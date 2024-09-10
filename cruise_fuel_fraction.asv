@@ -1,0 +1,43 @@
+function [segment_fuel_fraction] = cruise_fuel_fraction(range,specific_fuel_consumption,flight_velocity,lift_to_drag)
+% Description: This function generates a the TOGW of our aircraft by calling
+% another function, togw_regression_loop. It runs the regression loop 3 times for all 
+% three missions and returns three separate TOGWs.
+% 
+% INPUTS:
+% --------------------------------------------
+%    range - Double defined in fuel_weight function. Segment/maneuver's range [m] 
+% 
+%    specific_fuel_comsumption - Double defined in section 1 of main.m 
+%    Assumed specific fuel consumption for the PW F100-229 engine [kg/(kg*hr)]
+% 
+%    flight_velocity - Double defined in fuel_weight fucntion after calling 
+%    velocity_from_mach function. 
+%    Velocity of the aircraft corrected for the segment altitude []
+% 
+%    lift_to_drag -  Double defined in max_lift_to_drag function. 
+%    Aircraft lift to drag ratio [unitless]
+%
+% OUTPUTS:
+% --------------------------------------------
+%    togw_DCA - TOGW for DCA [unitless]
+% 
+% See also: togw_regression_loop()
+% Author:                          Juan
+% Version history revision notes:
+%                                  v1: 9/10/2024
+
+% This function calculates the fuel fraction between two mission segments
+% where steady flight can be assumed. It uses equation 2.7 from the 
+% metabook meant to calculate cruise  fuel fraction
+%   
+% The equation takes in the following paramenters:
+% - Segment/maneuver's range [m] 
+% - Assumed specific fuel consumption for the PW F100-229 engine [kg/(kg*hr)]
+% - Velocity of the aircraft corrected for the segment altitude obtianed
+% from the velocity_from_mach() function [m/s]
+% - Aircraft lift to drag ratio calculated using the max_lift_to_drag
+% function [unitless]
+
+segment_fuel_fraction = exp(-range*specific_fuel_capacity/(flight_velocity*lift_to_drag));
+
+end
