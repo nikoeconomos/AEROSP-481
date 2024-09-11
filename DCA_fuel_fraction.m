@@ -33,19 +33,28 @@ function [mission_ff] = DCA_fuel_fraction(DCA_mission,lift_to_drag,cruise_fuel_f
 % Version history revision notes:
 %                                  v1: 9/10/2024
 
-cruise_out_ff = cruise_fuel_fraction(DCA_mission.cruise_out.range,DCA_mission.cruise_out.tsfc,DCA_mission.cruise_out.flight_velocity,lift_to_drag);
+cruise_out_ff = cruise_fuel_fraction(DCA_mission.cruise_out.range, ...
+    DCA_mission.cruise_out.tsfc,DCA_mission.cruise_out.flight_velocity,lift_to_drag);
 
-loiter_ff = loiter_fuel_fraction(DCA_mission.loiter.endurance,DCA_mission.loiter.tsfc,lift_to_drag);
+loiter_ff = loiter_fuel_fraction(DCA_mission.loiter.endurance,DCA_mission.loiter.tsfc, ...
+    lift_to_drag);
 
-dash_ff = cruise_fuel_fraction(DCA_mission.dash.range,DCA_mission.dash.tsfc,DCA_mission.dash.flight_velocity,lift_to_drag);
+dash_ff = cruise_fuel_fraction(DCA_mission.dash.range,DCA_mission.dash.tsfc, ...
+    DCA_mission.dash.flight_velocity,lift_to_drag);
 
-combat_ff = cruise_fuel_fraction(DCA_mission.combat.range,DCA_mission.combat.tsfc,DCA_mission.combat.flight_velocity,lift_to_drag);
+combat_ff = cruise_fuel_fraction(DCA_mission.combat.range,DCA_mission.combat.tsfc, ...
+    DCA_mission.combat.flight_velocity,lift_to_drag);
 
-cruise_in_ff = cruise_fuel_fraction(DCA_mission.cruise_in.range,DCA_mission.cruise_in.tsfc,DCA_mission.cruise_in.flight_velocity,lift_to_drag);
+cruise_in_ff = cruise_fuel_fraction(DCA_mission.cruise_in.range, ...
+    DCA_mission.cruise_in.tsfc,DCA_mission.cruise_in.flight_velocity,lift_to_drag);
 
-reserve_ff = loiter_ff(DCA_mission.reserve.endurance,DCA_mission.reserve.tsfc,lift_to_drag);
+reserve_ff = loiter_ff(DCA_mission.reserve.endurance,DCA_mission.reserve.tsfc, ...
+    lift_to_drag);
 
-total_ff = DCA_mission.start_takeoff.ff*DCA_mission.climb.ff*cruise_out_ff*loiter_ff*dash_ff*combat_ff*cruise_in_ff*DCA_mission.descent.ff*reserve_ff;
+total_ff = DCA_mission.start_takeoff.ff*DCA_mission.climb.ff*cruise_out_ff* ...
+    loiter_ff*dash_ff*combat_ff*DCA_mission.climb.ff*cruise_in_ff*DCA_mission.descent.ff*reserve_ff; 
+    % Multiply fuel fractions at each stage to obtain total fuel empty fraction 
+    % from fuel consumption during mission segments
 
 mission_ff = 1.06*(1-total_ff); % Using equation 2.33 from metabook to 
 % account for trapped and reserve fuel
