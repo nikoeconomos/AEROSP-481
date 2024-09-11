@@ -11,7 +11,7 @@ function [segment_fuel_fraction] = cruise_fuel_fraction(range,specific_fuel_cons
 %    Assumed specific fuel consumption for the PW F100-229 engine [kg/(kg*hr)]
 % 
 %    flight_velocity - Double defined in fuel_weight fucntion after calling 
-%    velocity_from_mach function. 
+%    velocity_from_flight_cond function. 
 %    Velocity of the aircraft corrected for the segment altitude [m/s]
 % 
 %    lift_to_drag -  Double defined in max_lift_to_drag function. 
@@ -22,7 +22,7 @@ function [segment_fuel_fraction] = cruise_fuel_fraction(range,specific_fuel_cons
 %    segment_fuel_fraction - Double. Fuel fraction calculated for mission 
 %    segment [unitless]
 % 
-% See also: fuel_weight(), velocity_from_mach(), max_lift_to_drag(), main.m
+% See also: fuel_weight(), velocity_from_flight_cond(), max_lift_to_drag(), main.m
 % Author:                          Juan
 % Version history revision notes:
 %                                  v1: 9/10/2024
