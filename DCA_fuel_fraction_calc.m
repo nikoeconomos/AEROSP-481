@@ -33,6 +33,8 @@ function [mission_ff] = DCA_fuel_fraction_calc(DCA_mission,LD,cruise_fuel_fracti
 % Version history revision notes:
 %                                  v1: 9/10/2024
 
+[cruise_lift_over_drag,]
+
 cruise_out_ff = cruise_fuel_fraction(DCA_mission.cruise_out.range,DCA_mission.cruise_out.tsfc,DCA_mission.cruise_out.flight_velocity,LD);
 
 loiter_ff = loiter_fuel_fraction(DCA_mission.loiter.endurance,DCA_mission.loiter.tsfc,LD);
