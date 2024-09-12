@@ -1,10 +1,13 @@
-function [max_lift_to_drag, cruise_lift_to_drag] = lift_to_drag_calc(c_d_0,e,AR)
+function [max_lift_to_drag, cruise_lift_to_drag] = lift_to_drag_calc()
 % Description: This function returns the maximum and cruise Lift to Drag ratio (L/D)
 % of our aircraft by using drag polar values and aircraft geometry. This
 % function will be used to refine the L/D parameter as the design matures.
 %
 % INPUTS:
 % --------------------------------------------
+%    Currently not taking any inputs since the formula for L/D max isn't
+%    being used
+% 
 %    c_d_0 - Zero lift drag coefficient; corresponds to parasitic drag [-]
 %    e - Oswald efficiency parameter (between [0,1]) [-]
 %    AR - aspect ratio (wingspan/mean chord) [-]

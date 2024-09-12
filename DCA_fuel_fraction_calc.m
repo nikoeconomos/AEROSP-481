@@ -33,7 +33,7 @@ function [mission_ff] = DCA_fuel_fraction_calc(DCA_mission,lift_to_drag_calc,cru
 % Version history revision notes:
 %                                  v1: 9/10/2024
 
-[max_lift_to_drag,cruise_lift_to_drag] = lift_to_drag_calc(1,1,1); % Lift to drag estimated based on the F-35A,
+[max_lift_to_drag,cruise_lift_to_drag] = lift_to_drag_calc(); % Lift to drag estimated based on the F-35A,
 % currently omitting the calculation method on the metabook, therefore
 % function argument doesn't matter as lift_to_drag_calc() is currently
 % defined and all argument values can be arbitrary.

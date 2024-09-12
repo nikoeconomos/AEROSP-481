@@ -68,7 +68,7 @@ DCA_mission.combat1.range = basic_360_turn_distance(DCA_mission.combat1.flight_v
 % Combat segment 2
 DCA_mission.combat2.altitude = 10668; % [m]
 DCA_mission.combat2.mach = 0.9; % [unitless]
-DCA_mission.combat1.bank_ang = 89; % [degrees]
+DCA_mission.combat2.bank_ang = 89; % [degrees]
 DCA_mission.combat2.t_amb = 219.05; % [k]
 DCA_mission.combat2.rho = 0.37960; % [kg/m^3]
 DCA_mission.combat2.tsfc = 1.2 / 7938; % [kg/kg*s] First number from left to right is TSFC in lbm/hr*lbf, next rumber is conversion factor to 1/s
