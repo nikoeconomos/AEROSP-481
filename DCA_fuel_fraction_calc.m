@@ -33,7 +33,9 @@ function [mission_ff] = DCA_fuel_fraction_calc(DCA_mission,LD,cruise_fuel_fracti
 % Version history revision notes:
 %                                  v1: 9/10/2024
 
-[cruise_lift_over_drag,]
+[max_lift_to_drag,cruise_lift_to_drag] = lift_to_drag_calc(1,1,1);
+
+dash_lift_to_drag = 0.93 * cruise_lift_to_drag;
 
 cruise_out_ff = cruise_fuel_fraction(DCA_mission.cruise_out.range,DCA_mission.cruise_out.tsfc,DCA_mission.cruise_out.flight_velocity,LD);
 
@@ -41,7 +43,9 @@ loiter_ff = loiter_fuel_fraction(DCA_mission.loiter.endurance,DCA_mission.loiter
 
 dash_ff = cruise_fuel_fraction(DCA_mission.dash.range,DCA_mission.dash.tsfc,DCA_mission.dash.flight_velocity,LD);
 
-combat_ff = cruise_fuel_fraction(DCA_mission.combat.range,DCA_mission.combat.tsfc,DCA_mission.combat.flight_velocity,LD);
+combat1_ff = cruise_fuel_fraction(DCA_mission.combat1.range,DCA_mission.combat1.tsfc,DCA_mission.combat1.flight_velocity,LD);
+
+combat2_ff = cruise_fuel_fraction(DCA_mission.combat2.range,DCA_mission.combat2.tsfc,DCA_mission.combat2.flight_velocity,LD);
 
 cruise_in_ff = cruise_fuel_fraction(DCA_mission.cruise_in.range,DCA_mission.cruise_in.tsfc,DCA_mission.cruise_in.flight_velocity,LD);
 

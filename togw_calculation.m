@@ -59,6 +59,14 @@ function togw = togw_regression_loop(w_0_guess, w_crew, w_payload, A, C, mission
 %                                  v1: 9/10/2024
     w_0 = w_0_guess;
     
+    if mission == "DCA"
+        mission_struct = generate_DCA_mission(constants.r_air); %TODO PARAMETERS
+    elseif mission == "PDI"
+        mission_struct = generate_PDI_mission(constants.r_air); %TODO PARAMETERS
+    else % mission must equal escort
+        mission_struct = generate_ESCORT_mission(constants.r_air);
+    end
+
     epsilon = 10e-6; % error for convergence
     delta = 2*epsilon; % the amount the we are off from converging
 
@@ -68,11 +76,11 @@ function togw = togw_regression_loop(w_0_guess, w_crew, w_payload, A, C, mission
         % Calculates the fuel fraction depending on which mission we are
         % attempting to do calculations for. This is input in the calling function
         if mission == "DCA"
-            ff = DCA_fuel_fraction_calc(); %TODO PARAMETERS
+            ff = DCA_fuel_fraction_calc(mission_struct); %TODO PARAMETERS
         elseif mission == "PDI"
-            ff = PDI_fuel_fraction_calc(); %TODO PARAMETERS
+            ff = PDI_fuel_fraction_calc(mission_struct); %TODO PARAMETERS
         else % mission must equal escort
-            ff = ESCORT_fuel_fraction_calc(); %TODO PARAMETERS
+            ff = ESCORT_fuel_fraction_calc(mission_struct); %TODO PARAMETERS
         end
 
         w_0_new = (w_crew + w_payload)/(1 - ff - empty_weight_fraction);
