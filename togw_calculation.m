@@ -29,14 +29,14 @@ function [togw_DCA, togw_PDI, togw_ESCORT] = togw_calculation(weight_params,cons
     
     % run the loop three times, one for each mission. The fuel fraction
     % changes, nothing else does.
-    togw_DCA = togw_regression_loop(w_0_guess, w_crew, w_payload, A, C, "DCA",constants);
-    togw_PDI = togw_regression_loop(w_0_guess, w_crew, w_payload, A, C, "PDI",constants);
-    togw_ESCORT = togw_regression_loop(w_0_guess, w_crew, w_payload, A, C, "ESCORT",constants);
+    togw_DCA = togw_regression_loop(w_0_guess, w_crew, w_payload, A, C, "DCA",constants,lift_to_drag_calc,cruise_fuel_fraction_calc,loiter_fuel_fraction_calc);
+    togw_PDI = togw_regression_loop(w_0_guess, w_crew, w_payload, A, C, "PDI",constants,lift_to_drag_calc,cruise_fuel_fraction_calc,loiter_fuel_fraction_calc);
+    togw_ESCORT = togw_regression_loop(w_0_guess, w_crew, w_payload, A, C, "ESCORT",constants,lift_to_drag_calc,cruise_fuel_fraction_calc,loiter_fuel_fraction_calc);
 end
 
 %%
 
-function togw = togw_regression_loop(w_0_guess, w_crew, w_payload, A, C, mission,constants)
+function togw = togw_regression_loop(w_0_guess, w_crew, w_payload, A, C, mission,constants,lift_to_drag_calc,cruise_fuel_fraction_calc,loiter_fuel_fraction_calc)
 % Description: This function generates a the TOGW of our aircraft based on
 % the algorithm given in section 2.5 of the meta guide.
 % 
