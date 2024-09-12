@@ -40,7 +40,7 @@ ESCORT_mission.dash.mach = 1.8; % [unitless]
 ESCORT_mission.dash.t_amb = 219.05; % [k]
 ESCORT_mission.dash.rho = 0.37960; % [kg/m^3]
 ESCORT_mission.dash.tsfc = 1.2 / 7938; % [kg/kg*s] First number from left to right is TSFC in lbm/hr*lbf, next rumber is conversion factor to 1/s
-ESCORT_mission.dash.flight_velocity = velocity_from_flight_cond(ESCORT_mission.dash.mach,ESCORT_mission.dash.t_amb,r_air); % [m/s]
+ESCORT_mission.dash.flight_velocity = velocity_from_flight_cond(ESCORT_mission.dash.mach,ESCORT_mission.dash.t_amb,ESCORT_mission.dash.rho,r_air); % [m/s]
 
 
 % Escort segment
@@ -50,7 +50,7 @@ ESCORT_mission.escort.mach = 0.7; % [unitless] Assumed from lowest F14 speed fou
 ESCORT_mission.escort.t_amb = 219.05; % [k]
 ESCORT_mission.escort.rho = 0.37960; % [kg/m^3]
 ESCORT_mission.escort.tsfc = 0.8 / 7938; % [kg/kg*s] First number from left to right is TSFC in lbm/hr*lbf, next rumber is conversion factor to 1/s
-ESCORT_mission.escort.flight_velocity = velocity_from_flight_cond(ESCORT_mission.escort.mach,ESCORT_mission.escort.t_amb,r_air); % [m/s]
+ESCORT_mission.escort.flight_velocity = velocity_from_flight_cond(ESCORT_mission.escort.mach,ESCORT_mission.escort.t_amb,ESCORT_mission.escort.rho,r_air); % [m/s]
 % "climb/accelerate to optimal speed and altitude" - assuming this remains
 % 35,000ft (until we can better assess the optimal altitude for out craft)
 
@@ -62,7 +62,7 @@ ESCORT_mission.cruise_in.mach = 0.95; % [unitless]
 ESCORT_mission.cruise_in.t_amb = 219.05; % [k]
 ESCORT_mission.cruise_in.rho = 0.37960; % [kg/m^3]
 ESCORT_mission.cruise_in.tsfc = 0.86 / 7938; % [kg/kg*s] First number from left to right is TSFC in lbm/hr*lbf, next rumber is conversion factor to 1/s
-ESCORT_mission.cruise_in.flight_velocity = velocity_from_flight_cond(ESCORT_mission.cruise_in.mach,ESCORT_mission.cruise_in.t_amb,r_air); % [m/s]
+ESCORT_mission.cruise_in.flight_velocity = velocity_from_flight_cond(ESCORT_mission.cruise_in.mach,ESCORT_mission.cruise_in.t_amb,ESCORT_mission.cruise_in.rho,r_air); % [m/s]
 
 
 % Descent segment
@@ -76,6 +76,6 @@ ESCORT_mission.reserve.mach = 0.16; % [unitless]
 ESCORT_mission.reserve.t_amb = 288.15; % [k]
 ESCORT_mission.reserve.rho = 1.225; % [kg/m^3]
 ESCORT_mission.reserve.tsfc = 0.71 / 7938; % [kg/kg*s] First number from left to right is TSFC in lbm/hr*lbf, next rumber is conversion factor to 1/s
-ESCORT_mission.reserve.flight_velocity = velocity_from_flight_cond(ESCORT_mission.reserve.mach,ESCORT_mission.reserve.t_amb,r_air); % [m/s]
+ESCORT_mission.reserve.flight_velocity = velocity_from_flight_cond(ESCORT_mission.reserve.mach,ESCORT_mission.reserve.t_amb,ESCORT_mission.reserve.rho,r_air); % [m/s]
 
 end
