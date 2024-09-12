@@ -1,5 +1,5 @@
 % Aerosp 481 Group 3 - Libellula 
-function [togw_DCA, togw_PDI, togw_ESCORT] = togw_calculation(weight_params)
+function [togw_DCA, togw_PDI, togw_ESCORT] = togw_calculation(weight_params,constants)
 % Description: This function generates a the TOGW of our aircraft by calling
 % another function, togw_regression_loop. It runs the regression loop 3 times for all 
 % three missions and returns three separate TOGWs.
@@ -29,14 +29,14 @@ function [togw_DCA, togw_PDI, togw_ESCORT] = togw_calculation(weight_params)
     
     % run the loop three times, one for each mission. The fuel fraction
     % changes, nothing else does.
-    togw_DCA = togw_regression_loop(w_0_guess, w_crew, w_payload, A, C, "DCA");
-    togw_PDI = togw_regression_loop(w_0_guess, w_crew, w_payload, A, C, "PDI");
-    togw_ESCORT = togw_regression_loop(w_0_guess, w_crew, w_payload, A, C, "ESCORT");
+    togw_DCA = togw_regression_loop(w_0_guess, w_crew, w_payload, A, C, "DCA",constants);
+    togw_PDI = togw_regression_loop(w_0_guess, w_crew, w_payload, A, C, "PDI",constants);
+    togw_ESCORT = togw_regression_loop(w_0_guess, w_crew, w_payload, A, C, "ESCORT",constants);
 end
 
 %%
 
-function togw = togw_regression_loop(w_0_guess, w_crew, w_payload, A, C, mission)
+function togw = togw_regression_loop(w_0_guess, w_crew, w_payload, A, C, mission,constants)
 % Description: This function generates a the TOGW of our aircraft based on
 % the algorithm given in section 2.5 of the meta guide.
 % 
