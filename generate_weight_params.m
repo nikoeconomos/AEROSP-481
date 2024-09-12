@@ -40,7 +40,7 @@ function [weight_params] = generate_weight_params()
     weight_params.w_crew_member = 82; % [kg]
 
     % Number of crew members to include onboard [TODO update if remote piloting]
-    weight_params.num_crew_members = 1; % [number]
+    weight_params.num_crew_members = 0; % [number]
 
     % Total weight of crew members. Crew weight * num of crew members
     % aboard
