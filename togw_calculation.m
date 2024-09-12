@@ -1,5 +1,5 @@
 % Aerosp 481 Group 3 - Libellula 
-function [togw_DCA, togw_PDI, togw_ESCORT] = togw_calculation(weight_params,constants)
+function [togw_DCA, togw_PDI, togw_ESCORT] = togw_calculation(weight_params,constants,lift_to_drag_calc,cruise_fuel_fraction_calc,loiter_fuel_fraction_calc)
 % Description: This function generates a the TOGW of our aircraft by calling
 % another function, togw_regression_loop. It runs the regression loop 3 times for all 
 % three missions and returns three separate TOGWs.
