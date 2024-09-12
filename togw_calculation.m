@@ -76,11 +76,11 @@ function togw = togw_regression_loop(w_0_guess, w_crew, w_payload, A, C, mission
         % Calculates the fuel fraction depending on which mission we are
         % attempting to do calculations for. This is input in the calling function
         if mission == "DCA"
-            ff = DCA_fuel_fraction_calc(mission_struct);
+            ff = DCA_fuel_fraction_calc(mission_struct,lift_to_drag_calc,cruise_fuel_fraction_calc,loiter_fuel_fraction_calc);
         elseif mission == "PDI"
-            ff = PDI_fuel_fraction_calc(mission_struct);
+            ff = PDI_fuel_fraction_calc(mission_struct,lift_to_drag_calc,cruise_fuel_fraction_calc,loiter_fuel_fraction_calc);
         else % mission must equal escort
-            ff = ESCORT_fuel_fraction_calc(mission_struct);
+            ff = ESCORT_fuel_fraction_calc(mission_struct,lift_to_drag_calc,cruise_fuel_fraction_calc,loiter_fuel_fraction_calc);
         end
 
         w_0_new = (w_crew + w_payload)/(1 - ff - empty_weight_fraction);
