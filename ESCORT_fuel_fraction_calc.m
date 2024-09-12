@@ -1,4 +1,4 @@
-function [mission_ff] = ESCORT_fuel_fraction_calc(ESCORT_mission,lift_to_drag_calc,cruise_fuel_fraction_calc,loiter_fuel_fraction_calc)
+function [mission_ff] = ESCORT_fuel_fraction_calc(ESCORT_mission)
 % Description: This function calculates the total fuel fraction for the
 % Intercept/Escort (ESCORT) Mission. It does this by using values
 % from a table of typical fuel fractions (table 2.2 in the metabook) for
@@ -33,7 +33,7 @@ function [mission_ff] = ESCORT_fuel_fraction_calc(ESCORT_mission,lift_to_drag_ca
 % Version history revision notes:
 %                                  v1: 9/11/2024
 
-[max_lift_to_drag,cruise_lift_to_drag] = lift_to_drag_calc(1,1,1); % Lift to drag estimated based on the F-35A,
+[max_lift_to_drag,cruise_lift_to_drag] = lift_to_drag_calc(); % Lift to drag estimated based on the F-35A,
 % currently omitting the calculation method on the metabook, therefore
 % function argument doesn't matter as lift_to_drag_calc() is currently
 % defined and all argument values can be arbitrary.

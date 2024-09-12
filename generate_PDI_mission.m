@@ -43,7 +43,7 @@ PDI_mission.combat1.t_amb = 219.05; % [k]
 PDI_mission.combat1.rho = 0.37960; % [kg/m^3]
 PDI_mission.combat1.tsfc = 1.2 / 7938; % [kg/kg*s] First number from left to right is TSFC in lbm/hr*lbf, next rumber is conversion factor to 1/s
 PDI_mission.combat1.flight_velocity = velocity_from_flight_cond(PDI_mission.combat1.mach,PDI_mission.combat1.t_amb,PDI_mission.combat1.rho,r_air); % [m/s]
-PDI_mission.combat1.range = basic_360_turn_distance(PDI_mission.combat1.flight_velocity); % [m] want to double chk this!!
+PDI_mission.combat1.range = basic_360_turn_distance(PDI_mission.combat1.flight_velocity, 89); % [m] want to double chk this!!
 
 % combat segment 2 - 360 turn at mach .9
 PDI_mission.combat2.altitude = 10668; % [m]
@@ -52,7 +52,7 @@ PDI_mission.combat2.t_amb = 219.05; % [k]
 PDI_mission.combat2.rho = 0.37960; % [kg/m^3]
 PDI_mission.combat2.tsfc = 1.2 / 7938; % [kg/kg*s] First number from left to right is TSFC in lbm/hr*lbf, next rumber is conversion factor to 1/s
 PDI_mission.combat2.flight_velocity = velocity_from_flight_cond(PDI_mission.combat2.mach,PDI_mission.combat2.t_amb,PDI_mission.combat2.rho,r_air); % [m/s]
-PDI_mission.combat2.range = basic_360_turn_distance(PDI_mission.combat2.flight_velocity); % [m] want to double chk this!!
+PDI_mission.combat2.range = basic_360_turn_distance(PDI_mission.combat2.flight_velocity, 89); % [m] want to double chk this!!
 % at the end of this segment we release all missles
 
 % climb / accelerate to optimal speed / altitude
@@ -78,6 +78,6 @@ PDI_mission.reserve.mach = 0.16; % [unitless]
 PDI_mission.reserve.t_amb = 288.15; % [k]
 PDI_mission.reserve.rho = 1.225; % [kg/m^3]
 PDI_mission.reserve.tsfc = 0.71 / 7938; % [kg/kg*s] First number from left to right is TSFC in lbm/hr*lbf, next rumber is conversion factor to 1/s
-PDI_mission.reserve.flight_velocity = velocity_from_flight_cond(DCA_mission.reserve.mach,DCA_mission.reserve.t_amb,DCA_mission.reserve.rho,r_air); % [m/s]
+PDI_mission.reserve.flight_velocity = velocity_from_flight_cond(PDI_mission.reserve.mach,PDI_mission.reserve.t_amb,PDI_mission.reserve.rho,r_air); % [m/s]
 
 end

@@ -1,5 +1,5 @@
 % Aerosp 481 Group 3 - Libellula 
-function [togw_DCA, togw_PDI, togw_ESCORT] = togw_calculation(weight_params,constants,lift_to_drag_calc,cruise_fuel_fraction_calc,loiter_fuel_fraction_calc,DCA_fuel_fraction_calc,PDI_fuel_fraction_calc,ESCORT_fuel_fraction_calc,generate_DCA_mission,generate_PDI_mission,generate_ESCORT_mission)
+function [togw_DCA, togw_PDI, togw_ESCORT, ff_DCA, ff_PDI, ff_ESCORT] = togw_calculation(weight_params,constants)
 % Description: This function generates a the TOGW of our aircraft by calling
 % another function, togw_regression_loop. It runs the regression loop 3 times for all 
 % three missions and returns three separate TOGWs.
@@ -29,14 +29,14 @@ function [togw_DCA, togw_PDI, togw_ESCORT] = togw_calculation(weight_params,cons
     
     % run the loop three times, one for each mission. The fuel fraction
     % changes, nothing else does.
-    togw_DCA = togw_regression_loop(w_0_guess, w_crew, w_payload, A, C, "DCA",constants,lift_to_drag_calc,cruise_fuel_fraction_calc,loiter_fuel_fraction_calc,DCA_fuel_fraction_calc,PDI_fuel_fraction_calc,ESCORT_fuel_fraction_calc,generate_DCA_mission,generate_PDI_mission,generate_ESCORT_mission);
-    togw_PDI = togw_regression_loop(w_0_guess, w_crew, w_payload, A, C, "PDI",constants,lift_to_drag_calc,cruise_fuel_fraction_calc,loiter_fuel_fraction_calc,DCA_fuel_fraction_calc,PDI_fuel_fraction_calc,ESCORT_fuel_fraction_calc,generate_DCA_mission,generate_PDI_mission,generate_ESCORT_mission);
-    togw_ESCORT = togw_regression_loop(w_0_guess, w_crew, w_payload, A, C, "ESCORT",constants,lift_to_drag_calc,cruise_fuel_fraction_calc,loiter_fuel_fraction_calc,DCA_fuel_fraction_calc,PDI_fuel_fraction_calc,ESCORT_fuel_fraction_calc,generate_DCA_mission,generate_PDI_mission,generate_ESCORT_mission);
+    [togw_DCA, ff_DCA] = togw_regression_loop(w_0_guess, w_crew, w_payload, A, C, "DCA",constants);
+    [togw_PDI, ff_PDI] = togw_regression_loop(w_0_guess, w_crew, w_payload, A, C, "PDI",constants);
+    [togw_ESCORT, ff_ESCORT] = togw_regression_loop(w_0_guess, w_crew, w_payload, A, C, "ESCORT",constants);
 end
 
 %%
 
-function togw = togw_regression_loop(w_0_guess, w_crew, w_payload, A, C, mission,constants,lift_to_drag_calc,cruise_fuel_fraction_calc,loiter_fuel_fraction_calc,DCA_fuel_fraction_calc,PDI_fuel_fraction_calc,ESCORT_fuel_fraction_calc,generate_DCA_mission,generate_PDI_mission,generate_ESCORT_mission)
+function [togw,ff] = togw_regression_loop(w_0_guess, w_crew, w_payload, A, C, mission,constants)
 % Description: This function generates a the TOGW of our aircraft based on
 % the algorithm given in section 2.5 of the meta guide.
 % 
@@ -76,11 +76,11 @@ function togw = togw_regression_loop(w_0_guess, w_crew, w_payload, A, C, mission
         % Calculates the fuel fraction depending on which mission we are
         % attempting to do calculations for. This is input in the calling function
         if mission == "DCA"
-            ff = DCA_fuel_fraction_calc(mission_struct,lift_to_drag_calc,cruise_fuel_fraction_calc,loiter_fuel_fraction_calc);
+            ff = DCA_fuel_fraction_calc(mission_struct);
         elseif mission == "PDI"
-            ff = PDI_fuel_fraction_calc(mission_struct,lift_to_drag_calc,cruise_fuel_fraction_calc,loiter_fuel_fraction_calc);
+            ff = PDI_fuel_fraction_calc(mission_struct);
         else % mission must equal escort
-            ff = ESCORT_fuel_fraction_calc(mission_struct,lift_to_drag_calc,cruise_fuel_fraction_calc,loiter_fuel_fraction_calc);
+            ff = ESCORT_fuel_fraction_calc(mission_struct);
         end
 
         w_0_new = (w_crew + w_payload)/(1 - ff - empty_weight_fraction);

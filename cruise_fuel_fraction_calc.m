@@ -1,4 +1,4 @@
-function [segment_fuel_fraction] = cruise_fuel_fraction_calc(range,SFC,flight_velocity,LD)
+function segment_fuel_fraction = cruise_fuel_fraction_calc(range,SFC,flight_velocity,LD)
 % Description: This function calculates the fuel fraction between two mission segments
 % where steady flight can be assumed. It uses equation 2.7 from the 
 % metabook meant to calculate cruise  fuel fraction

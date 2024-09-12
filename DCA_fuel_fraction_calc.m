@@ -1,4 +1,4 @@
-function [mission_ff] = DCA_fuel_fraction_calc(DCA_mission,lift_to_drag_calc,cruise_fuel_fraction_calc,loiter_fuel_fraction_calc)
+function [mission_ff] = DCA_fuel_fraction_calc(DCA_mission)
 % Description: This function calculates the total fuel fraction for the
 % Direct Counter-Air (DCA) Patroll Mission. It does this by using values
 % from a table of typical fuel fractions (table 2.2 in the metabook) for
