@@ -1,4 +1,4 @@
-function [mission_ff] = DCA_fuel_fraction_calc(DCA_mission,lift_to_drag_calc,cruise_fuel_fraction,loiter_fuel_fraction)
+function [mission_ff] = DCA_fuel_fraction_calc(DCA_mission,lift_to_drag_calc,cruise_fuel_fraction_calc,loiter_fuel_fraction_calc)
 % Description: This function calculates the total fuel fraction for the
 % Direct Counter-Air (DCA) Patroll Mission. It does this by using values
 % from a table of typical fuel fractions (table 2.2 in the metabook) for
@@ -70,11 +70,13 @@ cruise_in_ff = cruise_fuel_fraction_calc(DCA_mission.cruise_in.range,DCA_mission
 reserve_ff = loiter_fuel_fraction_calc(DCA_mission.reserve.endurance,DCA_mission.reserve.tsfc,cruise_lift_to_drag);
 
 
-total_ff = DCA_mission.start_takeoff.ff*DCA_mission.climb.ff*cruise_out_ff* ...
-    loiter_ff*dash_ff*combat1_ff*combat2_ff*DCA_mission.climb.ff*cruise_in_ff*DCA_mission.descent.ff*reserve_ff; 
+total_ff = DCA_mission.start_takeoff.ff * DCA_mission.climb.ff * cruise_out_ff * loiter_ff * dash_ff * combat1_ff ...
+    * combat2_ff * DCA_mission.climb.ff * cruise_in_ff * reserve_ff; 
     % Multiply fuel fractions at each stage to obtain total fuel empty fraction 
     % from fuel consumption during mission segments
 
+    % Second climb is accounted for in this equation with the same standard
+    % fuel fraction from Table 2.2 of the metabook
 
     mission_ff = 1.06*(1-total_ff); % Using equation 2.33 from metabook to 
 % account for trapped and reserve fuel

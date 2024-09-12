@@ -1,4 +1,4 @@
-function [mission_ff] = DCA_fuel_fraction_calc(DCA_mission,lift_to_drag_calc,cruise_fuel_fraction_calc,loiter_fuel_fraction_calc)
+function [mission_ff] = ESCORT_fuel_fraction_calc(ESCORT_mission,lift_to_drag_calc,cruise_fuel_fraction_calc,loiter_fuel_fraction_calc)
 % Description: This function calculates the total fuel fraction for the
 % Direct Counter-Air (DCA) Patroll Mission. It does this by using values
 % from a table of typical fuel fractions (table 2.2 in the metabook) for
@@ -12,16 +12,16 @@ function [mission_ff] = DCA_fuel_fraction_calc(DCA_mission,lift_to_drag_calc,cru
 % 
 % INPUTS:
 % --------------------------------------------
-%    DCA_mission - Struct defined in generate_DCA_mission function. 
+%    ESCORT_mission - Struct defined in generate_DCA_mission function. 
 %    Contains mission segment parameters and aircraft states 
 % 
-%    LD - Double defined in max_lift_to_drag function. 
+%    lift_to_drag - Function defined in max_lift_to_drag function. 
 %    Aircraft lift to drag ratio [unitless]
 %
-%    cruise_fuel_fraction - Function outputting double. 
+%    cruise_fuel_fraction_calc - Function outputting double. 
 %    Calculates mission segment fuel fraction using equation for cruise [unitless]
 %
-%    loiter_fuel_fraction - Function outputting double. 
+%    loiter_fuel_fraction_calc - Function outputting double. 
 %    Calculates mission segment fuel fraction using equation for loitering [unitless]
 %
 % OUTPUTS:
@@ -44,39 +44,27 @@ dash_lift_to_drag = 0.93 * cruise_lift_to_drag; % Expecting decrease in aerodyna
 % Assuming aircraft is optimized for combat and has maximum lift_to_drag
 % ratio during this mission segment
 
-cruise_out_ff = cruise_fuel_fraction_calc(DCA_mission.cruise_out.range,DCA_mission.cruise_out.tsfc, ...
-    DCA_mission.cruise_out.flight_velocity,cruise_lift_to_drag);
- 
-
-loiter_ff = loiter_fuel_fraction_calc(DCA_mission.loiter.endurance,DCA_mission.loiter.tsfc,cruise_lift_to_drag);
-
-
-dash_ff = cruise_fuel_fraction_calc(DCA_mission.dash.range,DCA_mission.dash.tsfc,DCA_mission.dash.flight_velocity, ...
+dash_ff = cruise_fuel_fraction_calc(ESCORT_mission.dash.range,ESCORT_mission.dash.tsfc,ESCORT_mission.dash.flight_velocity, ...
     dash_lift_to_drag);
 
 
-combat1_ff = cruise_fuel_fraction_calc(DCA_mission.combat1.range,DCA_mission.combat1.tsfc, ...
-    DCA_mission.combat1.flight_velocity,max_lift_to_drag);
+escort_ff = cruise_fuel_fraction_calc(ESCORT_mission.escort.range,ESCORT_mission.escort.tsfc, ...
+    ESCORT_mission.escort.flight_velocity,max_lift_to_drag);
 
 
-combat2_ff = cruise_fuel_fraction_calc(DCA_mission.combat2.range,DCA_mission.combat2.tsfc, ...
-    DCA_mission.combat2.flight_velocity,max_lift_to_drag);
+cruise_in_ff = cruise_fuel_fraction_calc(ESCORT_mission.cruise_in.range,ESCORT_mission.cruise_in.tsfc, ...
+    ESCORT_mission.cruise_in.flight_velocity,cruise_lift_to_drag);
 
 
-cruise_in_ff = cruise_fuel_fraction_calc(DCA_mission.cruise_in.range,DCA_mission.cruise_in.tsfc, ...
-    DCA_mission.cruise_in.flight_velocity,cruise_lift_to_drag);
+reserve_ff = loiter_fuel_fraction_calc(ESCORT_mission.reserve.endurance,ESCORT_mission.reserve.tsfc,cruise_lift_to_drag);
 
 
-reserve_ff = loiter_fuel_fraction_calc(DCA_mission.reserve.endurance,DCA_mission.reserve.tsfc,cruise_lift_to_drag);
-
-
-total_ff = DCA_mission.start_takeoff.ff * DCA_mission.climb.ff * cruise_out_ff * loiter_ff * dash_ff * combat1_ff ...
-    * combat2_ff * DCA_mission.climb.ff * cruise_in_ff * reserve_ff; 
+total_ff = ESCORT_mission.start_takeoff.ff * ESCORT_mission.climb.ff * dash_ff * escort_ff ...
+    * ESCORT_mission.climb.ff * cruise_in_ff * reserve_ff; 
     % Multiply fuel fractions at each stage to obtain total fuel empty fraction 
     % from fuel consumption during mission segments
 
-    % Second climb is accounted for in this equation with the same standard
-    % fuel fraction used in 
+    % Second climb is accounted for in this 
 
 
     mission_ff = 1.06*(1-total_ff); % Using equation 2.33 from metabook to 
