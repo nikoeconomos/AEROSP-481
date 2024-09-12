@@ -1,21 +1,24 @@
 function [PDI_mission] = generate_PDI_mission(r_air)
-
-% **Commenting TBD**
-
 % Description:
+% Function parameteizes aircraft and environment states for Point Defense Intercept 
+% (PDI) mission and stores them in a struct following the sequence 
+% Mission.Mission_Segment.Parameter. Struct will be indexed into for fuel fraction calculations.
 %
 % INPUTS:
 % --------------------------------------------
-% r_air -
+% r_air - Gas constant for air defined universally on main script.
 %
 % OUTPUTS:
 % --------------------------------------------
-% PDI_mission -
+%    PDI_mission - 3 layer struct.
+%    Stores values for parameters relevant to the aircraft's state at each segment of the
+%    mission.
 %
-% See also:
-% Author: shay
+% See also: PDI_fuel_fraction_calc() for calculation of these parammeters
+% using, loiter_fuel_fraction_calc(), cruise_fuel_fraction_calc()
+% Author:                                           Shay
 % Version history revision notes:
-% v1: 9/11/2024
+%                                           v1: 9/11/2024
 
 
 % Engine start and takeoff segment

@@ -1,9 +1,6 @@
 function [DCA_mission] = generate_DCA_mission(r_air)
 % Description: 
-% Function parameteizes aircraft and environment states for Direct
-% Counter-Air Patrol (DCA) mission and stores them in a struct following
-% the sequence Mission.Mission_Segment.Parameter. Struct will be indexed
-% into for fuel fraction calculations.
+% Function parameteizes aircraft 
 % 
 % INPUTS:
 % --------------------------------------------
