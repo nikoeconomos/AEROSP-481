@@ -15,13 +15,13 @@ function [mission_ff] = DCA_fuel_fraction_calc(DCA_mission,lift_to_drag_calc,cru
 %    DCA_mission - Struct defined in generate_DCA_mission function. 
 %    Contains mission segment parameters and aircraft states 
 % 
-%    LD - Double defined in max_lift_to_drag function. 
+%    lift_to_drag_calc - Function outputting double. 
 %    Aircraft lift to drag ratio [unitless]
 %
-%    cruise_fuel_fraction - Function outputting double. 
+%    cruise_fuel_fraction_calc - Function outputting double. 
 %    Calculates mission segment fuel fraction using equation for cruise [unitless]
 %
-%    loiter_fuel_fraction - Function outputting double. 
+%    loiter_fuel_fraction_calc - Function outputting double. 
 %    Calculates mission segment fuel fraction using equation for loitering [unitless]
 %
 % OUTPUTS:
