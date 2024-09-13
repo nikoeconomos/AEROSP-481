@@ -32,11 +32,7 @@ PDI_mission.dash.time + PDI_mission.combat1.time + PDI_mission.combat2.time...
 + PDI_mission.cruise_in.time + PDI_mission.descent.time;
 
 % mission 3
-mission3_time = ESCORT_mission.start_takeoff.time + ESCORT_mission.climb.time...
-    + ESCORT_mission.dash.time + ESCORT_mission.escort.time + ...
-    ESCORT_mission.cruise_in.time +ESCORT_mission.descent.time;
+mission3_time = ESCORT_mission.start_takeoff.time + ESCORT_mission.climb.time + ESCORT_mission.escort.time + ESCORT;
 
 % total block time
 block_time = mission1_time + mission2_time + mission3_time;
-
-end

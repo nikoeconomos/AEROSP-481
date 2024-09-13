@@ -27,10 +27,12 @@ function [ESCORT_mission] = generate_ESCORT_mission(r_air)
 
 % Engine start and takeoff segment
 ESCORT_mission.start_takeoff.ff = 0.970; % [unitless]
+ESCORT_mission.start_takeoff.time = .1; % averaged this from data online (~6 min)
 
 
 % Climb segment - 35,000 ft
 ESCORT_mission.climb.ff = 0.985; % [unitless]
+ESCORT_mission.climb.time = 1/60; % [hours] - overestimate from data online (~1 min)
 
 
 % Dash segment
@@ -41,7 +43,7 @@ ESCORT_mission.dash.t_amb = 219.05; % [k]
 ESCORT_mission.dash.rho = 0.37960; % [kg/m^3]
 ESCORT_mission.dash.tsfc = 1.2 / 7938; % [kg/kg*s] First number from left to right is TSFC in lbm/hr*lbf, next rumber is conversion factor to 1/s
 ESCORT_mission.dash.flight_velocity = velocity_from_flight_cond(ESCORT_mission.dash.mach,ESCORT_mission.dash.t_amb,ESCORT_mission.dash.rho,r_air); % [m/s]
-
+ESCORT_mission.dash.time = (ESCORT_mission.dash.range / (ESCORT_mission.dash.mach*343)) / 3600; % time [s] = distance [m] / speed [m/s] - then convert to hours
 
 % Escort segment
 ESCORT_mission.escort.range = 555600; % [m]
@@ -51,6 +53,8 @@ ESCORT_mission.escort.t_amb = 219.05; % [k]
 ESCORT_mission.escort.rho = 0.37960; % [kg/m^3]
 ESCORT_mission.escort.tsfc = 0.8 / 7938; % [kg/kg*s] First number from left to right is TSFC in lbm/hr*lbf, next rumber is conversion factor to 1/s
 ESCORT_mission.escort.flight_velocity = velocity_from_flight_cond(ESCORT_mission.escort.mach,ESCORT_mission.escort.t_amb,ESCORT_mission.escort.rho,r_air); % [m/s]
+ESCORT_mission.escort.time = (ESCORT_mission.escort.range / (ESCORT_mission.escort.mach*343)) / 3600; % [hours]
+
 % "climb/accelerate to optimal speed and altitude" - assuming this remains
 % 35,000ft (until we can better assess the optimal altitude for out craft)
 
@@ -63,10 +67,12 @@ ESCORT_mission.cruise_in.t_amb = 219.05; % [k]
 ESCORT_mission.cruise_in.rho = 0.37960; % [kg/m^3]
 ESCORT_mission.cruise_in.tsfc = 0.86 / 7938; % [kg/kg*s] First number from left to right is TSFC in lbm/hr*lbf, next rumber is conversion factor to 1/s
 ESCORT_mission.cruise_in.flight_velocity = velocity_from_flight_cond(ESCORT_mission.cruise_in.mach,ESCORT_mission.cruise_in.t_amb,ESCORT_mission.cruise_in.rho,r_air); % [m/s]
+ESCORT_mission.cruise_in.time = (ESCORT_mission.cruise_in.range / (ESCORT_mission.cruise_in.mach*343)) / 3600; % [hours]
 
 
 % Descent segment
 ESCORT_mission.descent.ff = 0.990; % [unitless]
+ESCORT_mission.descent.time = 4 / 60; % averaged historical data for decent time [hours]
 
 
 % Reserve segment
