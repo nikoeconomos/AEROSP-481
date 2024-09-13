@@ -5,17 +5,18 @@ function [block_time] = block_time_calc(DCA_mission, PDI_mission, ESCORT_mission
 % This parameter will feed into calculations for several other cost
 % functions.
 %
-% INPUTS:
+% INPUTS: 
 % --------------------------------------------
-%    
+%    mission struct variables
 %
 % OUTPUTS:
 % --------------------------------------------
-%    
+%    block_time - the total time in hours spent completing all 3 missions
 % 
 % See also: generate_DCA_mission, generate_PDI_mission and
 % generate_ESCORT_mission for calculations of the time for each mission
 % segment respectively
+%
 % Author:                          shay
 % Version history revision notes:
 %                                  v1: 9/13/2024
