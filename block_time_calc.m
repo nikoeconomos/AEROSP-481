@@ -1,4 +1,4 @@
-function [block_time] = block_time_calc()
+function [block_time] = block_time_calc(DCA_mission, PDI_mission, ESCORT_mission)
 % Description: This function calculates the total sum of hours spent to fly
 % each mission - AKA the block time.
 %
