@@ -107,5 +107,6 @@ DCA_mission.reserve.t_amb = 288.15; % [k]
 DCA_mission.reserve.rho = 1.225; % [kg/m^3]
 DCA_mission.reserve.tsfc = 0.71 / 7938; % [kg/kg*s] First number from left to right is TSFC in lbm/hr*lbf, next rumber is conversion factor to 1/s
 DCA_mission.reserve.flight_velocity = velocity_from_flight_cond(DCA_mission.reserve.mach,DCA_mission.reserve.t_amb,DCA_mission.reserve.rho,r_air); % [m/s]
+DCA_mission.reserve.time ;
 
 end
