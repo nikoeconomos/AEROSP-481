@@ -6,9 +6,7 @@ function [weight_params] = generate_weight_params()
 % 
 % INPUTS:
 % --------------------------------------------
-%    a - [m,n] size,[double] type,Description
-%    b - [m,n] size,[double] type,Description
-%    c - [m,n] size,[double] type,Description
+%    None
 % 
 % OUTPUTS:
 % --------------------------------------------
