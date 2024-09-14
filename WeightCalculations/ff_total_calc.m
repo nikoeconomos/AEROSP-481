@@ -27,11 +27,11 @@ function [mission_ff] = ff_total_calc(aircraft)
 
 % Lift to drag estimated based on the F-35A, currently omitting the calculation method on the metabook, therefore
 % function argument doesn't matter as lift_to_drag_calc() is currently defined and all argument values can be arbitrary.
-[max_LD, cruise_LD] = LD_calc(); 
+[LD_max, LD_cruise] = LD_calc(); 
 
 % Expecting decrease in aerodynamic efficiency during dash due to 
 % supersonic flight conditions, arbitrarily picked a loss of 7%
-dash_LD = 0.93 * cruise_LD; 
+LD_dash = 0.93 * LD_cruise; 
 
 % Assuming aircraft is optimized for combat and has maximum lift_to_drag
 % ratio during this mission segment
@@ -41,68 +41,51 @@ dash_LD = 0.93 * cruise_LD;
 
 mission = aircraft.mission;
 mission.ff = NaN(size(mission.segments));
+
+% this for loop goes through every defined mission segment and calculates
+% the FF based on the defined type.
 for i = 1:length(aircraft.mission.segments)
 
     if mission.segments(i) == "takeoff"
-        mission.ff(i) = 0.970; % [unitless]
+        mission.ff(i) = 0.970; % [unitless] pulled from meta guide
 
     elseif mission.segments(i) == "climb"
-        mission.ff(i) = 0.985;
+        mission.ff(i) = 0.985; % [unitless], pulled from meta guide
 
     elseif mission.segments(i) == "cruise"
-        mission.ff(i) = ff_cruise_calc(DCA_mission.cruise_out.range,DCA_mission.cruise_out.tsfc, ...
-    DCA_mission.cruise_out.flight_velocity,cruise_lift_to_drag);
+        range = mission.range(i);
+        TSFC = mission.TSFC(i);
+        velocity = mission.velocity(i);
+        mission.ff(i) = ff_cruise_calc(range, TSFC, velocity, LD_cruise);
 
-    elseif mission.segments(i) == "loiter"
+    elseif mission.segments(i) == "dash" % differs only in LD from cruise
+        range = mission.range(i);
+        TSFC = mission.TSFC(i);
+        velocity = mission.velocity(i);
+        mission.ff(i) = ff_cruise_calc(range, TSFC, velocity, LD_dash);
 
-    elseif mission.segments(i) == "dash"
+    elseif mission.segments(i) == "combat" % differs only in LD from cruise
+        range = mission.range(i);
+        TSFC = mission.TSFC(i);
+        velocity = mission.velocity(i);
+        mission.ff(i) = ff_cruise_calc(range, TSFC, velocity, LD_max);
 
-    elseif mission.segments(i) == "combat"
+    elseif mission.segments(i) == "loiter" || mission.segments(i) == "reserve" % currently no difference between them
+        endurance = mission.endurance(i);
+        TSFC = mission.TSFC(i);
+        ff_loiter_calc(endurance,TSFC,LD_cruise)
 
-    elseif mission.segments(i) == "optimize" % UNSURE IF NEEDED. From the "return to optimal alt/speed" line in RFP.
+    elseif mission.segments(i) == "optimize" % TODO: UNSURE IF NEEDED. From the "return to optimal alt/speed" line in RFP.
          mission.ff(i) = 1; % set to 1 so it has no effect on total
 
     elseif mission.segments(i) == "descent"
-        mission.ff(i) = 0.990; % [unitless]
-    
-    elseif mission.segments(i) == "reserve"
+        mission.ff(i) = 0.990; % [unitless] pulled from meta guide
 
     else
         error("Unaccepted mission segment variable name.")
     end
 
-
-
 end
-
-
-
-cruise_out_ff = 
- 
-
-loiter_ff = loiter_fuel_fraction_calc(DCA_mission.loiter.endurance,DCA_mission.loiter.tsfc,cruise_lift_to_drag);
-
-
-dash_ff = cruise_fuel_fraction_calc(DCA_mission.dash.range,DCA_mission.dash.tsfc,DCA_mission.dash.flight_velocity, ...
-    dash_lift_to_drag);
-
-
-combat1_ff = cruise_fuel_fraction_calc(DCA_mission.combat1.range,DCA_mission.combat1.tsfc, ...
-    DCA_mission.combat1.flight_velocity,max_lift_to_drag);
-
-
-combat2_ff = cruise_fuel_fraction_calc(DCA_mission.combat2.range,DCA_mission.combat2.tsfc, ...
-    DCA_mission.combat2.flight_velocity,max_lift_to_drag);
-
-
-
-cruise_in_ff = cruise_fuel_fraction_calc(DCA_mission.cruise_in.range,DCA_mission.cruise_in.tsfc, ...
-    DCA_mission.cruise_in.flight_velocity,cruise_lift_to_drag);
-
-    % Descent segment
-    
-
-reserve_ff = loiter_fuel_fraction_calc(DCA_mission.reserve.endurance,DCA_mission.reserve.tsfc,cruise_lift_to_drag);
 
 %% TOTAL FF CALCULATION %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -116,7 +99,8 @@ for i = 2:size(mission.ff) %start at the second index
 end
 
 % Second climb is accounted for in this equation with the same standard
-% fuel fraction from Table 2.2 of the metabook TODO Juan what does this mean?
+% fuel fraction from Table 2.2 of the metabook TODO: Juan what does this
+% mean? Can we take out optimize?
 
 % Using equation 2.33 from metabook to account for trapped and reserve fuel
 mission_ff = 1.06*(1-total_ff);
