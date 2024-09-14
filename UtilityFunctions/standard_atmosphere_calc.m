@@ -1,4 +1,4 @@
-function [T, P, Rho] = StdAtm(Alt)
+function [T, P, Rho, a] = standard_atmosphere_calc(Alt)
 %
 % [T, P, Rho] = StdAtm(Alt)
 % atmosphere model written by Max Arnson
@@ -184,6 +184,7 @@ end
 
 % compute the density
 Rho = P ./ (R .* T);
+a = sqrt(R, T, Rho); % speed of sound
 
 % ----------------------------------------------------------
 

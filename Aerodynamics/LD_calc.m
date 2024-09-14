@@ -1,4 +1,4 @@
-function [max_lift_to_drag, cruise_lift_to_drag] = lift_to_drag_calc()
+function [max_lift_to_drag, cruise_lift_to_drag] = LD_calc()
 % Description: This function returns the maximum and cruise Lift to Drag ratio (L/D)
 % of our aircraft by using drag polar values and aircraft geometry. This
 % function will be used to refine the L/D parameter as the design matures.
@@ -24,7 +24,7 @@ function [max_lift_to_drag, cruise_lift_to_drag] = lift_to_drag_calc()
 %   necessary parameters are available, replace the max_lift_to_drag
 %   lines.
 %
-    max_lift_to_drag = 12; %ESTIMATION, from hand calculation & graph
+    max_lift_to_drag = 12; % TODO: UPDATE, ESTIMATION, from hand calculation & graph
     % max_lift_to_drag = 0.5*sqrt(pi*e*a_r/c_d_0);
     cruise_lift_to_drag = 0.943*max_lift_to_drag;
 end

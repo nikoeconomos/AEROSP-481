@@ -1,4 +1,4 @@
-function [segment_fuel_fraction] = loiter_fuel_fraction_calc(segment_endurance,SFC,LD)
+function [segment_fuel_fraction] = ff_loiter_calc(endurance,TSFC,LD)
 % Description: This function calculates the fuel fraction for a given
 % loiter time when steady flight can be assumed. It uses equation 2.8 from the 
 % metabook meant to calculate loiter fuel fraction
@@ -24,6 +24,6 @@ function [segment_fuel_fraction] = loiter_fuel_fraction_calc(segment_endurance,S
 % Version history revision notes:
 %                                  v1: 9/10/2024
 
-    segment_fuel_fraction = exp(-segment_endurance*SFC/LD);
+segment_fuel_fraction = exp(-endurance*TSFC/LD);
 
 end

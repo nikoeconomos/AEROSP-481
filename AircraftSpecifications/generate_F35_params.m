@@ -85,7 +85,7 @@ function [aircraft] = generate_F35_params()
     aircraft.propulsion.T_max = 191273.53; %[N]
 
      % military thrust
-    aircraft.performance.T_military = 124550.2; %[N]
+    aircraft.propulsion.T_military = 124550.2; %[N]
 
 
     %% GEOMETRY %%
