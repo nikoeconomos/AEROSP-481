@@ -21,16 +21,20 @@ function [aircraft] = generate_prop_params(aircraft)
 %                                  to match format of parameter generation
 %                                  codes.
 
-%% PARAMETERS %%
+%% COSTS %%
 %%%%%%%%%%%
 
-aircraft.propulsion.fuel_density = 839.98; % kg/m3
-aircraft.propulsion.oil_density = 1003.55; % kg/m3
-aircraft.propulsion.maintenance_labor_rate = 24.81; % $ as of June 2024
-aircraft.propulsion.weight_oil = 0.0125*aircraft.weight.ff*aircraft.weight.togw*block_time_calc(aircraft)/100;
+aircraft.propulsion.fuel_price = 2.14; % $/gal as of September 13, 2024
+aircraft.propulsion.oil_price = 113.92; % $/gal as of September 13, 2024
+aircraft.propulsion.fuel_density = 7.01; % lb/gal
+aircraft.propulsion.oil_density = 8.375; % lb/gal
+aircraft.propulsion.max_thrust = aircraft.propulsion.T_max; % lbf
+aircraft.propulsion.maintenace_labor_rate = 24.81; % $ as of June 2024
+propulsion.engine_cost = aircraft.propulsion.engine_cost; % $, 2024
+
 %% UPDATE AIRCRAFT %%
 %%%%%%%%%%%%%%%%%%%%%
 
-%aircraft.propulsion = propulsion;
+aircraft.propulsion = propulsion;
 
 end

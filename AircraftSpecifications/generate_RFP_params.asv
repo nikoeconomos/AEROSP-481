@@ -16,9 +16,8 @@ function [aircraft] = generate_RFP_params()
 % Author:                          Niko
 % Version history revision notes:
 %                                  v1: 9/10/2024
-%                                  v1.1: 9/15/2024 - Added tentative
-%                                  parameters based on the F100-PW-229.
-%                                  (Joon)
+%                                  v2: 9/15/2024: Added tentative max thrust
+%                                  parameter based on the F100-PW-229.
 
 %% %% %% %% WEIGHTS %% %% %% %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -79,16 +78,10 @@ aircraft.performance.g_force_lower_limit = -3; % [g's]
 
 %% %% %% %% PROPULSION %% %% %% %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% number of engines
-aircraft.propulsion.engine_count = 2;
-
-% engine cost
-aircraft.propulsion.engine_cost = aircraft.propulsion.engine_count*5000000; %[$] TOTAL COST FOR BOTH ENGINES
-
+% eng
 % max thrust
-aircraft.propulsion.T_max = aircraft.propulsion.engine_count*129710.14; %[N] TOTAL THRUST FROM BOTH ENGINES
+aircraft.propulsion.T_max = 2*129710.14; %[N], two engines
 
 % military thrust
-aircraft.propulsion.T_military = aircraft.propulsion.engine_count*79178.344; %[N] TOTAL THRUST FROM BOTH ENGINES
+aircraft.propulsion.T_military = 2*79178.344; %[N], two engines
 end

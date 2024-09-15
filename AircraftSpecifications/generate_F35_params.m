@@ -17,6 +17,8 @@ function [aircraft] = generate_F35_params()
 % Author:                          Niko
 % Version history revision notes:
 %                                  v1: 9/13/2024
+%                                  v1.1: 9/15/2024 - Added parameters based
+%                                  on the F135 engine. (Joon)
 
 
 
@@ -84,11 +86,17 @@ aircraft.aerodynamics.CL_max_landing = 0.81; %[Unitless]
 %% PROPULSION %%
 %%------------%%
 
+% number of engines
+aircraft.propulsion.engine_count = 1;
+
+% engine cost
+aircraft.propulsion.engine_cost = aircraft.propulsion.engine_count*15000000; %[$]
+
 % max thrust
-aircraft.propulsion.T_max = 191273.53; %[N]
+aircraft.propulsion.T_max = aircraft.propulsion.engine_count*191273.53; %[N]
 
 % military thrust
-aircraft.propulsion.T_military = 124550.2; %[N]
+aircraft.propulsion.T_military = aircraft.propulsion.engine_count*124550.2; %[N]
 
 
 %% GEOMETRY %%

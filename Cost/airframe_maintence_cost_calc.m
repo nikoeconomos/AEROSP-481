@@ -13,7 +13,7 @@ function maintenance_costs = airframe_maintence_cost_calc(base_year, then_year, 
     % Author:                          Victoria
     % Version history revision notes:
     %                                  v1: 9/14/2024
-
+    addpath('../Weights/','../UtilityFunctions/','../','../MissionProfiles/')
     % Cost escalation factors
     base_cef = 5.17053 + 0.104981 * (base_year - 2006);
     then_cef = 5.17053 + 0.104981 * (then_year - 2006);
