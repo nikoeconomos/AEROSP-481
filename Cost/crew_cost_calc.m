@@ -3,9 +3,7 @@ function crew_costs = crew_cost_calc(aircraft)
 % flight crew wages and other expenses for multiple missions.
 %
 % INPUTS: 
-%    base_year    - The reference base year for cost escalation
-%    then_year    - The year for which cost is being estimated
-%    airline_factor - Factor to adjust for airline-specific expenses
+%    aircraft struct
 %
 % OUTPUTS:
 %    crew_costs - Estimated crew costs for each mission
@@ -20,10 +18,10 @@ function crew_costs = crew_cost_calc(aircraft)
     cef = base_cef / then_cef; % Cost escalation factor
 
     % Route factor
-    route_factor = 2; % Route factor -- estimated
+    route_factor = 1; % Route factor -- estimated
 
     mission_block_time = block_time_calc(aircraft);
-    airline_factor = 1;
+    airline_factor = 1; % Estimated
 
     % Initialize result
     crew_costs = airline_factor * (route_factor * (aircraft.weight.togw)^0.4 * mission_block_time) * cef;

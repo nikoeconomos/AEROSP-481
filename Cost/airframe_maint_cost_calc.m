@@ -3,9 +3,7 @@ function maintenance_costs = airframe_maint_cost_calc(aircraft)
     % incurred for multiple missions based on block times and aircraft weight.
     %
     % INPUTS: 
-    %    base_year    - The reference base year for cost escalation
-    %    then_year    - The year for which cost is being estimated
-    %    airline_factor - Factor to adjust for airline-specific expenses
+    %    aircraft struct
     %
     % OUTPUTS:
     %    maintenance_costs - Estimated airframe maintenance costs for each mission
@@ -20,7 +18,7 @@ function maintenance_costs = airframe_maint_cost_calc(aircraft)
     cef = base_cef / then_cef; % Cost escalation factor
 
     % Route factor and MTOW (constant for all missions)
-    route_factor = 2; % Route factor - Estimated
+    route_factor = 1; % Route factor - Estimated
     airline_factor = 1; % Estimated
 
     maintenance_factor = 0.15; % Estimated
