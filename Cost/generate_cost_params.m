@@ -19,8 +19,8 @@ function [aircraft] = generate_cost_params(aircraft)
 % Version history revision notes:
 %                                  v1: 9/14/2024
 
-%% Lift to Drag %%
-%%%%%%%%%%%%%%%%%%
+%% Individual Components %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 aircraft.cost.missile = 100;%[$]
 
