@@ -36,7 +36,7 @@ aircraft.crew.crew_cost = crew_cost_calc(aircraft);
 
 
 % AIRFRAME %
-aircraft.airframe.maint_cost = airframe_maintenance_cost_calc(aircraft);
+aircraft.airframe.maint_cost = airframe_maint_cost_calc(aircraft);
 
 
 

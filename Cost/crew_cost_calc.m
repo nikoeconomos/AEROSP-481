@@ -19,13 +19,13 @@ function crew_costs = crew_cost_calc(aircraft)
     then_cef = 5.17053 + 0.104981 * (2024 - 2006);
     cef = base_cef / then_cef; % Cost escalation factor
 
-    % Route factor and MTOW
+    % Route factor
     route_factor = 2; % Route factor -- estimated
 
     mission_block_time = block_time_calc(aircraft);
     airline_factor = 1;
 
     % Initialize result
-    crew_costs = airline_factor * (route_factor * (mtow)^0.4 * mission_block_time) * cef;
+    crew_costs = airline_factor * (route_factor * (aircraft.weight.togw)^0.4 * mission_block_time) * cef;
 
 end

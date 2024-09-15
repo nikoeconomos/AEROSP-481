@@ -1,4 +1,4 @@
-function maintenance_costs = airframe_maintence_cost_calc(aircraft)
+function maintenance_costs = airframe_maint_cost_calc(aircraft)
     % Description: This function calculates the airframe maintenance costs 
     % incurred for multiple missions based on block times and aircraft weight.
     %
@@ -20,10 +20,10 @@ function maintenance_costs = airframe_maintence_cost_calc(aircraft)
     cef = base_cef / then_cef; % Cost escalation factor
 
     % Route factor and MTOW (constant for all missions)
-    route_factor = 2; % Route factor (can adjust if needed)
+    route_factor = 2; % Route factor - Estimated
+    airline_factor = 1; % Estimated
 
-    % Maintenance cost multiplier (hypothetical constant factor)
-    maintenance_factor = 0.15; % Adjust to reflect typical maintenance cost influence
+    maintenance_factor = 0.15; % Estimated
     mission_block_time = block_time_calc(aircraft);
 
     maintenance_costs = maintenance_factor * airline_factor * (route_factor * (aircraft.weight.togw)^0.6 * mission_block_time) * cef;
