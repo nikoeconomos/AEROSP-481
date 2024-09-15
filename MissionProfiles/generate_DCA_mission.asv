@@ -93,7 +93,7 @@ mission.time = [360, 60, time_cruise_out,...
                 time_combat2, NaN, time_cruise_in,...
                 240, mission.endurance(1,11)]; %[s]
 
-mission.time_total = sum(mission.time(~isnan(mission.time)));
+mission.time_total = sum(mission.time(~isnan(mission.time))_;
 
 %% TSFC %%
 %%%%%%%%%%

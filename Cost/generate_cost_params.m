@@ -22,9 +22,9 @@ function [aircraft] = generate_cost_params(aircraft)
 %% Individual Components %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-aircraft.cost.missile = 100;%[$]
+aircraft.cost.missile = 100; %[$]
 
-aircraft.cost.total = total_cost_calc(aircraft);
+%aircraft.cost.total = total_cost_calc(aircraft); EXAMPLE ONLY
 
 
 

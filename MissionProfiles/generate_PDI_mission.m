@@ -83,7 +83,10 @@ time_cruise_in = time_from_range_flight_cond(mission.range(1,7), mission.mach(1,
 
 mission.time = [360, 60, time_dash, ...
                 time_combat1, time_combat2, NaN ...
-                time_cruise_in, 240, 1800]; %[s]
+                time_cruise_in, 240, mission.endurance(1,9)]; %[s]
+
+mission.time_total = sum(mission.time(~isnan(mission.time)));
+
 
 %% TSFC %%
 %%%%%%%%%%
