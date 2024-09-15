@@ -20,84 +20,84 @@ function [aircraft] = generate_F35_params()
 
 
 
-    %% WEIGHTS %%
-    %%---------%%
+%% WEIGHTS %%
+%%---------%%
 
-    % Average weight of crew member and carry on luggage given by the metabook. No checked baggage included in this.
-    aircraft.weight.crew_member = 82; % [kg]
+% Average weight of crew member and carry on luggage given by the metabook. No checked baggage included in this.
+aircraft.weight.crew_member = 82; % [kg]
 
-    % Number of crew members to include onboard [TODO update if remote piloting]
-    aircraft.weight.num_crew_members = 1; % [number]
+% Number of crew members to include onboard [TODO update if remote piloting]
+aircraft.weight.num_crew_members = 1; % [number]
 
-    % Total weight of crew members. Crew weight * num of crew members aboard
-    aircraft.weight.crew = weight_params.num_crew_members*weight_params.w_crew_member; % [kg]
+% Total weight of crew members. Crew weight * num of crew members aboard
+aircraft.weight.crew = aircraft.weight.num_crew_members*aircraft.weight.w_crew_member; % [kg]
 
-    % Weight of the payload
-    aircraft.weight.payload = 8164.6627; %[kg]
+% Weight of the payload
+aircraft.weight.payload = 8164.6627; %[kg]
 
-    % MTOW
-    aircraft.weight.mtow = 29899.902; %[kg]
+% MTOW
+aircraft.weight.mtow = 29899.902; %[kg]
 
-    % TOGW
-    aircraft.weight.togw = 22470.966; % [kg]
+% TOGW
+aircraft.weight.togw = 22470.966; % [kg]
 
-    % Empty weight
-    aircraft.weight.empty = 13290.256; % [kg]
+% Empty weight
+aircraft.weight.empty = 13290.256; % [kg]
 
-    % Fuel weight
-    aircraft.weight.fuel = 8278.0608; % [kg]
-
-
-    %% PERFORMANCE %%
-    %%-------------%%
-
-    % range
-    aircraft.performance.range = 2778000; %[m]
-
-    % range in combat
-    aircraft.performance.range_combat = 1296000; %[m]
-
-    % max mach number at altitude
-    aircraft.performance.mach_max_alt = 1.6; %[Mach number]
-
-    % max mach number at sea level
-    aircraft.performance.mach_max_SL = 1.06; %[Mach number]
-
-    % g force limit
-    aircraft.performance.g_force_limit = 9; % [g's]
-
-    %% AERODYNAMICS %%
-    %%--------------%%
-
-    % maximum L/D
-    aircraft.aerodynamics.LD_max = 10; %[Unitless]
-
-    % CL max at takeoff
-    aircraft.aerodynamics.CL_max_takeoff = 1.82; %[Unitless]
-
-    % CL max at landing
-    aircraft.aerodynamics.CL_max_landing = 0.81; %[Unitless]
-
-    %% PROPULSION %%
-    %%------------%%
-    
-    % max thrust
-    aircraft.propulsion.T_max = 191273.53; %[N]
-
-     % military thrust
-    aircraft.propulsion.T_military = 124550.2; %[N]
+% Fuel weight
+aircraft.weight.fuel = 8278.0608; % [kg]
 
 
-    %% GEOMETRY %%
-    %%----------%%
+%% PERFORMANCE %%
+%%-------------%%
 
-    % Aspect ratio
-    aircraft.geometry.AR = 2.66; %[Unitless]
+% range
+aircraft.performance.range = 2778000; %[m]
 
-    % wing reference area
-    aircraft.geometry.S_ref = 42.7354; %[m^2]
+% range in combat
+aircraft.performance.range_combat = 1296000; %[m]
 
-    % wingspan
-    aircraft.geometry.b = 10.668; % [m]
+% max mach number at altitude
+aircraft.performance.mach_max_alt = 1.6; %[Mach number]
+
+% max mach number at sea level
+aircraft.performance.mach_max_SL = 1.06; %[Mach number]
+
+% g force limit
+aircraft.performance.g_force_limit = 9; % [g's]
+
+%% AERODYNAMICS %%
+%%--------------%%
+
+% maximum L/D
+aircraft.aerodynamics.LD_max = 10; %[Unitless]
+
+% CL max at takeoff
+aircraft.aerodynamics.CL_max_takeoff = 1.82; %[Unitless]
+
+% CL max at landing
+aircraft.aerodynamics.CL_max_landing = 0.81; %[Unitless]
+
+%% PROPULSION %%
+%%------------%%
+
+% max thrust
+aircraft.propulsion.T_max = 191273.53; %[N]
+
+% military thrust
+aircraft.propulsion.T_military = 124550.2; %[N]
+
+
+%% GEOMETRY %%
+%%----------%%
+
+% Aspect ratio
+aircraft.geometry.AR = 2.66; %[Unitless]
+
+% wing reference area
+aircraft.geometry.S_ref = 42.7354; %[m^2]
+
+% wingspan
+aircraft.geometry.b = 10.668; % [m]
 
 end

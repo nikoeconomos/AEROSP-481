@@ -24,8 +24,10 @@ function [togw_DCA, togw_PDI, togw_ESCORT, ff_DCA, ff_PDI, ff_ESCORT] = togw_cal
     w_crew = weight_params.w_crew;
     w_payload = weight_params.w_payload;
 
-    A = weight_params.a_jet_fighter; % unitless parameters
-    C = weight_params.c_jet_fighter;
+    % Regression constant, assuming jet fighter.
+    % Pulled from Raymer table 3.1, assuming conventional metallic structure will be used
+    A = 2.11; % unitless parameters, metric
+    C = -0.13; % unitless, metric
     
     % run the loop three times, one for each mission. The fuel fraction
     % changes, nothing else does.
