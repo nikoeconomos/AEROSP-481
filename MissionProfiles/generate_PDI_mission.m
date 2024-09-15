@@ -1,4 +1,4 @@
-function [aircraft] = PDI_mission(aircraft)
+function [aircraft] = generate_PDI_mission(aircraft)
 % Description: 
 % Function parameteizes aircraft and environment states for Point Defense Intercept 
 % (PDI) mission and stores them in a struct. Each struct element is made up of an array

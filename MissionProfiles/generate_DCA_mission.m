@@ -1,4 +1,4 @@
-function [aircraft] = DCA_mission(aircraft)
+function [aircraft] = generate_DCA_mission(aircraft)
 % Description: 
 % Function parameteizes aircraft and environment states for Direct
 % Counter-Air Patrol (DCA) mission and stores them in a struct following

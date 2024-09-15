@@ -1,4 +1,4 @@
-function [aircraft] = ESCORT_mission(aircraft)
+function [aircraft] = generate_ESCORT_mission(aircraft)
 % Description: 
 % This function is to calculate the different parameters 
 % (TSFC, range, flight velocity) needed for the ESCORT_mission 
