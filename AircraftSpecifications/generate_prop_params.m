@@ -1,5 +1,5 @@
 % Aerosp 481 Group 3 - Libellula 
-function [prop_params] = generate_prop_params()
+function [aircraft] = generate_prop_params(aircraft)
 % Description: This function generates a struct that holds parameters used in
 % calculating the cost of the propulsion system of the aircraft.
 % 
@@ -21,12 +21,17 @@ function [prop_params] = generate_prop_params()
 %% COSTS %%
 %%%%%%%%%%%
 
-prop_params.fuel_price = 2.14; % $/gal as of September 13, 2024
-prop_params.oil_price = 113.92; % $/gal as of September 13, 2024
-prop_params.fuel_density = 7.01; % lb/gal
-prop_params.oil_density = 8.375; % lb/gal
-prop_params.max_thrust = 29160; % lbf
-prop_params.maintenace_labor_rate = 24.81; % $ as of June 2024
-prop_params.engine_cost = 8200000; % $, 2024
+propulsion.fuel_price = 2.14; % $/gal as of September 13, 2024
+propulsion.oil_price = 113.92; % $/gal as of September 13, 2024
+propulsion.fuel_density = 7.01; % lb/gal
+propulsion.oil_density = 8.375; % lb/gal
+propulsion.max_thrust = 29160; % lbf
+propulsion.maintenace_labor_rate = 24.81; % $ as of June 2024
+propulsion.engine_cost = 8200000; % $, 2024
+
+%% UPDATE AIRCRAFT %%
+%%%%%%%%%%%%%%%%%%%%%
+
+aircraft.propulsion = propulsion;
 
 end
