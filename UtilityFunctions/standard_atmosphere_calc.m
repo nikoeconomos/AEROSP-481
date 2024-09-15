@@ -23,6 +23,9 @@ function [T, P, Rho, a] = standard_atmosphere_calc(Alt)
 %     Rho - air density.
 %           size/type/units: n-by-1 or 1-by-n / double / [kg / m^3]
 %
+%     a - speed of sound
+%          size/type/units: n-by-1 or 1-by-n / double / [m/s]
+%
 
 % ----------------------------------------------------------
 
@@ -184,7 +187,8 @@ end
 
 % compute the density
 Rho = P ./ (R .* T);
-a = sqrt(R, T, Rho); % speed of sound
+g = 1.4; % gamma for air
+a = sqrt(g*R*T); % speed of sound TODO double check
 
 % ----------------------------------------------------------
 

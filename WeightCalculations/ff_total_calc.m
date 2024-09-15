@@ -73,7 +73,7 @@ for i = 1:length(aircraft.mission.segments)
     elseif mission.segments(i) == "loiter" || mission.segments(i) == "reserve" % currently no difference between them
         endurance = mission.endurance(i);
         TSFC = mission.TSFC(i);
-        ff_loiter_calc(endurance,TSFC,LD_cruise)
+        ff_loiter_calc(endurance,TSFC,LD_cruise);
 
     elseif mission.segments(i) == "optimize" % TODO: UNSURE IF NEEDED. From the "return to optimal alt/speed" line in RFP.
          mission.ff(i) = 1; % set to 1 so it has no effect on total
@@ -103,7 +103,7 @@ end
 % mean? Can we take out optimize?
 
 % Using equation 2.33 from metabook to account for trapped and reserve fuel
-ff_total_adjusted = 1.06*(1-total_ff);
+ff_total_adjusted = 1.06*(1-ff_total);
 
 end
 

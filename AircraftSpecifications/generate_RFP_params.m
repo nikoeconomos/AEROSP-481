@@ -30,7 +30,7 @@ aircraft.weight.crew_member = 82; % [kg]
 aircraft.weight.num_crew_members = 0; % [number]
 
 % Total weight of crew members. Crew weight * num of crew members aboard
-aircraft.weight.crew = aircraft.weight.num_crew_members*aircraft.weight.w_crew_member; % [kg]
+aircraft.weight.crew = aircraft.weight.num_crew_members*aircraft.weight.crew_member; % [kg]
 
 % PAYLOAD WEIGHTS %
 %%%%%%%%%%%%%%%%%%%

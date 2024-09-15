@@ -26,5 +26,5 @@ function [LD_max, LD_cruise] = LD_calc()
 %
     LD_max = 12; % TODO: UPDATE, ESTIMATION, from hand calculation & graph
     % max_lift_to_drag = 0.5*sqrt(pi*e*a_r/c_d_0);
-    LD_cruise = 0.943*max_lift_to_drag;
+    LD_cruise = 0.943*LD_max;
 end

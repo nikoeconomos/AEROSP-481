@@ -18,10 +18,7 @@ function [velocity] = velocity_from_flight_cond(mach,alt)
 % Version history revision notes:
 %                                  v1: 9/10/2024
 
-R = 287;
-
 [T, P, rho, a] = standard_atmosphere_calc(alt);
-
 velocity = a*mach; % Solve for velocity from relationship with mach number and speed of sound
 
 end

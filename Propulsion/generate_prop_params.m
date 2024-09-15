@@ -1,7 +1,6 @@
 % Aerosp 481 Group 3 - Libellula 
 function [aircraft] = generate_prop_params(aircraft)
-% Description: This function generates a struct that holds parameters used in
-% calculating the cost of the propulsion system of the aircraft.
+% Description: This function generates a struct that holds parameters related to the propulsion system of the aircraft.
 % 
 % 
 % INPUTS:
