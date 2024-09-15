@@ -27,8 +27,8 @@ aircraft.propulsion.fuel_price = 2.14/0.00378541; % $/m3 as of September 13, 202
 aircraft.propulsion.oil_price = 113.92/0.00378541; % $/m3 as of September 13, 2024
 aircraft.propulsion.fuel_cost = 1.02*aircraft.weight.ff*aircraft.weight.togw*aircraft.propulsion.fuel_price/aircraft.propulsion.fuel_density;
 aircraft.propulsion.oil_cost = 1.02*aircraft.propulsion.weight_oil*aircraft.propulsion.oil_price/aircraft.propulsion.oil_density;
+aircraft.propulsion.engine_maintenance_cost = engine_maint_cost_calc(aircraft);
 aircraft.propulsion.total_cost = prop_cost_calc(aircraft);
-%aircraft.cost.total = total_cost_calc(aircraft); EXAMPLE ONLY
 
 
 % CREW %
