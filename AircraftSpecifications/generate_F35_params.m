@@ -30,7 +30,7 @@ aircraft.weight.crew_member = 82; % [kg]
 aircraft.weight.num_crew_members = 1; % [number]
 
 % Total weight of crew members. Crew weight * num of crew members aboard
-aircraft.weight.crew = aircraft.weight.num_crew_members*aircraft.weight.w_crew_member; % [kg]
+aircraft.weight.crew = aircraft.weight.num_crew_members*aircraft.weight.crew_member; % [kg]
 
 % Weight of the payload
 aircraft.weight.payload = 8164.6627; %[kg]
@@ -40,6 +40,9 @@ aircraft.weight.mtow = 29899.902; %[kg]
 
 % TOGW
 aircraft.weight.togw = 22470.966; % [kg]
+
+% Guess for our estimation purposes
+aircraft.weight.guess = 22470.966; % [kg]
 
 % Empty weight
 aircraft.weight.empty = 13290.256; % [kg]
