@@ -1,4 +1,4 @@
-function [mission_ff] = ff_total_calc(aircraft)
+function [ff_total_adjusted] = ff_total_calc(aircraft)
 % Description: This function calculates the total fuel fraction for the
 % any mission profile. It does this by using values
 % from a table of typical fuel fractions (table 2.2 in the metabook) for
@@ -103,13 +103,7 @@ end
 % mean? Can we take out optimize?
 
 % Using equation 2.33 from metabook to account for trapped and reserve fuel
-mission_ff = 1.06*(1-total_ff);
-
-%% SAVE RESULT %%
-%%%%%%%%%%%%%%%%%
-
-aircraft.mission = mission;
-
+ff_total_adjusted = 1.06*(1-total_ff);
 
 end
 

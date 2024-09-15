@@ -1,5 +1,5 @@
 % Aerosp 481 Group 3 - Libellula 
-function total_prop_cost = prop_cost_calc(prop_params, togw, mission_ff,block_time,cef)
+function total_prop_cost = prop_cost_calc(prop_params, togw, mission_ff, block_time,cef)
 % Description: This function generates a struct that holds parameters used in
 % calculating the cost of the propulsion system of the aircraft.
 % 

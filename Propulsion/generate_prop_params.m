@@ -6,11 +6,12 @@ function [aircraft] = generate_prop_params(aircraft)
 % 
 % INPUTS:
 % --------------------------------------------
-%    None
+%    aircraft - aircraft param with struct
 % 
 % OUTPUTS:
 % --------------------------------------------
-%    weight_params - X element struct, contains:
+%    aircraft - aircraft param with struct, updated with propulsion
+%    parameters
 %                       
 % 
 % See also: None
