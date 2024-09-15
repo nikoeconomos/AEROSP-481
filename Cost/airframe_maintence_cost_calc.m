@@ -1,4 +1,4 @@
-function maintenance_costs = airframe_maintence_cost_calc(base_year, then_year, airline_factor)
+function maintenance_costs = airframe_maintence_cost_calc(aircraft)
     % Description: This function calculates the airframe maintenance costs 
     % incurred for multiple missions based on block times and aircraft weight.
     %
@@ -13,39 +13,19 @@ function maintenance_costs = airframe_maintence_cost_calc(base_year, then_year, 
     % Author:                          Victoria
     % Version history revision notes:
     %                                  v1: 9/14/2024
-    addpath('../Weights/','../UtilityFunctions/','../','../MissionProfiles/')
+    
     % Cost escalation factors
-    base_cef = 5.17053 + 0.104981 * (base_year - 2006);
-    then_cef = 5.17053 + 0.104981 * (then_year - 2006);
+    base_cef = 5.17053 + 0.104981 * (1993 - 2006);
+    then_cef = 5.17053 + 0.104981 * (2024 - 2006);
     cef = base_cef / then_cef; % Cost escalation factor
 
     % Route factor and MTOW (constant for all missions)
-    route_factor = 1; % Route factor (can adjust if needed)
-    mtow = max(togw_calculation(generate_weight_params(), generate_constants())); % Max takeoff weight
+    route_factor = 2; % Route factor (can adjust if needed)
 
     % Maintenance cost multiplier (hypothetical constant factor)
     maintenance_factor = 0.15; % Adjust to reflect typical maintenance cost influence
+    mission_block_time = block_time_calc(aircraft);
 
-    % Mission block times for different mission profiles
-    mission_block_times = block_time_calc(...
-        generate_DCA_mission(), ...
-        generate_PDI_mission(), ...
-        generate_ESCORT_mission() ...
-    );
+    maintenance_costs = maintenance_factor * airline_factor * (route_factor * (aircraft.weight.mtow)^0.6 * mission_block_time) * cef;
 
-    % Initialize result
-    maintenance_costs = zeros(length(mission_block_times), 1);
-
-    % Calculate airframe maintenance cost for each mission
-    for i = 1:length(mission_block_times)
-        mission_block_time = mission_block_times(i);
-        % Airframe maintenance cost formula
-        maintenance_costs(i) = maintenance_factor * airline_factor * ...
-                               (route_factor * (mtow)^0.6 * mission_block_time) * cef;
-    end
-
-    % Display the estimated maintenance cost for each mission
-    for i = 1:length(maintenance_costs)
-        fprintf('Estimated airframe maintenance cost for Mission %d: $%.2f\n', i, maintenance_costs(i));
-    end
 end

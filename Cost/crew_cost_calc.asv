@@ -1,4 +1,4 @@
-function crew_costs = crew_cost_calc(base_year, then_year, airline_factor)
+function crew_costs = crew_cost_calc(aircraft, base_year, then_year, airline_factor)
 % Description: This function calculates the crew cost incurred through
 % flight crew wages and other expenses for multiple missions.
 %
@@ -20,24 +20,12 @@ function crew_costs = crew_cost_calc(base_year, then_year, airline_factor)
     cef = base_cef / then_cef; % Cost escalation factor
 
     % Route factor and MTOW
-    route_factor = 1; % Route factor -- estimated
-    mtow = max(togw_calc(generate_weight_params(), generate_constants())); % Max takeoff weight
+    route_factor = 2; % Route factor -- estimated
 
-    % Mission block times for different mission profiles
-    mission_block_times = block_time_calc(...
-        generate_DCA_mission(), ...
-        generate_PDI_mission(), ...
-        generate_ESCORT_mission() ...
-    );
+    block_time = block_time_calc(aircraft)
 
     % Initialize result
-    crew_costs = zeros(length(mission_block_times), 1);
-
-    % Calculate crew cost for each mission
-    for i = 1:length(mission_block_times)
-        mission_block_time = mission_block_times(i);
-        crew_costs(i) = airline_factor * (route_factor * (mtow)^0.4 * mission_block_time) * cef;
-    end
+    aircraft.crew.crew_costs = airline_factor * (route_factor * (mtow)^0.4 * mission_block_time) * cef;
 
     % Display the estimated crew cost for each mission
     for i = 1:length(crew_costs)
