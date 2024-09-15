@@ -38,11 +38,11 @@ aircraft.weight.payload = 8164.6627; %[kg]
 % MTOW
 aircraft.weight.mtow = 29899.902; %[kg]
 
+% Guess for our estimation purposes, same as actual
+aircraft.weight.guess = 22470.966; % [kg]
+
 % TOGW
 aircraft.weight.togw = 22470.966; % [kg]
-
-% Guess for our estimation purposes
-aircraft.weight.guess = 22470.966; % [kg]
 
 % Empty weight
 aircraft.weight.empty = 13290.256; % [kg]

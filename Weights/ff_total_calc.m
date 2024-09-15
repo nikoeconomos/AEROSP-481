@@ -64,7 +64,13 @@ for i = 1:length(aircraft.mission.segments)
         velocity = mission.velocity(i);
         mission.ff(i) = ff_cruise_calc(range, TSFC, velocity, LD_dash);
 
-    elseif mission.segments(i) == "combat" % differs only in LD from cruise
+    elseif mission.segments(i) == "combat" % differs only in LD from cruise, assumed to use max as it's optimized for combat
+        range = mission.range(i);
+        TSFC = mission.TSFC(i);
+        velocity = mission.velocity(i);
+        mission.ff(i) = ff_cruise_calc(range, TSFC, velocity, LD_max);
+
+    elseif mission.segments(i) == "escort" % differs only in LD from cruise, assumed to use max but subject to change
         range = mission.range(i);
         TSFC = mission.TSFC(i);
         velocity = mission.velocity(i);
