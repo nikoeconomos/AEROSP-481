@@ -22,7 +22,38 @@ function [aircraft] = generate_cost_params(aircraft)
 %% Lift to Drag %%
 %%%%%%%%%%%%%%%%%%
 
-aircraft.cost.placeholder = 0;%%%%PLACEHolder
+aircraft.cost.missile = 100;%[$]
+
+aircraft.cost.total = total_cost_calc(aircraft);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 end
