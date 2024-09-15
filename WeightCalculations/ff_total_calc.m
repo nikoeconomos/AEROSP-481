@@ -73,10 +73,10 @@ for i = 1:length(aircraft.mission.segments)
     elseif mission.segments(i) == "loiter" || mission.segments(i) == "reserve" % currently no difference between them
         endurance = mission.endurance(i);
         TSFC = mission.TSFC(i);
-        ff_loiter_calc(endurance,TSFC,LD_cruise);
+        mission.ff(i) = ff_loiter_calc(endurance,TSFC,LD_cruise);
 
     elseif mission.segments(i) == "optimize" % TODO: UNSURE IF NEEDED. From the "return to optimal alt/speed" line in RFP.
-         mission.ff(i) = 1; % set to 1 so it has no effect on total
+        mission.ff(i) = 1; % set to 1 so it has no effect on total
 
     elseif mission.segments(i) == "descent"
         mission.ff(i) = 0.990; % [unitless] pulled from meta guide
@@ -94,7 +94,7 @@ end
 % from fuel consumption during mission segments
 
 ff_total = mission.ff(1);
-for i = 2:size(mission.ff) %start at the second index
+for i = 2:length(mission.ff) %start at the second index
     ff_total = ff_total*mission.ff(i);
 end
 
