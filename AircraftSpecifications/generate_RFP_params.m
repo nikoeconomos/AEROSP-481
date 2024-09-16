@@ -91,4 +91,11 @@ aircraft.propulsion.T_max = aircraft.propulsion.engine_count*129710.14; %[N] TOT
 
 % military thrust
 aircraft.propulsion.T_military = aircraft.propulsion.engine_count*79178.344; %[N] TOTAL THRUST FROM BOTH ENGINES
+
+%% %% %% %% UTILITY %% %% %% %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% miscelaneous constants for fluids/ performance calculations
+aircraft.constants = generate_constants();
+
 end

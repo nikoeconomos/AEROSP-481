@@ -1,4 +1,4 @@
-function [flight_velocity] = velocity_from_flight_cond(mach,t_amb,rho,r_air)
+function flight_velocity = velocity_from_flight_cond(mach,t_amb,rho,r_air)
 % Description: This function calculates the aircraft's velocity from its
 % mach number and the atmospheric temperature and density at its current
 % flight altitude

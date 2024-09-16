@@ -111,4 +111,10 @@ aircraft.geometry.S_ref = 42.7354; %[m^2]
 % wingspan
 aircraft.geometry.b = 10.668; % [m]
 
+%% %% %% %% UTILITY %% %% %% %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% miscelaneous constants for fluids/ performance calculations
+aircraft.constants = generate_constants();
+
 end
