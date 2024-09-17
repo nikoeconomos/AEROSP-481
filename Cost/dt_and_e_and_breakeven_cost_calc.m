@@ -15,7 +15,7 @@ function [program_dt_and_e_cost, breakeven_upcharge] = dt_and_e_and_breakeven_co
 %     program_dt_and_e_cost - Double. Program DT&E phase cost estimate                
 %     breakeven_upcharge - Double. Break even customer upcharge
 %
-% See also: block_time_calc.m, ff_total_calc.m
+% See also: generate_cost_params.m
 % Author:                          Juan
 % Version history revision notes:
 %                                  v1: 9/16/2024
