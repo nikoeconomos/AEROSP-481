@@ -34,6 +34,10 @@ aircraft.propulsion.total_cost = prop_cost_calc(aircraft);
 % CREW %
 aircraft.crew.crew_cost = crew_cost_calc(aircraft);
 
+% Labor %
+aircraft.labor.skunk_works_hourly_2024 = 63; % USD/hour
+aircraft.labor.tooling_hourly_2024 = 61; % USD/hour
+aircraft.labor.manufacturing_hourly_2024 = 27; % USD/hour
 
 % AIRFRAME %
 aircraft.airframe.maint_cost = airframe_maint_cost_calc(aircraft);

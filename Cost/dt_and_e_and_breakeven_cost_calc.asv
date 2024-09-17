@@ -77,8 +77,8 @@ manuf_mat_eq_cost = apply_inflation(manuf_mat_eq_cost_1998, base_year, target_ye
 %% Overal Program Phase Cost %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 program_dt_and_e_cost = airframe_engineering_cost + dev_support_cost + flight_test_cost + tooling_cost + ...
-manufacturing_cost + quality_control_cost + manuf_mat_eq_cost; % [2024 USD]
+manufacturing_cost + quality_control_cost + manuf_mat_eq_cost;
 
-breakeven_upcharge = program_dt_and_e_cost/60; % [2024 USD]
+breakeven_upcharge = program_dt_and_e_cost/60;
 
 end
