@@ -49,19 +49,21 @@ aircraft.airframe.maint_cost = airframe_maint_cost_calc(aircraft);
 
 
 % Missile cost
-aircraft.cost_params.missile.cost_base = 386000;  % USD
-aircraft.cost_params.missile.base_year = 2006;
-aircraft.cost_params.missile.cost_2024 = apply_inflation(aircraft.cost_params.missile.cost_base, aircraft.cost_params.missile.base_year, target_year); % USD
+aircraft.cost.missile.cost_base = 386000;  % USD
+aircraft.cost.missile.base_year = 2006;
+aircraft.cost.missile.cost_2024 = adjust_cost_inflation_calc(aircraft.cost_params.missile.cost_base, aircraft.cost_params.missile.base_year, target_year); % USD
 
 % Avionics cost 
-aircraft.cost_params.avionics.cost_base = 234000;  % USD
-aircraft.cost_params.avionics.base_year = 2006;  
-aircraft.cost_params.avionics.cost_2024 = apply_inflation(aircraft.cost_params.avionics_cost_base, base_year, target_year); % USD
+aircraft.cost.avionics.cost_base = 234000;  % USD
+aircraft.cost.avionics.base_year = 2006;  
+aircraft.cost.avionics.cost_2024 = adjust_cost_inflation_calc(aircraft.cost_params.avionics_cost_base, base_year, target_year); % USD
 
 % Cannon cost
-aircraft.cost_params.cannon.cost_base = 250290;  % USD
-aircraft.cost_params.cannon.base_year = 2006;  
-aircraft.cost_params.cannon.cost_2024 = apply_inflation(aircraft.cost_params.cannon_cost_base, base_year, target_year); % USD
+aircraft.cost.cannon.cost_base = 250290;  % USD
+aircraft.cost.cannon.base_year = 2006;  
+aircraft.cost.cannon.cost_2024 = adjust_cost_inflation_calc(aircraft.cost_params.cannon_cost_base, base_year, target_year); % USD
+
+end
 
 
 
