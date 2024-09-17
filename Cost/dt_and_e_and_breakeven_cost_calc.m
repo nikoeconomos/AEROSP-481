@@ -40,39 +40,54 @@ S = 277.821180117969 * 1.944; % Maximum aircraft speed at best altitude in [kts]
 target_year = 2024;
 base_year = 1998;
 
+
 %% Airframe Engineering Phase %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 airf_eng_hours = 4.86 * (W^0.777) * (S^0.894) * (Q^0.163); % [hr]
 airframe_engineering_cost = airf_eng_hours * aircraft.labor.skunk_works_hourly_2024; % [2024 USD]
+
+
 
 %% Development Support %%
 %%%%%%%%%%%%%%%%%%%%%%%%%
 dev_support_cost_1998 = 66 * (W^0.63) * (S^1.3); % [1998 USD]
 dev_support_cost = apply_inflation(dev_support_cost_1998, base_year, target_year); % [2024 USD]
 
+
+
 %% Flight Test Operations %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 flight_test_cost_1998 = 1852 * (W^0.325) * (S^0.822) * (Qd^1.21); % [1998 USD]
 flight_test_cost = apply_inflation(flight_test_cost_1998, base_year, target_year); % [2024 USD]
+
+
 
 %% Tooling %%
 %%%%%%%%%%%%%
 tooling_hours = 5.99 * (W^0.777) * (S^0.696) * (Q^0.263); % [hr]
 tooling_cost = tooling_hours * aircraft.labor.tooling_hourly_2024; % [2024 USD]
 
+
+
 %% Manufacturing Labor %%
 %%%%%%%%%%%%%%%%%%%%%%%%%
 manufacturing_hours = 7.37 * (W^0.82) * (S^0.484) * (Q^0.641); % [hr]
 manufacturing_cost = manufacturing_hours * aircraft.labor.manufacturing_hourly_2024; % [2024 USD]
 
+
+
 %% Quality Control %%
 %%%%%%%%%%%%%%%%%%%%%
 quality_control_cost = 0.13 * manufacturing_cost; % Assuming that this guideline holds in 2024
+
+
 
 %% Manufacturing Material & Equipment %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 manuf_mat_eq_cost_1998 = 16.39 * (W^0.921) * (S^0.621) * (Q^0.799); % [1998 USD]
 manuf_mat_eq_cost = apply_inflation(manuf_mat_eq_cost_1998, base_year, target_year); % [2024 USD]
+
+
 
 %% Overal Program Phase Cost %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
