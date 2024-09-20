@@ -41,35 +41,13 @@ mission.alt = [0, NaN, 10668,...
                10668, 10668, NaN, ... % TODO: DETERMINE "OPTIMUM" SPEED AND ALTITUDE
                10668, NaN, 0]; % [m]
 
-%% AMBIENT DENSITY %%
-%%%%%%%%%%%%%%
-
-mission.rho_amb = NaN(size(mission.segments));
-for i = 1:length(mission.segments)
-    if ~isnan(mission.alt(1,i))
-        [~, ~, Rho] = std_atm(mission.alt(i));
-        mission.rho_amb(i) = Rho; % [m/s]
-    end
-end
-
-%% AMBIENT TEMPERATURE %%
-%%%%%%%%%%%%%%
-
-mission.t_amb = NaN(size(mission.segments));
-for i = 1:length(mission.segments)
-    if ~isnan(mission.alt(1,i))
-        [T, ~, ~] = std_atm(mission.alt(i));
-        mission.t_amb(i) = T; % [m/s]
-    end
-end
-
 %% VELOCITY %%
 %%%%%%%%%%%%%%
 
 mission.velocity = NaN(size(mission.segments));
 for i = 1:length(mission.segments)
     if ~isnan(mission.mach(1,i))
-        mission.velocity(i) = velocity_from_flight_cond(mission.mach(i),mission.t_amb(i),mission.rho_amb(i),aircraft.constants.r_air); % [m/s]
+        mission.velocity(i) = velocity_from_flight_cond(mission.mach(i),mission.alt(i)); % [m/s]
     end
 end
 

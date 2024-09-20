@@ -22,15 +22,16 @@ function [aircraft] = generate_prop_params(aircraft)
 %                                  codes.
 
 %% PARAMETERS %%
-%%%%%%%%%%%
+%%%%%%%%%%%%%%%%
 
-aircraft.propulsion.fuel_density = 839.98; % kg/m3
-aircraft.propulsion.oil_density = 1003.55; % kg/m3
-aircraft.propulsion.maintenance_labor_rate = 24.81; % $ as of June 2024
-aircraft.propulsion.weight_oil = 0.0125*aircraft.weight.ff*aircraft.weight.togw*block_time_calc(aircraft)/100;
-%% UPDATE AIRCRAFT %%
-%%%%%%%%%%%%%%%%%%%%%
+% number of engines
+aircraft.propulsion.num_engines = 2;
 
-%aircraft.propulsion = propulsion;
+% max thrust
+aircraft.propulsion.T_max = aircraft.propulsion.num_engines*129710.14; %[N] TOTAL THRUST FROM BOTH ENGINES
+
+% military thrust
+aircraft.propulsion.T_military = aircraft.propulsion.num_engines*79178.344; %[N] TOTAL THRUST FROM BOTH ENGINES
+
 
 end

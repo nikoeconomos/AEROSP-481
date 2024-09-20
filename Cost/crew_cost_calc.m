@@ -1,4 +1,4 @@
-function crew_costs = crew_cost_calc(aircraft)
+function crew_costs_adjusted = crew_cost_calc(aircraft)
 % Description: This function calculates the crew cost incurred through
 % flight crew wages and other expenses for multiple missions.
 %
@@ -12,11 +12,6 @@ function crew_costs = crew_cost_calc(aircraft)
 % Version history revision notes:
 %                                  v1: 9/14/2024
 
-    % Cost escalation factors
-    base_cef = 5.17053 + 0.104981 * (1993 - 2006);
-    then_cef = 5.17053 + 0.104981 * (2024 - 2006);
-    cef = base_cef / then_cef; % Cost escalation factor
-
     % Route factor
     route_factor = 1; % Route factor -- estimated
 
@@ -24,6 +19,8 @@ function crew_costs = crew_cost_calc(aircraft)
     airline_factor = 1; % Estimated
 
     % Initialize result
-    crew_costs = airline_factor * (route_factor * (aircraft.weight.togw)^0.4 * mission_block_time) * cef;
+    crew_costs = airline_factor * (route_factor * (aircraft.weight.togw)^0.4 * mission_block_time);
+
+    crew_costs_adjusted = adjust_cost_inflation_calc(crew_costs, aircraft.cost.crew.base_year, aircraft.cost.target_year);
 
 end

@@ -23,5 +23,6 @@ function total_prop_cost = prop_cost_calc(aircraft)
 %                                  maintenance cost into a different
 %                                  function.
     
-    total_prop_cost = aircraft.propulsion.engine_cost + aircraft.propulsion.fuel_cost + aircraft.propulsion.oil_cost + aircraft.propulsion.engine_maintenance_cost;
+    total_prop_cost = aircraft.propulsion.num_engines*aircraft.cost.propulsion.engine.engine_cost ...
+                    + aircraft.cost.propulsion.fuel_cost + aircraft.cost.propulsion.oil_cost + aircraft.cost.propulsion.engine.maintenance_cost;
 end

@@ -18,17 +18,14 @@ function engine_maint_cost = engine_maint_cost_calc(aircraft)
 % Version history revision notes:
 %                                  v1: 9/15/2024
     
-    
     block_time = block_time_calc(aircraft);
-    % vvv PARAMETERIZE THIS SECTION IF NEEDED!!! vvv
-    base_year = 1993;
-    then_year = 2024;
-    bcef = 5.17053+0.104981*(base_year-2006);
-    tcef = 5.17053+0.104981*(then_year-2006);
-    cef = tcef/bcef;
-    % ^^^ PARAMETERIZE THIS SECTION IF NEEDED!!! ^^^
-    T_max_lbf = aircraft.propulsion.T_max*0.224809/aircraft.propulsion.engine_count; %Thrust of an individual engine, in lbf
-    Cml = (0.645+(0.05*T_max_lbf/10000))*(0.566+0.434/block_time)*aircraft.propulsion.maintenance_labor_rate;
-    Cmm = (25+(18*T_max_lbf/10000))*(0.62+0.38/block_time)*cef;
-    engine_maint_cost = aircraft.propulsion.engine_count*(Cml+Cmm)*block_time;
+
+    T_max_lbf = aircraft.propulsion.T_max*0.224809/aircraft.propulsion.num_engines; %Thrust of an individual engine, in lbf
+    Cml = (0.645+(0.05*T_max_lbf/10000))*(0.566+0.434/block_time)*aircraft.cost.propulsion.engine.maintenance_labor_rate;
+
+    Cmm_base = (25+(18*T_max_lbf/10000))*(0.62+0.38/block_time);
+
+    Cmm_adjusted = adjust_cost_inflation_calc(Cmm_base, aircraft.cost.propulsion.engine.base_year, aircraft.cost.target_year);
+
+    engine_maint_cost = aircraft.propulsion.num_engines*(Cml+Cmm_adjusted)*block_time;
 end
