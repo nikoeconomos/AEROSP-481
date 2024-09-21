@@ -21,8 +21,13 @@ function [aircraft] = generate_prelim_sizing_params(aircraft)
 
 %% ***CATEGORY*** %%
 %%%%%%%%%%%%%%%%%%%%
-
-aircraft.descriptiveName.placeholder = 0; %placeholder
+%aircraft.descriptiveName.placeholder = 0; %placeholder
+aircraft.aerodynamics.Swet = 10^(-.1289)*(aircraft.weight.togw)^0.7506; %Wetted surface area estimate
+aircraft.aerodynamics.skin_friction_coefficient = 0.0035; % skin friction coefficient estimate
+aircraft.geometry.aspect_ratio = 2.66; %Assumed from F-35
+aircraft.aerodynamics.span_efficiency = 0.85;
+aircraft.performance.max_sustained_g_force = 3.5;
+aircraft.performance.max_sustained_turn_mach = 1.2;
 
 
 
