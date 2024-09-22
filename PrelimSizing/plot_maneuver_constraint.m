@@ -1,9 +1,11 @@
 function aircraft = plot_maneuver_constraint(aircraft)
+% NOTE: THIS CODE IS DEPRECATED!!!
+% 
 % Description: This function generates a plot of T/W vs W/S as part of a
 % constraint diagram in relation to the maneuvering requirement. If
 % desired, assigning this function to the aircraft will add the parasitic
 % drag coefficient estimate and arrays for sample W/S values and their
-% corresponding minimum T/W requirements.
+% corresponding minimum T/W requirements. 
 % 
 % 
 % INPUTS:
@@ -21,6 +23,7 @@ function aircraft = plot_maneuver_constraint(aircraft)
 % Author:                          Joon Kyo Kim
 % Version history revision notes:
 %                                  v1: 9/21/2024
+%                                  v2: 9/22/2024 (no longer relevant)
 
     aircraft.aerodynamics.wing_loading_maneuver = linspace(0,250,250); %psf
     aircraft.aerodynamics.wing_loading_maneuver_psi = aircraft.aerodynamics.wing_loading_maneuver/12^2; %psi, for calculations
