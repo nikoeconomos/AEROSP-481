@@ -21,8 +21,7 @@ function tw = calculate_maneuver_constraint(aircraft,ws)
 % Author:                          Joon Kyo Kim
 % Version history revision notes:
 %                                  v1: 9/21/2024
-
-    aircraft.aerodynamics.parasitic_drag_coeff_est = aircraft.aerodynamics.skin_friction_coefficient*aircraft.aerodynamics.Swet/(aircraft.weight.togw*9.807/ws);
+    aircraft.aerodynamics.parasitic_drag_coeff_est = aircraft.aerodynamics.skin_friction_coefficient*aircraft.aerodynamics.Swet/(aircraft.aerodynamics.Sref);
     [t,p,rho,a] = standard_atmosphere_calc(10668); %35000ft = 10668m
     q = rho*(a*aircraft.performance.max_sustained_turn_mach)^2/2; % Pa
     tw = q*aircraft.aerodynamics.parasitic_drag_coeff_est/ws + (aircraft.performance.max_sustained_g_force^2/(q*pi*aircraft.geometry.aspect_ratio*aircraft.aerodynamics.span_efficiency))*ws;
