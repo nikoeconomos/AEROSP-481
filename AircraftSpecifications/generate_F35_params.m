@@ -71,6 +71,17 @@ aircraft.performance.mach_max_SL = 1.06; %[Mach number]
 % g force limit
 aircraft.performance.g_force_limit = 9; % [g's]
 
+%% GEOMETRY %%
+%%----------%%
+
+% Aspect ratio
+aircraft.geometry.AR = 2.66; %[Unitless]
+
+% wing reference area
+aircraft.geometry.S_ref = 42.7354; %[m^2]
+
+% wingspan
+aircraft.geometry.b = 10.668; % [m]
 %% AERODYNAMICS %%
 %%--------------%%
 
@@ -82,6 +93,12 @@ aircraft.aerodynamics.CL_max_takeoff = 1.82; %[Unitless]
 
 % CL max at landing
 aircraft.aerodynamics.CL_max_landing = 0.81; %[Unitless]
+
+aircraft.aerodynamics.W_S = wing_loading_calc((aircraft.weight.mtow),(aircraft.geometry.S_ref));
+aircraft.aerodynamics.rho = 1.225; %[kg.m^3]
+
+aircraft.aerodynamics.V_stall = stall_speed_calc(aircraft.aerodynamics.W_S,aircraft.aerodynamics.rho,aircraft.aerodynamics.CL_max_takeoff);
+
 
 %% PROPULSION %%
 %%------------%%
@@ -99,17 +116,7 @@ aircraft.propulsion.T_max = aircraft.propulsion.engine_count*191273.53; %[N]
 aircraft.propulsion.T_military = aircraft.propulsion.engine_count*124550.2; %[N]
 
 
-%% GEOMETRY %%
-%%----------%%
 
-% Aspect ratio
-aircraft.geometry.AR = 2.66; %[Unitless]
-
-% wing reference area
-aircraft.geometry.S_ref = 42.7354; %[m^2]
-
-% wingspan
-aircraft.geometry.b = 10.668; % [m]
 
 %% %% %% %% UTILITY %% %% %% %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
