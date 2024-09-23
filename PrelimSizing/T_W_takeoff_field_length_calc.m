@@ -32,6 +32,6 @@ rho = rho_SL; %[kg/m^3] - this is bc we want to calculate these values at sea le
 
 %T_W = (factor_of_safety^2/(g*rho_SL))*(1/((rho/rho_SL)*CL_max*takeoff_distance))*W_S;
 
-T_W = (W_S)/((rho/rho_SL)*CL_max*takeoff_distance); % Takeoff distance should be TOP25
+T_W = (factor_of_safety^2 / rho)*((W_S)/((rho/rho_SL)*CL_max*takeoff_distance)); % Takeoff distance should be TOP25
 
 end

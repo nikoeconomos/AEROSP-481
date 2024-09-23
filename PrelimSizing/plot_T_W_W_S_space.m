@@ -18,9 +18,9 @@ function [] = plot_T_W_W_S_space(aircraft)
 % Version history revision notes:
 %                                  v1: 9/21/2024
 
-    l = 250; % wing loading limit
+    l = 750; % wing loading limit
     t = 1; % TW limit
-    k = 250; % number of points on the plot
+    k = 750; % number of points on the plot
 
     W_S_space =  linspace(0,l,k); %kg per m^2
     T_W_space =  linspace(0,t,k); %kg per m^2
@@ -69,7 +69,7 @@ function [] = plot_T_W_W_S_space(aircraft)
     figure()
     hold on;
     
-    plot(W_S_space, T_W_takeoff_field_length_arr)
+    plot(W_S_space, T_W_takeoff_field_length_arr, 'b')
     plot(W_S_landing_field_length_arr, T_W_space, 'b')
 
     plot(W_S_space, T_W_cruise_speed_arr, 'g')
