@@ -69,25 +69,25 @@ function [] = plot_T_W_W_S_space(aircraft)
     figure()
     hold on;
     
-    plot(W_S_space, T_W_takeoff_field_length_arr, '--')
-    plot(W_S_landing_field_length_arr, T_W_space)
+    plot(W_S_space, T_W_takeoff_field_length_arr)
+    plot(W_S_landing_field_length_arr, T_W_space, 'b')
 
-    plot(W_S_space, T_W_cruise_speed_arr)
+    plot(W_S_space, T_W_cruise_speed_arr, 'g')
 
-    plot(W_S_space, T_W_maneuver_arr)
+    plot(W_S_space, T_W_maneuver_arr, 'r')
 
-    plot(W_S_space, T_W_climb_1_arr)
-    plot(W_S_space, T_W_climb_2_arr)
-    plot(W_S_space, T_W_climb_3_arr)
-    plot(W_S_space, T_W_climb_4_arr)
-    plot(W_S_space, T_W_climb_5_arr)
-    plot(W_S_space, T_W_climb_6_arr)
+    plot(W_S_space, T_W_climb_1_arr, 'c')
+    plot(W_S_space, T_W_climb_2_arr, 'c')
+    plot(W_S_space, T_W_climb_3_arr, 'c')
+    plot(W_S_space, T_W_climb_4_arr, 'c')
+    plot(W_S_space, T_W_climb_5_arr, 'c')
+    plot(W_S_space, T_W_climb_6_arr, 'c')
 
-    plot(W_S_space, T_W_ceiling_arr)
+    plot(W_S_space, T_W_ceiling_arr, 'm')
 
     
 
-    plot(W_S_stall_speed_arr, T_W_space)
+    plot(W_S_stall_speed_arr, T_W_space, 'y')
 
     legend('Takeoff field length','Landing field length','Cruise','Maneuver','Takeoff climb','Transition climb','Second segment climb',...
             'Enroute climb','Balked landing climb (AEO)','Balked landing climb (OEI)','Ceiling','Stall speed');
