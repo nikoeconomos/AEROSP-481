@@ -1,14 +1,14 @@
 % Aerosp 481 Group 3 - Libellula 
 function thrust_weight = T_W_cruise_speed_calc(wing_loading)
 % Description: This function generates a thrust to weight ratio based on
-% the aircraft struct and wing loading
+% wing loading
 % 
 % 
 % INPUTS:
 % --------------------------------------------
-%    aircraft - aircraft struct with specs
 %    wing_loading for the aircraft
 % 
+%
 % OUTPUTS:
 % --------------------------------------------
 %    thrust_weight of the aircraft at cruise speed
@@ -19,7 +19,17 @@ function thrust_weight = T_W_cruise_speed_calc(wing_loading)
 % Version history revision notes:
 %                                  v1: 9/22/2024
 
-    % Similar to maneuver, but set n=1
+
+Swet = 10^(-.1289)*(aircraft.weight.togw)^0.7506; %Wetted surface area estimate, ft2
+aircraft.aerodynamics.Swet = Swet*0.092903; %Wetted surface area estimate, m2
+aircraft.aerodynamics.skin_friction_coefficient = 0.0035; % skin friction coefficient estimate
+aircraft.geometry.aspect_ratio = 2.66; %Assumed from F-35
+aircraft.aerodynamics.Sref = 0.75*aircraft.aerodynamics.Swet/aircraft.geometry.aspect_ratio; % Estimated from wetted aspect ratio graph (fig 2.4)
+aircraft.aerodynamics.span_efficiency = 0.85;
+aircraft.performance.max_sustained_g_force = 3.5;
+aircraft.performance.max_sustained_turn_mach = 1.2;    
+
+% Similar to maneuver, but set n=1
     aircraft.aerodynamics.parasitic_drag_coeff_est = aircraft.aerodynamics.skin_friction_coefficient*aircraft.aerodynamics.Swet/(aircraft.aerodynamics.Sref);
     [t,p,rho,a] = standard_atmosphere_calc(10668); %35000ft = 10668m
     q = rho*(a*aircraft.performance.max_sustained_turn_mach)^2/2; % Pa
