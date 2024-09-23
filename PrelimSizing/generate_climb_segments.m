@@ -45,15 +45,24 @@ aircraft.mission.climb.ks = [1.2, 1.2, 1.2,...
 %% MAXIMUM LIFT COEFFICIENT %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-aircraft.mission.climb.CL_max = [2, 2, 2,...
-               1.8, 2.6, 0.85*2.6]; % taken from table in Roskam textbook, OEI balked landing climb value is 
+aircraft.mission.climb.CL_max = [aircraft.aerodynamics.CL_takeoff, aircraft.aerodynamics.CL_takeoff, aircraft.aerodynamics.CL_takeoff,...
+               aircraft.aerodynamics.CL_cruise, aircraft.aerodynamics.CL_landing_2, 0.85*aircraft.aerodynamics.CL_landing_2]; % taken from table in Roskam textbook, OEI balked landing climb value is 
+% calculated following method in metabook page 40
+
+%% ZERO LIFT DRAG COEFFICIENT %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+aircraft.mission.climb.CL_max = [aircraft.aerodynamics.CD0_takeoff, aircraft.aerodynamics.CD0_takeoff, aircraft.aerodynamics.CD0_takeoff,...
+               aircraft.aerodynamics.CD0_clean, aircraft.aerodynamics.CD0_landing_2, aircraft.aerodynamics.CD0_landing_2]; % taken from table in Roskam textbook, OEI balked landing climb value is 
 % calculated following method in metabook page 40
 
 %% WEIGHT %%
 %%%%%%%%%%%%
 
-aircraft.mission.climb.weight = [aircraft.mtow, aircraft.mtow, aircraft.mtow,...
-               aircraft.mtow,aircraft.max_landing_weight, aircraft.max_landing_weight]; % [kg] from FAR 25 requirements in metabook
+aircraft.weight.max_landing_weight = 0.85 * aircraft.weight.togw; % Googled common share of togw that is max landing weight
+
+aircraft.mission.climb.weight = [aircraft.weight.togw, aircraft.weight.togw, aircraft.weight.togw,...
+               aircraft.weight.togw,aircraft.weight.max_landing_weight, aircraft.weight.max_landing_weight]; % [kg] from FAR 25 requirements in metabook
 
 %% ACTIVE ENGINES %%
 %%%%%%%%%%%%%%%%%%%%
