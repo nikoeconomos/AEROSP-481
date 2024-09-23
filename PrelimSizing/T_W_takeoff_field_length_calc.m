@@ -1,4 +1,4 @@
-function T_W = T_W_takeoff_field_length_calc(W_S_space(i))
+function T_W = T_W_takeoff_field_length_calc(W_S_space)
 % Description: This function generates a relationship of T/W vs W/S for a
 % constraint diagram that is based on our takeoff distance requirement.
 % 
