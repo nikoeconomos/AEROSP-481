@@ -1,11 +1,11 @@
-function T_W = T_W_takeoff_field_length_calc(W_S_space)
+function T_W = T_W_takeoff_field_length_calc(W_S)
 % Description: This function generates a relationship of T/W vs W/S for a
 % constraint diagram that is based on our takeoff distance requirement.
 % 
 % 
 % INPUTS:
 % --------------------------------------------
-%    W_S - wing loading array
+%    W_S - wing loading value
 %    
 % 
 % OUTPUTS:
@@ -26,6 +26,6 @@ CL_max = 2; %This was from Cinar to use - estimated from similar aircraft with p
 takeoff_distance = 2438.4; %[m] - takeoff distance per RFP
 rho = rho_SL; %[kg/m^3] - this is bc we want to calculate these values at sea level per RFP
 
-T_W = (factor_of_safety^2/(g*rho_SL))*(1/((rho/rho_SL)*CL_max*takeoff_distance))*W_S_space;
+T_W = (factor_of_safety^2/(g*rho_SL))*(1/((rho/rho_SL)*CL_max*takeoff_distance))*W_S;
 
 end
