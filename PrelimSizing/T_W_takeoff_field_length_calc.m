@@ -1,6 +1,7 @@
 function T_W = T_W_takeoff_field_length_calc(W_S)
 % Description: This function generates a relationship of T/W vs W/S for a
-% constraint diagram that is based on our takeoff distance requirement.
+% constraint diagram that is based on our takeoff distance requirement. The
+% function takes in a W/S value and will output a single T/W value.
 % 
 % 
 % INPUTS:
@@ -10,7 +11,7 @@ function T_W = T_W_takeoff_field_length_calc(W_S)
 % 
 % OUTPUTS:
 % --------------------------------------------
-%    T_W - thrust to weight ratio as an array of values based on W_S array
+%    T_W - thrust to weight ratio
 %                       
 % 
 % See also: generate_prelim_sizing_params.m 
