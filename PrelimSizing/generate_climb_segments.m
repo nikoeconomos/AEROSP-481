@@ -46,15 +46,15 @@ aircraft.mission.climb.ks = [1.2, 1.2, 1.2,...
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 aircraft.mission.climb.CL_max = [aircraft.aerodynamics.CL_takeoff, aircraft.aerodynamics.CL_takeoff, aircraft.aerodynamics.CL_takeoff,...
-               aircraft.aerodynamics.CL_cruise, aircraft.aerodynamics.CL_landing_2, 0.85*aircraft.aerodynamics.CL_landing_2]; % taken from table in Roskam textbook, OEI balked landing climb value is 
+               aircraft.aerodynamics.CL_cruise, aircraft.aerodynamics.CL_landing_flaps_gears, 0.85*aircraft.aerodynamics.CL_landing_flaps_gears]; % taken from table in Roskam textbook, OEI balked landing climb value is 
 % calculated following method in metabook page 40
 
 %% ZERO LIFT DRAG COEFFICIENT %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 aircraft.mission.climb.CL_max = [aircraft.aerodynamics.CD0_takeoff, aircraft.aerodynamics.CD0_takeoff, aircraft.aerodynamics.CD0_takeoff,...
-               aircraft.aerodynamics.CD0_clean, aircraft.aerodynamics.CD0_landing_2, aircraft.aerodynamics.CD0_landing_2]; % taken from table in Roskam textbook, OEI balked landing climb value is 
-% calculated following method in metabook page 40
+               aircraft.aerodynamics.CD0_clean, aircraft.aerodynamics.CL_landing_flaps_gears, aircraft.aerodynamics.CL_landing_flaps_gears]; % taken from table in Roskam textbook, OEI balked landing climb value is 
+% calculated following method in metabook page 40 landing 2 =flaps and gears
 
 %% WEIGHT %%
 %%%%%%%%%%%%
