@@ -1,4 +1,4 @@
-function W_S = landing_field_length_calc()
+function W_S = W_S_landing_field_length_calc()
 % Description: This function generates a W/S  value for a
 % constraint diagram that is based on our landing distance requirement.
 % Note that this equation is independent of T/W. Also note that the value
