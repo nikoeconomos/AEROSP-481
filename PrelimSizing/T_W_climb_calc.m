@@ -1,4 +1,4 @@
-function TW_corrected = climb_TW_calc(aircraft)
+function TW_corrected = T_W_climb_calc(aircraft)
 % Description: 
 % Function parameteizes aircraft and environment states for Direct
 % Counter-Air Patrol (DCA) mission and stores them in a struct following

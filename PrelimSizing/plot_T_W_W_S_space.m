@@ -38,7 +38,7 @@ function [] = plot_T_W_W_S_space(aircraft)
     end
 
     % climb calculations
-    [climb_1_TW, climb_2_TW, climb_3_TW, climb_4_TW, climb_5_TW, climb_6_TW] = T_W_climb_calc(aircraft); %TODO UPDATE
+    [climb_1_TW, climb_2_TW, climb_3_TW, climb_4_TW, climb_5_TW, climb_6_TW] = T_W_climb_calc(aircraft);
 
     T_W_climb_1_arr = ones(1, k) * climb_1_TW; % takeoff
     T_W_climb_2_arr = ones(1, k) * climb_2_TW; % transition
@@ -49,7 +49,7 @@ function [] = plot_T_W_W_S_space(aircraft)
 
     T_W_ceiling_arr = ones(1, k) * T_W_ceiling_calc();
 
-    W_S_landing_field_length_arr = ones(1, k) * landing_field_length_calc();
+    W_S_landing_field_length_arr = ones(1, k) * W_S_landing_field_length_calc();
 
     %% Plotting the calculated values %%
 
