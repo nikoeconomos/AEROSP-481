@@ -19,7 +19,7 @@ function [] = plot_T_W_W_S_space(aircraft)
 %                                  v1: 9/21/2024
 
     l = 250; % wing loading limit
-    t = 2; % TW limit
+    t = 1; % TW limit
     k = 250; % number of points on the plot
 
     W_S_space =  linspace(0,l,k); %kg per m^2
@@ -38,7 +38,17 @@ function [] = plot_T_W_W_S_space(aircraft)
     end
 
     % climb calculations
-    [climb_1_TW, climb_2_TW, climb_3_TW, climb_4_TW, climb_5_TW, climb_6_TW] = T_W_climb_calc(aircraft);
+    aircraft = generate_climb_segments(aircraft);
+    TW_climb_arr = T_W_climb_calc(aircraft);
+
+    climb_1_TW = TW_climb_arr(1);
+    climb_2_TW = TW_climb_arr(2);
+    climb_3_TW = TW_climb_arr(3);
+    climb_4_TW = TW_climb_arr(4);
+    climb_5_TW = TW_climb_arr(5);
+    climb_6_TW = TW_climb_arr(6);
+    ceiling_TW = TW_climb_arr(7);
+
 
     T_W_climb_1_arr = ones(1, k) * climb_1_TW; % takeoff
     T_W_climb_2_arr = ones(1, k) * climb_2_TW; % transition
@@ -47,20 +57,24 @@ function [] = plot_T_W_W_S_space(aircraft)
     T_W_climb_5_arr = ones(1, k) * climb_5_TW; % aeo balked landing
     T_W_climb_6_arr = ones(1, k) * climb_6_TW; % oei balked landing
 
-    T_W_ceiling_arr = ones(1, k) * T_W_ceiling_calc();
+    T_W_ceiling_arr = ones(1, k) * ceiling_TW;
+
 
     W_S_landing_field_length_arr = ones(1, k) * W_S_landing_field_length_calc();
 
+    W_S_stall_speed_arr = ones(1,k) * W_S_stall_speed_calc(aircraft, aircraft.performance.cruise_alt); % using cruise altitude
+
     %% Plotting the calculated values %%
 
-    figure;
+    figure()
     hold on;
     
-    plot(W_S_space, T_W_takeoff_field_length_arr);
+    plot(W_S_space, T_W_takeoff_field_length_arr, '--')
+    plot(W_S_landing_field_length_arr, T_W_space)
 
-    plot(W_S_space, T_W_cruise_speed_arr);
+    plot(W_S_space, T_W_cruise_speed_arr)
 
-    plot(W_S_space, T_W_maneuver_arr);
+    plot(W_S_space, T_W_maneuver_arr)
 
     plot(W_S_space, T_W_climb_1_arr)
     plot(W_S_space, T_W_climb_2_arr)
@@ -71,12 +85,13 @@ function [] = plot_T_W_W_S_space(aircraft)
 
     plot(W_S_space, T_W_ceiling_arr)
 
-    plot(W_S_landing_field_length_arr, T_W_space)
+    
 
-    legend('Takeoff field length','Cruise','Maneuver','Takeoff climb','Transition climb','Second segment climb',...
-            'Enroute climb','Balked landing climb (AEO)','Balked landing climb (OEI)','Ceiling','Landing field length');
+    plot(W_S_stall_speed_arr, T_W_space)
 
-    axis equal;
+    legend('Takeoff field length','Landing field length','Cruise','Maneuver','Takeoff climb','Transition climb','Second segment climb',...
+            'Enroute climb','Balked landing climb (AEO)','Balked landing climb (OEI)','Ceiling','Stall speed');
+
     grid on;
     xlim([0 l]); ylim([0 t]);
     xlabel('W/S [UNITS]');

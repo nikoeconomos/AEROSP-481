@@ -31,7 +31,7 @@ aircraft.aerodynamics.LD_cruise = LD_cruise;
 
 aircraft.aerodynamics.rho = 1.225; %[kg.m^3]
 
-aircraft.aerodynamics.V_stall = stall_speed_calc(aircraft.aerodynamics.W_S,aircraft.aerodynamics.rho,aircraft.aerodynamics.CL_max_takeoff);
+%aircraft.aerodynamics.V_stall = stall_speed_calc(aircraft.aerodynamics.W_S,aircraft.aerodynamics.rho,aircraft.aerodynamics.CL_max_takeoff);
 
 
 end

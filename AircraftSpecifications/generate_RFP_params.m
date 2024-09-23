@@ -40,7 +40,9 @@ aircraft.performance.mach_max_SL = NaN; %[Mach number]
 aircraft.performance.g_force_upper_limit = 7; % [g's]
 
 % g force limit, upper
-aircraft.performance.g_force_lower_limit = -3; % [g's]    
+aircraft.performance.g_force_lower_limit = -3; % [g's]   
+
+aircraft.performance.cruise_alt = 10668; % [m]
 
 
 %% %% %% %% UTILITY %% %% %% %%

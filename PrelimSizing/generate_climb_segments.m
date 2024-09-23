@@ -1,4 +1,4 @@
-function [TW_corrected] = generate_climb_segments(aircraft)
+function [aircraft] = generate_climb_segments(aircraft)
 % Description: 
 % Function parameteizes aircraft and environment states for Direct
 % Counter-Air Patrol (DCA) mission and stores them in a struct following
@@ -51,9 +51,10 @@ aircraft.mission.climb.CL_max = [2, 2, 2,...
 
 %% WEIGHT %%
 %%%%%%%%%%%%
+aircraft.weight.max_landing_weight = 0.85 * aircraft.weight.togw;
 
-aircraft.mission.climb.weight = [aircraft.mtow, aircraft.mtow, aircraft.mtow,...
-               aircraft.mtow,aircraft.max_landing_weight, aircraft.max_landing_weight]; % [kg] from FAR 25 requirements in metabook
+aircraft.mission.climb.weight = [aircraft.weight.togw, aircraft.weight.togw, aircraft.weight.togw,...
+               aircraft.weight.togw,aircraft.weight.max_landing_weight, aircraft.weight.max_landing_weight]; % [kg] from FAR 25 requirements in metabook
 
 %% ACTIVE ENGINES %%
 %%%%%%%%%%%%%%%%%%%%
@@ -64,7 +65,7 @@ aircraft.mission.climb.engines_active = [1, 1, 1,...
 %%%%%%%%%%%%%%%%%%%%%%%% 
 
 OEI_correction = 2; % Using formula (N_engines/(N_engines-1)) for 2 engines
-W_correction = aircraft.max_landing_weight/aircraft.mtow; % Only applies for balked landing scenario with maximum landing weight
+W_correction = aircraft.weight.max_landing_weight/aircraft.weight.togw; % Only applies for balked landing scenario with maximum landing weight
 Temp_correction = 1/0.8;
 Max_T_correction = 1/0.94;
 
@@ -72,4 +73,11 @@ aircraft.mission.climb.TW_corrections = [Temp_correction*OEI_correction, Temp_co
                Temp_correction*OEI_correction*Max_T_correction, Temp_correction*W_correction, Temp_correction*OEI_correction*W_correction, ...
                Temp_correction*Max_T_correction]; % always using the temperature correction given that the RFP says aircraft must be able 
 % to complete the climb maneuver in all weather and we don't know if the increase in temperature decreaes with altitude so it will be assumed to be present in all climb scenarios
+
+%% ZERO LIFT DRAG COEFFICIENT %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+aircraft.mission.climb.CD0 = [aircraft.aerodynamics.CD0_takeoff, aircraft.aerodynamics.CD0_takeoff, aircraft.aerodynamics.CD0_takeoff,...
+               aircraft.aerodynamics.CD0_clean, aircraft.aerodynamics.CD0_landing_flaps_gears, aircraft.aerodynamics.CD0_landing_flaps_gears];
+
 end

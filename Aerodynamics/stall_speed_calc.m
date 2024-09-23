@@ -27,8 +27,6 @@ function V_stall = stall_speed_calc(W_S, rho, CL_max)
 
     V_stall = sqrt((2 * W_S) / (rho * CL_max));
 
-
-
 end
 
 

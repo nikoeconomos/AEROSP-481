@@ -21,9 +21,9 @@ function TW_corrected = T_W_climb_calc(aircraft)
 % Version history revision notes:
 %                                  v1: 9/22/2024
 
-TW = (aircraft.mission.climb.ks.^2 .* aircraft.mission.climb.CD0 ./ aircraft.mission.climb.CL_max) + ...
+TW = ((aircraft.mission.climb.ks).^2 .* aircraft.mission.climb.CD0 ./ aircraft.mission.climb.CL_max) + ...
 (aircraft.mission.climb.CL_max ./ (pi * aircraft.geometry.aspect_ratio .* aircraft.aerodynamics.span_efficiency ...
-.* aircraft.mission.climb.ks.^2)) + aircraft.mission.climb.G;
+.* (aircraft.mission.climb.ks).^2)) + aircraft.mission.climb.G;
 
 %% INCORPORATE CEILING %%
 %%%%%%%%%%%%%%%%%%%%%%%%%
