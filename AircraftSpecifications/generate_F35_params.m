@@ -94,10 +94,12 @@ aircraft.aerodynamics.CL_max_takeoff = 1.82; %[Unitless]
 % CL max at landing
 aircraft.aerodynamics.CL_max_landing = 0.81; %[Unitless]
 
+%Stall Speed 
 aircraft.aerodynamics.W_S = wing_loading_calc((aircraft.weight.mtow),(aircraft.geometry.S_ref));
 aircraft.aerodynamics.rho = 1.225; %[kg.m^3]
 
 aircraft.aerodynamics.V_stall = stall_speed_calc(aircraft.aerodynamics.W_S,aircraft.aerodynamics.rho,aircraft.aerodynamics.CL_max_takeoff);
+
 
 
 %% PROPULSION %%
@@ -115,7 +117,52 @@ aircraft.propulsion.T_max = aircraft.propulsion.engine_count*191273.53; %[N]
 % military thrust
 aircraft.propulsion.T_military = aircraft.propulsion.engine_count*124550.2; %[N]
 
+%% Drag Polar and Parasite Drag Coefficent 
 
+aircraft.aerodynamics.Cf_clean = 0.0040;  % Skin friction coefficient (from table 12.3)
+aircraft.aerodynamics.c_coeff = -0.1289;   % Constant for Jet Fighter from reference table
+aircraft.aerodynamics.d_coeff = 0.7506;    % Constant for Jet Fighter from reference table
+aircraft.aerodynamics.Delta_C_D0_clean = 0;
+
+% ----------- Clean Configuration (Cruise) -----------
+% parasite drag coefficient (CD0) for clean configuration
+aircraft.aerodynamics.CD0_clean = parasite_drag_calc(aircraft.weight.togw, aircraft.geometry.S_ref, aircraft.aerodynamics.Cf_clean, aircraft.aerodynamics.c_coeff, aircraft.aerodynamics.d_coeff, 0);
+
+%total drag coefficient using drag polar for cruise
+aircraft.aerodynamics.e_cruise = 0.825;
+aircraft.aerodynamics.CD_cruise = drag_polar_calc(aircraft.aerodynamics.CD0_clean, ...
+    aircraft.aerodynamics.CL_cruise, aircraft.geometry.AR, aircraft.aerodynamics.e_cruise);
+
+% ----------- Takeoff Configuration (Flaps Deployed) -----------
+aircraft.aerodynamics.Delta_C_D0_takeoff = 0.015;  % Additional drag due to takeoff flaps
+
+%parasite drag coefficient (CD0) for takeoff configuration
+aircraft.aerodynamics.CD0_takeoff = parasite_drag_calc(aircraft.weight.togw, aircraft.geometry.S_ref, aircraft.aerodynamics.Cf_clean, aircraft.aerodynamics.c_coeff, aircraft.aerodynamics.d_coeff, aircraft.aerodynamics.delta_CD0_takeoff);
+
+%total drag coefficient for takeoff using drag polar
+aircraft.aerodynamics.e_takeoff = 0.775;
+aircraft.aerodynamics.CD_takeoff = drag_polar_calc(aircraft.aerodynamics.CD0_takeoff, ...
+    aircraft.aerodynamics.CL_takeoff, aircraft.geometry.AR, aircraft.aerodynamics.e_takeoff);
+
+% ----------- Landing Configuration (Flaps) -----------
+aircraft.aerodynamics.Delta_C_D0_landing_1 = 0.065;  % Additional drag due to landing flaps
+
+%parasite drag coefficient (CD0) for landing configuration
+aircraft.aerodynamics.CD0_landing_1 = parasite_drag_calc(aircraft.weight.togw, aircraft.geometry.S_ref, aircraft.aerodynamics.Cf_clean, aircraft.aerodynamics.c_coeff, aircraft.aerodynamics.d_coeff, aircraft.aerodynamics.delta_CD0_landing_1);
+
+%total drag coefficient for landing using the drag polar equation
+aircraft.aerodynamics.e_landing_1 = 0.725;
+aircraft.aerodynamics.CD_landing = drag_polar_calc(aircraft.aerodynamics.CD0_landing, ...
+    aircraft.aerodynamics.CL_landing, aircraft.geometry.AR, aircraft.aerodynamics.e_landing);
+
+% ----------- Landing Configuration (Flaps and Gear Deployed) -----------
+aircraft.aerodynamics.Delta_C_D0_landing_2 = 0.020;  % Additional drag due to landing flaps and gear
+
+aircraft.aerodynamics.CD0_landing_2 = parasite_drag_calc(aircraft.weight.togw, aircraft.geometry.S_ref, aircraft.aerodynamics.Cf_clean, aircraft.aerodynamics.c_coeff, aircraft.aerodynamics.d_coeff, aircraft.aerodynamics.delta_CD0_landing_2);
+%total drag coefficient for landing using the drag polar equation
+aircraft.aerodynamics.e_landing_2 = 1;
+aircraft.aerodynamics.CD_landing = drag_polar_calc(aircraft.aerodynamics.CD0_landing_2, ...
+    aircraft.aerodynamics.CL_landing, aircraft.geometry.AR, aircraft.aerodynamics.e_landing_2);
 
 
 %% %% %% %% UTILITY %% %% %% %%
