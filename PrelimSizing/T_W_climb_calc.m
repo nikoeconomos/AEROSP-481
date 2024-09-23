@@ -25,6 +25,15 @@ TW = (aircraft.mission.climb.ks.^2 .* aircraft.mission.climb.CD0 ./ aircraft.mis
 (aircraft.mission.climb.CL_max ./ (pi * aircraft.geometry.aspect_ratio .* aircraft.aerodynamics.span_efficiency ...
 .* aircraft.mission.climb.ks.^2)) + aircraft.mission.climb.G;
 
+%% INCORPORATE CEILING %%
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+TW_ceiling = 2*sqrt(aircraft.aerodynamics.CD0_clean/(pi * aircraft.geometry.aspect_ratio * aircraft.aerodynamics.span_efficiency)) + 0.006; % assume G is half of enroute climb so 0.6%
+
+TW = [TW, TW_ceiling];
+%% INCLUDE THRUST CORRECTIONS %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 TW_corrected = aircraft.mission.climb.TW_corrections .* TW;
 
 end

@@ -68,7 +68,8 @@ W_correction = aircraft.max_landing_weight/aircraft.mtow; % Only applies for bal
 Temp_correction = 1/0.8;
 Max_T_correction = 1/0.94;
 
-aircraft.mission.climb.TW_corrections = [Temp_correction*OEI_correction, Temp_correction*OEI_correction, Temp_correction*OEI_correction,...
-               Temp_correction*OEI_correction*Max_T_correction, Temp_correction*W_correction, Temp_correction*OEI_correction*W_correction]; % always using the temperature correction given that the RFP says aircraft must be able 
+aircraft.mission.climb.TW_corrections = [Temp_correction*OEI_correction, Temp_correction*OEI_correction, Temp_correction*OEI_correction, ...
+               Temp_correction*OEI_correction*Max_T_correction, Temp_correction*W_correction, Temp_correction*OEI_correction*W_correction, ...
+               Temp_correction*Max_T_correction]; % always using the temperature correction given that the RFP says aircraft must be able 
 % to complete the climb maneuver in all weather and we don't know if the increase in temperature decreaes with altitude so it will be assumed to be present in all climb scenarios
 end
