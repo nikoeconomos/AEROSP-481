@@ -46,4 +46,7 @@ aircraft.aerodynamics.e_landing_1 = 0.7; %from table
 aircraft = generate_climb_segments(aircraft);
 
 
+% Thrust design point
+% S design point put in
+
 end
