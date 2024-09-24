@@ -22,18 +22,14 @@ function aircraft = generate_prelim_sizing_params(aircraft)
 %% ***CATEGORY*** %%
 %%%%%%%%%%%%%%%%%%%%
 %aircraft.descriptiveName.placeholder = 0; %placeholder
-Swet = 10^(-.1289)*(aircraft.weight.togw)^0.7506; %Wetted surface area estimate, ft2
-aircraft.aerodynamics.Swet = Swet*0.092903; %Wetted surface area estimate, m2
+%Wetted surface area estimate placed into generate_geometry_params(), m2
 aircraft.aerodynamics.skin_friction_coefficient = 0.0035; % skin friction coefficient estimate
 
-aircraft.aerodynamics.Sref = 0.75*aircraft.aerodynamics.Swet/aircraft.geometry.aspect_ratio; % Estimated from wetted aspect ratio graph (fig 2.4)
 aircraft.aerodynamics.span_efficiency = 0.85;
 aircraft.performance.max_sustained_g_force = 3.5;
 aircraft.performance.max_sustained_turn_mach = 1.2;
 
 aircraft.performance.cruise_speed_mach = 0.8; % mach number taken from an average in our historical dataset
-
-aircraft.geometry.S_ref = 19.55*19.55*0.85; % Wingspan of F14^2 * 0.85 to account for taper. ROUGH estimate. TODO CHANGE
 
 
 aircraft.aerodynamics.e_cruise = 0.8; %from table

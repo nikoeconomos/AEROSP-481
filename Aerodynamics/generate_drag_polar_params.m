@@ -60,7 +60,7 @@ aircraft.aerodynamics.CD0_landing_flaps = parasite_drag_calc(aircraft.weight.tog
 aircraft.aerodynamics.e_landing_flaps = 0.725;
 aircraft.aerodynamics.CL_landing_flaps = 1.9;
 aircraft.aerodynamics.CD_landing_flaps = drag_polar_calc(aircraft.aerodynamics.CD0_landing_flaps, ...
-                                        aircraft.aerodynamics.CL_landing_flaps, aircraft.geometry.AR, aircraft.aerodynamics.e_landing_1);
+                                        aircraft.aerodynamics.CL_landing_flaps, aircraft.geometry.AR, aircraft.aerodynamics.e_landing_flaps);
 
 %% ----------- Landing Configuration (Flaps and Gear Deployed) -----------
 aircraft.aerodynamics.delta_CD0_landing_flaps_gears = 0.020;  % Additional drag due to landing flaps and gear
