@@ -38,7 +38,6 @@ function [] = plot_T_W_W_S_space(aircraft)
     end
 
     % climb calculations
-    aircraft = generate_climb_segments(aircraft);
     TW_climb_arr = T_W_climb_calc(aircraft);
 
     climb_1_TW = TW_climb_arr(1);

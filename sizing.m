@@ -47,47 +47,28 @@ drawnow
 disp("mission")
 aircraft.mission
 disp(newline)
+
+%%
 disp("weight")
 aircraft.weight
 disp(newline)
+
+%%
 %disp("performance")
 %aircraft.performance
 disp(newline)
 
 %%
-%{
-disp("cost")
-aircraft.cost
-
-% Define the cost components and their corresponding prices
-cost_names = {'Propulsion', 'Crew', 'Labor', 'Airframe Maintenance', 'Missile', 'Avionics', 'Cannon'};
-cost_values = [aircraft.cost.propulsion.total, aircraft.cost.crew.crew_cost, 0, ...
-               aircraft.cost.airframe.maint_cost, aircraft.cost.missile.total, aircraft.cost.avionics.cost_2024, ...
-               aircraft.cost.cannon.cost_2024];
-
-% Create a bar chart
-figure;
-bar(cost_values);
-
-% Set the labels for the x-axis
-set(gca, 'XTickLabel', cost_names);
-
-% Add labels and title
-xlabel('Cost Components');
-ylabel('Price ($)');
-title('Aircraft Cost Breakdown');
-
-% Rotate x-axis labels for better visibility (optional)
-xtickangle(45);
-
-% Display grid for clarity
-grid on;
-%}
+%disp("cost")
+%aircraft.cost
+%plot_cost_bar_chart(aircraft);
 
 %%
 disp(newline)
 %disp("propulsion")
 %aircraft.propulsion
+
+%%
 disp(newline)
 %disp("aerodynamics")
 %aircraft.aerodynamics

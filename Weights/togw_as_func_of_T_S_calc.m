@@ -1,5 +1,5 @@
 % Aerosp 481 Group 3 - Libellula 
-function [togw, w_e] = togw_as_func_of_T_S_calc(aircraft, T_over_W, W_over_S)
+function [togw, w_e] = togw_as_func_of_T_S_calc(aircraft, T, S)
 % Description: This function generates a the TOGW of our aircraft. It
 % calculates it as a function of T and S.
 % 
