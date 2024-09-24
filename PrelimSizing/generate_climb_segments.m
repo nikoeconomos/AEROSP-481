@@ -52,9 +52,9 @@ aircraft.mission.climb.CL_max = [aircraft.aerodynamics.CL_takeoff, aircraft.aero
 %% ZERO LIFT DRAG COEFFICIENT %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-aircraft.mission.climb.CL_max = [aircraft.aerodynamics.CD0_takeoff, aircraft.aerodynamics.CD0_takeoff, aircraft.aerodynamics.CD0_takeoff,...
-               aircraft.aerodynamics.CD0_clean, aircraft.aerodynamics.CL_landing_flaps_gears, aircraft.aerodynamics.CL_landing_flaps_gears]; % taken from table in Roskam textbook, OEI balked landing climb value is 
-% calculated following method in metabook page 40 landing 2 =flaps and gears
+aircraft.mission.climb.CD0 = [aircraft.aerodynamics.CD0_takeoff, aircraft.aerodynamics.CD0_takeoff, aircraft.aerodynamics.CD0_takeoff,...
+               aircraft.aerodynamics.CD0_clean, aircraft.aerodynamics.CD0_landing_flaps_gears, aircraft.aerodynamics.CD0_landing_flaps_gears];
+
 
 %% WEIGHT %%
 %%%%%%%%%%%%
@@ -81,11 +81,5 @@ aircraft.mission.climb.TW_corrections = [Temp_correction*OEI_correction, Temp_co
                Temp_correction*OEI_correction*Max_T_correction, Temp_correction*W_correction, Temp_correction*OEI_correction*W_correction, ...
                Temp_correction*Max_T_correction]; % always using the temperature correction given that the RFP says aircraft must be able 
 % to complete the climb maneuver in all weather and we don't know if the increase in temperature decreaes with altitude so it will be assumed to be present in all climb scenarios
-
-%% ZERO LIFT DRAG COEFFICIENT %%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-aircraft.mission.climb.CD0 = [aircraft.aerodynamics.CD0_takeoff, aircraft.aerodynamics.CD0_takeoff, aircraft.aerodynamics.CD0_takeoff,...
-               aircraft.aerodynamics.CD0_clean, aircraft.aerodynamics.CD0_landing_flaps_gears, aircraft.aerodynamics.CD0_landing_flaps_gears];
 
 end

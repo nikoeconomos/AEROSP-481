@@ -69,23 +69,23 @@ function [] = plot_T_W_W_S_space(aircraft)
     figure('Position', [100, 100, 1000, 800]); % Adjust figure size
     hold on;
     
-    to = plot(W_S_space, T_W_takeoff_field_length_arr, 'b');
-    lf = plot(W_S_landing_field_length_arr, T_W_space, 'b');
+    to = plot(W_S_space, T_W_takeoff_field_length_arr, 'b',LineWidth=1.2);
+    lf = plot(W_S_landing_field_length_arr, T_W_space, 'b',LineWidth=1.2);
 
-    cs = plot(W_S_space, T_W_cruise_speed_arr, 'g');
+    cs = plot(W_S_space, T_W_cruise_speed_arr, 'g',LineWidth=1.2);
 
-    m = plot(W_S_space, T_W_maneuver_arr, 'r');
+    m = plot(W_S_space, T_W_maneuver_arr, 'r',LineWidth=1.2);
 
-    c1 = plot(W_S_space, T_W_climb_1_arr, 'c');
-    c2 = plot(W_S_space, T_W_climb_2_arr, 'c');
-    c3 = plot(W_S_space, T_W_climb_3_arr, 'c');
-    c4 = plot(W_S_space, T_W_climb_4_arr, 'c');
-    c5 = plot(W_S_space, T_W_climb_5_arr, 'c');
-    c6 = plot(W_S_space, T_W_climb_6_arr, 'c');
+    c1 = plot(W_S_space, T_W_climb_1_arr, 'c',LineWidth=1.2);
+    c2 = plot(W_S_space, T_W_climb_2_arr, 'c',LineWidth=1.2);
+    c3 = plot(W_S_space, T_W_climb_3_arr, 'c',LineWidth=1.2);
+    c4 = plot(W_S_space, T_W_climb_4_arr, 'c',LineWidth=1.2);
+    c5 = plot(W_S_space, T_W_climb_5_arr, 'c',LineWidth=1.2);
+    c6 = plot(W_S_space, T_W_climb_6_arr, 'c',LineWidth=1.2);
 
-    ceil = plot(W_S_space, T_W_ceiling_arr, 'm');
+    ceil = plot(W_S_space, T_W_ceiling_arr, 'm',LineWidth=1.2);
 
-    ss = plot(W_S_stall_speed_arr, T_W_space, 'y');
+    ss = plot(W_S_stall_speed_arr, T_W_space, 'y',LineWidth=1.2);
     
     legend([to,lf,cs,m,c1,c2,c3,c4,c5,c6,ceil,ss], ...
         {'Takeoff field length','Landing field length','Cruise', ...
