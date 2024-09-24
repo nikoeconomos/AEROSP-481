@@ -18,7 +18,7 @@ function [] = plot_T_W_W_S_space(aircraft)
 % Version history revision notes:
 %                                  v1: 9/21/2024
 
-    l = 750; % wing loading limit
+    l = 750; % wing loading limit - want this to cover up to 750 kg/m^2
     t = 1; % TW limit
     k = 750; % number of points on the plot
 
@@ -94,7 +94,7 @@ function [] = plot_T_W_W_S_space(aircraft)
 
     grid on;
     xlim([0 l]); ylim([0 t]);
-    xlabel('W/S [UNITS]');
+    xlabel('W/S [kg/m^2]');
     ylabel('T/W [UNITS]');
     title('T/W - W/S plot for Libellula''s custom interceptor');
 

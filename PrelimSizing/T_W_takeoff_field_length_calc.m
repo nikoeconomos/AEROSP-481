@@ -23,7 +23,7 @@ function T_W = T_W_takeoff_field_length_calc(W_S)
 factor_of_safety = 1.5; %this is per our RFP requirements and should be used throughout
 g = 9.81; %[m/s^2] - gravitational acceleration
 
-CL_max = 2; %This was from Cinar to use - estimated from similar aircraft with plain flaps and will be updated once we choose flaps to use
+CL_max = 1.7; %This was from Cinar to use - estimated from similar aircraft with plain flaps and will be updated once we choose flaps to use
 
 takeoff_distance = 2438.4; %[m] - takeoff distance per RFP
 
