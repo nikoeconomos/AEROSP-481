@@ -6,6 +6,8 @@ function CD = drag_polar_calc(CD0, CL, AR, e)
     % CL: Lift coefficient (dimensionless)
     % AR: Aspect ratio of the wing (dimensionless)
     % e: Oswald efficiency factor (dimensionless)
+
+    %TODO DELETE if old or TRANSFER TO GENERATE DRAG POLAR PARAMS.m if useful
     
     % Calculate induced drag factor k
     k = 1 / (pi * AR * e);

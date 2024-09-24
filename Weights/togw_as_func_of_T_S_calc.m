@@ -1,5 +1,5 @@
 % Aerosp 481 Group 3 - Libellula 
-function [togw, w_e] = togw_T_S(aircraft, T_over_W, W_over_S)
+function [togw, w_e] = togw_as_func_of_T_S_calc(aircraft, T_over_W, W_over_S)
 % Description: This function generates a the TOGW of our aircraft. It
 % calculates it as a function of T and S.
 % 
@@ -11,7 +11,6 @@ function [togw, w_e] = togw_T_S(aircraft, T_over_W, W_over_S)
 % --------------------------------------------
 %    togw
 % 
-% See also: togw_regression_loop()
 % Latest author:                   Niko
 % Version history revision notes:
 %                                  v1: 9/22/2024
@@ -35,12 +34,11 @@ function [togw, w_e] = togw_T_S(aircraft, T_over_W, W_over_S)
         
         w_e = empty_weight_fraction * w_0;
 
-        w_e = w_e + 44 * (S-S_design);  %44 kg/ m^2 comes from table 7.1 in metabook TODO change if necessary
+        w_e = w_e + aircraft.weight.wing_density * (S-S_design);  %What is S vs S design?
 
         w_e = w_e + w_eng_calc(T_0)-w_eng_calc(T_0_design);
 
         ff = ff_func_S_calc(S);
-
 
         w_0_new = (w_crew + w_payload)/(1 - ff - empty_weight_fraction);
 

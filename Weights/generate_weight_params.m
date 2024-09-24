@@ -65,6 +65,11 @@ aircraft.weight.togw = togw;
 aircraft.weight.empty = w_empty;
 aircraft.weight.fuel = aircraft.weight.ff*aircraft.weight.togw;
 
+%% COMPONENT DENSITIES %%
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+aircraft.weight.wing_density = 44; % kg/m^2, from Metabook pg 76
+
 %% PROPULSION WEIGHT %%
 %%%%%%%%%%%%%%%%%%%%%%%
 
