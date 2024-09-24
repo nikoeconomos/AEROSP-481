@@ -28,7 +28,7 @@ CL_max = 1.7; %This was from Cinar to use - estimated from similar aircraft with
 takeoff_distance = 2438.4; %[m] - takeoff distance per RFP
 
 rho_SL = 1.225; %[kg/m^3] - density at sea level
-rho = rho_SL; %[kg/m^3] - this is bc we want to calculate these values at sea level per RFP
+rho = 1.056; %[kg/m^3] - this is bc we want to calculate these values at 4000 ft MSL per RFP
 
 %T_W = (factor_of_safety^2/(g*rho_SL))*(1/((rho/rho_SL)*CL_max*takeoff_distance))*W_S;
 
