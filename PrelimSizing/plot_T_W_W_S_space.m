@@ -18,7 +18,7 @@ function [] = plot_T_W_W_S_space(aircraft)
 % Version history revision notes:
 %                                  v1: 9/21/2024
 
-    l = 750; % wing loading limit
+    l = 750; % wing loading limit - want this to cover up to 750 kg/m^2
     t = 1; % TW limit
     k = 300; % number of points on the plot
 

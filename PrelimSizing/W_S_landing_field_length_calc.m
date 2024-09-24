@@ -27,7 +27,7 @@ function W_S = W_S_landing_field_length_calc()
 landing_distance = 2438.4; %[m] which is = 8,000 ft (from RFP)
 rho_SL = 1.225; %[kg/m^3]
 rho = rho_SL; %[kg/m^3] - calculating this at SL per RFP
-CL_max = 2;  %This was from Cinar to use - estimated from similar aircraft with plain flaps and will be updated once we choose flaps to use
+CL_max = 1.7;  %This was from Cinar to use - estimated from similar aircraft with plain flaps and will be updated once we choose flaps to use
 Sa = 182.88; %[m] - military aircraft Sa distance according to raymer txtbook (essentially an "error" factor)
 
 W_S = (((rho/rho_SL)*CL_max) / 80)*(landing_distance*1.67-Sa); % multiply by 1.67 for the 2/3 safety margin
