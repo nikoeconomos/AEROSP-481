@@ -56,6 +56,7 @@ disp(newline)
 disp(newline)
 
 %%
+%{
 disp("cost")
 aircraft.cost
 
@@ -82,6 +83,7 @@ xtickangle(45);
 
 % Display grid for clarity
 grid on;
+%}
 
 %%
 disp(newline)

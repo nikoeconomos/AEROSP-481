@@ -18,9 +18,9 @@ function [] = plot_T_W_W_S_space(aircraft)
 % Version history revision notes:
 %                                  v1: 9/21/2024
 
-    l = 750; % wing loading limit - want this to cover up to 750 kg/m^2
+    l = 750; % wing loading limit
     t = 1; % TW limit
-    k = 300; % number of points on the plot
+    k = 750; % number of points on the plot
 
     W_S_space =  linspace(0,l,k); %kg per m^2
     T_W_space =  linspace(0,t,k); %kg per m^2
@@ -69,34 +69,35 @@ function [] = plot_T_W_W_S_space(aircraft)
     figure('Position', [100, 100, 1000, 800]); % Adjust figure size
     hold on;
     
-    to = plot(W_S_space, T_W_takeoff_field_length_arr, 'b');
-    lf = plot(W_S_landing_field_length_arr, T_W_space, 'b');
+    to = plot(W_S_space, T_W_takeoff_field_length_arr, 'b')
+    lf = plot(W_S_landing_field_length_arr, T_W_space, 'b')
 
-    cs = plot(W_S_space, T_W_cruise_speed_arr, 'g');
+    cs = plot(W_S_space, T_W_cruise_speed_arr, 'g')
 
-    m = plot(W_S_space, T_W_maneuver_arr, 'r');
+    m = plot(W_S_space, T_W_maneuver_arr, 'r')
 
-    c1 = plot(W_S_space, T_W_climb_1_arr, 'c');
-    c2 = plot(W_S_space, T_W_climb_2_arr, 'c');
-    c3 = plot(W_S_space, T_W_climb_3_arr, 'c');
-    c4 = plot(W_S_space, T_W_climb_4_arr, 'c');
-    c5 = plot(W_S_space, T_W_climb_5_arr, 'c');
-    c6 = plot(W_S_space, T_W_climb_6_arr, 'c');
+    c1 = plot(W_S_space, T_W_climb_1_arr, 'c')
+    c2 = plot(W_S_space, T_W_climb_2_arr, 'c')
+    c3 = plot(W_S_space, T_W_climb_3_arr, 'c')
+    c4 = plot(W_S_space, T_W_climb_4_arr, 'c')
+    c5 = plot(W_S_space, T_W_climb_5_arr, 'c')
+    c6 = plot(W_S_space, T_W_climb_6_arr, 'c')
 
-    ceil = plot(W_S_space, T_W_ceiling_arr, 'm');
+    plot(W_S_space, T_W_ceiling_arr, 'm')
 
-    ss = plot(W_S_stall_speed_arr, T_W_space, 'y');
     
-    legend([to,lf,cs,m,c1,c2,c3,c4,c5,c6,ceil,ss], ...
-        {'Takeoff field length','Landing field length','Cruise', ...
-        'Maneuver','Takeoff climb','Transition climb', ...
-        'Second segment climb','Enroute climb','Balked landing climb (AEO)', ...
-        'Balked landing climb (OEI)','Ceiling','Stall speed'});
 
-    xlim([0 l]); 
-    ylim([0 t]);
-    xlabel('W/S [kg/m^2]');
-    ylabel('T/W [N/kg]');
+    plot(W_S_stall_speed_arr, T_W_space, 'y')
+
+
+    legend('Takeoff field length','Landing field length','Cruise','Maneuver','Takeoff climb','Transition climb','Second segment climb',...
+            'Enroute climb','Balked landing climb (AEO)','Balked landing climb (OEI)','Ceiling','Stall speed');
+    legend('Location', 'bestoutside');
+
+    grid on;
+    xlim([0 l]); ylim([0 t]);
+    xlabel('W/S [UNITS]');
+    ylabel('T/W [UNITS]');
     title('T/W - W/S plot for Libellula''s custom interceptor');
 
     hold off;   
