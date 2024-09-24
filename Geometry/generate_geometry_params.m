@@ -23,6 +23,7 @@ function [aircraft] = generate_geometry_params(aircraft)
 %%%%%%%%%%%%%%%%%%
 
 aircraft.wing.placeholder = 0; %placeholder
-
+aircraft.geometry.aspect_ratio = 2.66; %Assumed from F-35
+aircraft.geometry.AR = 2.663; % Of the F35. TODO CHANGE ESTIMATE
 
 end

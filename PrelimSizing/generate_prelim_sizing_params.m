@@ -26,9 +26,6 @@ Swet = 10^(-.1289)*(aircraft.weight.togw)^0.7506; %Wetted surface area estimate,
 aircraft.aerodynamics.Swet = Swet*0.092903; %Wetted surface area estimate, m2
 aircraft.aerodynamics.skin_friction_coefficient = 0.0035; % skin friction coefficient estimate
 
-aircraft.geometry.aspect_ratio = 2.66; %Assumed from F-35
-aircraft.geometry.AR = 2.663; % Of the F35. TODO CHANGE ESTIMATE
-
 aircraft.aerodynamics.Sref = 0.75*aircraft.aerodynamics.Swet/aircraft.geometry.aspect_ratio; % Estimated from wetted aspect ratio graph (fig 2.4)
 aircraft.aerodynamics.span_efficiency = 0.85;
 aircraft.performance.max_sustained_g_force = 3.5;
