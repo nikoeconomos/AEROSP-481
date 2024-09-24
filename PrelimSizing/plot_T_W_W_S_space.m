@@ -25,9 +25,9 @@ function [] = plot_T_W_W_S_space(aircraft)
     W_S_space =  linspace(0,l,k); %kg per m^2
     T_W_space =  linspace(0,t,k); %kg per m^2
 
-    T_W_cruise_speed_arr = zeros(k);
-    T_W_takeoff_field_length_arr = zeros(k);
-    T_W_maneuver_arr = zeros(k);
+    T_W_cruise_speed_arr = zeros(1,k);
+    T_W_takeoff_field_length_arr = zeros(1,k);
+    T_W_maneuver_arr = zeros(1,k);
 
     for i = 1:k
         T_W_takeoff_field_length_arr(i) = T_W_takeoff_field_length_calc(W_S_space(i));
@@ -50,19 +50,19 @@ function [] = plot_T_W_W_S_space(aircraft)
     ceiling_TW = TW_climb_arr(7);
 
 
-    T_W_climb_1_arr = ones(1, k) * climb_1_TW; % takeoff
-    T_W_climb_2_arr = ones(1, k) * climb_2_TW; % transition
-    T_W_climb_3_arr = ones(1, k) * climb_3_TW; % second segment
-    T_W_climb_4_arr = ones(1, k) * climb_4_TW; % enroute
-    T_W_climb_5_arr = ones(1, k) * climb_5_TW; % aeo balked landing
-    T_W_climb_6_arr = ones(1, k) * climb_6_TW; % oei balked landing
+    T_W_climb_1_arr = ones(1, k) .* climb_1_TW; % takeoff
+    T_W_climb_2_arr = ones(1, k) .* climb_2_TW; % transition
+    T_W_climb_3_arr = ones(1, k) .* climb_3_TW; % second segment
+    T_W_climb_4_arr = ones(1, k) .* climb_4_TW; % enroute
+    T_W_climb_5_arr = ones(1, k) .* climb_5_TW; % aeo balked landing
+    T_W_climb_6_arr = ones(1, k) .* climb_6_TW; % oei balked landing
 
-    T_W_ceiling_arr = ones(1, k) * ceiling_TW;
+    T_W_ceiling_arr = ones(1, k) .* ceiling_TW;
 
 
-    W_S_landing_field_length_arr = ones(1, k) * W_S_landing_field_length_calc();
+    W_S_landing_field_length_arr = ones(1, k) .* W_S_landing_field_length_calc();
 
-    W_S_stall_speed_arr = ones(1,k) * W_S_stall_speed_calc(aircraft, aircraft.performance.cruise_alt); % using cruise altitude
+    W_S_stall_speed_arr = ones(1,k) .* W_S_stall_speed_calc(aircraft, aircraft.performance.cruise_alt); % using cruise altitude
 
     %% Plotting the calculated values %%
 
@@ -93,8 +93,8 @@ function [] = plot_T_W_W_S_space(aircraft)
         'Second segment climb','Enroute climb','Balked landing climb (AEO)', ...
         'Balked landing climb (OEI)','Ceiling','Stall speed'});
 
-    xlim([0 l]); 
-    ylim([0 t]);
+    %xlim([0 l]); 
+    %ylim([0 t]);
     xlabel('W/S [kg/m^2]');
     ylabel('T/W [N/kg]');
     title('T/W - W/S plot for Libellula''s custom interceptor');
