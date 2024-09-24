@@ -42,7 +42,6 @@ aircraft = generate_prelim_sizing_params(aircraft);
 
 plot_T_W_W_S_space(aircraft)
 drawnow
-pause(0.1)
 
 %%
 disp("mission")
