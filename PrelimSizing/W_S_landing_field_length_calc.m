@@ -23,10 +23,10 @@ function W_S = W_S_landing_field_length_calc()
 % Version history revision notes:
 %                                  v1: 9/22/2024
 
-ks = .107; %[kg/m^3]
+ks = .107; %[kg/m^3] - comes from raymer textbook LDG equation
 landing_distance = 2438.4; %[m] which is = 8,000 ft (from RFP)
 rho_SL = 1.225; %[kg/m^3]
-rho = rho_SL; %[kg/m^3] - calculating this at SL per RFP
+rho = 1.056; %[kg/m^3] - calculating this at SL per RFP
 CL_max = 2;  %This was from Cinar to use - estimated from similar aircraft with plain flaps and will be updated once we choose flaps to use
 Sa = 182.88; %[m] - military aircraft Sa distance according to raymer txtbook (essentially an "error" factor)
 landing_distance = landing_distance - Sa; %[m] - essentially an error calc - the landing distance availible must be > landing distance it takes by 600 ft
