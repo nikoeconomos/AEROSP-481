@@ -30,7 +30,7 @@ aircraft.mission.climb.segment_names = ["takeoff climb", "transition climb", "se
 
 %% CLIMB GRADIENT %%
 %%%%%%%%%%%%%%%%%%%%
-G_overshoot = 1.3;  % Given that we are often trying to complete interception missions, a larger climb gradient 
+G_overshoot = 1;  % Given that we are often trying to complete interception missions, a larger climb gradient 
 % may be desirable in climb scenarios when the aircraft is heading out to complete its mission 
 
 aircraft.mission.climb.G = [0.012 * G_overshoot, 0*G_overshoot, 0.024*G_overshoot,...
