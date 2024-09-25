@@ -33,8 +33,6 @@ aircraft.aerodynamics.Cf = 0.0035; % skin friction coefficient estimate figure 4
 
 aircraft.aerodynamics.e_maneuver = 0.8; % TODO not sure if this changes. Used in maneuver. Can be replaced by e_cruise
 
-aircraft.performance.cruise_mach = 0.8; % TODO @VICTORIA give reasoning why. Used in TW cruise calc
-
 %% Drag polar %%
 %%%%%%%%%%%%%%%%
 
@@ -42,8 +40,8 @@ aircraft = generate_drag_polar_params(aircraft);
 
 %% Stall Speed at takeoff 
 
-aircraft.environment.rho_SL_15C = 1.225; %[kg.m^3]  % UPDATE TO INCLUDE THE TEMP
-aircraft.environment.rho_SL_45C = 1.109; % [kg/m^3]
+aircraft.environment.rho_SL_15C = 1.225; %[kg.m^3]  % 15 degrees celsius, sea level
+aircraft.environment.rho_SL_45C = 1.109; % [kg/m^3] % 45 degrees celsius, sea level. Calculated from an online calc
 
 %aircraft.aerodynamics.V_stall = stall_speed_calc(aircraft.aerodynamics.W_S,aircraft.aerodynamics.rho,aircraft.aerodynamics.CL_max_takeoff);
 

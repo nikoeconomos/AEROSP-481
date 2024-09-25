@@ -22,10 +22,6 @@ function aircraft = generate_prelim_sizing_params(aircraft)
 %% ***CATEGORY*** %%
 %%%%%%%%%%%%%%%%%%%%
 
-
-aircraft.performance.max_sustained_g_force = 3.5;
-aircraft.performance.max_sustained_turn_mach = 1.2;
-
 aircraft.performance.cruise_speed_mach = 0.8; % mach number taken from an average in our historical dataset
 
 aircraft = generate_climb_segments(aircraft);

@@ -95,7 +95,7 @@ function [] = plot_T_W_W_S_space(aircraft)
     xlim([0 l]); 
     ylim([0 t]);
     xlabel('W/S [kg/m^2]');
-    ylabel('T/W [N/kg]');
+    ylabel('T/W [N/N]');
     title('T/W - W/S plot for Libellula''s custom interceptor');
 
     hold off;   
