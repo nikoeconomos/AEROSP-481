@@ -37,9 +37,8 @@ end
 aircraft = generate_weight_params(aircraft);
 aircraft = generate_prop_params(aircraft);
 aircraft = generate_cost_params(aircraft);
-aircraft = generate_aerodynamics_params(aircraft);
 aircraft = generate_geometry_params(aircraft);
-aircraft = generate_drag_polar_params(aircraft);
+aircraft = generate_aerodynamics_params(aircraft);
 aircraft = generate_prelim_sizing_params(aircraft);
 
 plot_T_W_W_S_space(aircraft)

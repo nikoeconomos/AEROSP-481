@@ -18,23 +18,23 @@ function [] = plot_T_W_W_S_space(aircraft)
 % Version history revision notes:
 %                                  v1: 9/21/2024
 
-    l = 750; % wing loading limit - want this to cover up to 750 kg/m^2
-    t = 1; % TW limit
+    l = 1000; % wing loading limit - want this to cover up to 750 kg/m^2
+    t = 1.25; % TW limit
     k = 300; % number of points on the plot
 
     W_S_space =  linspace(0,l,k); %kg per m^2
     T_W_space =  linspace(0,t,k); %kg per m^2
 
-    T_W_cruise_speed_arr = zeros(1,k);
+    T_W_cruise_arr = zeros(1,k);
     T_W_takeoff_field_length_arr = zeros(1,k);
     T_W_maneuver_arr = zeros(1,k);
 
     for i = 1:k
-        T_W_takeoff_field_length_arr(i) = T_W_takeoff_field_length_calc(W_S_space(i));
+        T_W_takeoff_field_length_arr(i) = T_W_takeoff_field_length_calc(aircraft, W_S_space(i));
 
-        T_W_cruise_speed_arr(i) = T_W_cruise_speed_calc(W_S_space(i));
+        T_W_cruise_arr(i) = T_W_cruise_calc(aircraft, W_S_space(i));
 
-        T_W_maneuver_arr(i) = T_W_maneuver_calc(W_S_space(i));
+        T_W_maneuver_arr(i) = T_W_maneuver_calc(aircraft, W_S_space(i));
     end
 
     % climb calculations
@@ -59,19 +59,19 @@ function [] = plot_T_W_W_S_space(aircraft)
     T_W_ceiling_arr = ones(1, k) .* ceiling_TW;
 
 
-    W_S_landing_field_length_arr = ones(1, k) .* W_S_landing_field_length_calc();
+    W_S_landing_field_length_arr = ones(1, k) .* W_S_landing_field_length_calc(aircraft);
 
-    W_S_stall_speed_arr = ones(1,k) .* W_S_stall_speed_calc(aircraft, aircraft.performance.cruise_alt); % using cruise altitude
+    W_S_stall_speed_arr = ones(1,k) .* W_S_stall_speed_calc(aircraft, aircraft.environment.rho_SL_45C); % using cruise altitude
 
     %% Plotting the calculated values %%
 
-    figure('Position', [100, 100, 1000, 800]); % Adjust figure size
+    figure('Position', [50, 50, 1000, 800]); % Adjust figure size
     hold on;
     
     to = plot(W_S_space, T_W_takeoff_field_length_arr, 'b',LineWidth=1.2);
     lf = plot(W_S_landing_field_length_arr, T_W_space, 'b',LineWidth=1.2);
 
-    cs = plot(W_S_space, T_W_cruise_speed_arr, 'g',LineWidth=1.2);
+    cs = plot(W_S_space, T_W_cruise_arr, 'g',LineWidth=1.2);
 
     m = plot(W_S_space, T_W_maneuver_arr, 'r',LineWidth=1.2);
 
@@ -92,8 +92,8 @@ function [] = plot_T_W_W_S_space(aircraft)
         'Second segment climb','Enroute climb','Balked landing climb (AEO)', ...
         'Balked landing climb (OEI)','Ceiling','Stall speed'});
 
-    %xlim([0 l]); 
-    %ylim([0 t]);
+    xlim([0 l]); 
+    ylim([0 t]);
     xlabel('W/S [kg/m^2]');
     ylabel('T/W [N/kg]');
     title('T/W - W/S plot for Libellula''s custom interceptor');

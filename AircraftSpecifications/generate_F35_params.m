@@ -100,7 +100,7 @@ aircraft.aerodynamics.rho = 1.225; %[kg.m^3]
 
 aircraft.aerodynamics.V_stall = stall_speed_calc(aircraft.aerodynamics.W_S,aircraft.aerodynamics.rho,aircraft.aerodynamics.CL_max_takeoff);
 
-
+aircraft.safety_factor = 1.5; % defined from our RFP
 
 %% PROPULSION %%
 %%------------%%
@@ -116,12 +116,5 @@ aircraft.propulsion.T_max = aircraft.propulsion.engine_count*191273.53; %[N]
 
 % military thrust
 aircraft.propulsion.T_military = aircraft.propulsion.engine_count*124550.2; %[N]
-
-
-%% %% %% %% UTILITY %% %% %% %%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% miscelaneous constants for fluids/ performance calculations
-aircraft.constants = generate_constants();
 
 end

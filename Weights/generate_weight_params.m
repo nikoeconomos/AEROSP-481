@@ -65,6 +65,8 @@ aircraft.weight.togw = togw;
 aircraft.weight.empty = w_empty;
 aircraft.weight.fuel = aircraft.weight.ff*aircraft.weight.togw;
 
+aircraft.weight.max_landing_weight = 0.85 * aircraft.weight.togw; % Googled common share of togw that is max landing weight
+
 %% COMPONENT DENSITIES %%
 %%%%%%%%%%%%%%%%%%%%%%%%%
 

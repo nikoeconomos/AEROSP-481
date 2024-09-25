@@ -1,9 +1,6 @@
-function tw = T_W_maneuver_calc(ws)
-% Description: This function generates a plot of T/W vs W/S as part of a
-% constraint diagram in relation to the maneuvering requirement. If
-% desired, assigning this function to the aircraft will add the parasitic
-% drag coefficient estimate and arrays for sample W/S values and their
-% corresponding minimum T/W requirements.
+function [T_W] = T_W_maneuver_calc(aircraft, W_S)
+% Description: This function generates T/W for a given W/S value for the
+% aircraft's max sustained turn, mach 1.2. this is derived from equation 4.33
 % 
 % 
 % INPUTS:
@@ -13,7 +10,7 @@ function tw = T_W_maneuver_calc(ws)
 % 
 % OUTPUTS:
 % --------------------------------------------
-%    tw - outputted thrust to weight constraint
+%    T_W - outputted thrust to weight constraint
 %                       
 % 
 % See also: generate_prelim_sizing_params.m - required to run prior to this
@@ -21,18 +18,20 @@ function tw = T_W_maneuver_calc(ws)
 % Author:                          Joon Kyo Kim
 % Version history revision notes:
 %                                  v1: 9/21/2024
-    ws = ws*9.807; %Pa
-    togw = 9005; %kg, based on DCA mission
-    Swet = 10^(-.1289)*(togw)^0.7506; %Wetted surface area estimate, ft2
-    Swet = Swet*0.092903; %Wetted surface area estimate, m2
-    skin_friction_coefficient = 0.0035; % skin friction coefficient estimate
-    aspect_ratio = 2.66; %Assumed from F-35
-    Sref = 0.75*Swet/aspect_ratio; % Estimated from wetted aspect ratio graph (fig 2.4)
-    span_efficiency = 0.85;
-    max_sustained_g_force = 3.5;
-    max_sustained_turn_mach = 1.2;
-    parasitic_drag_coeff_est = skin_friction_coefficient*Swet/(Sref);
-    [t,p,rho,a] = standard_atmosphere_calc(10668); %35000ft = 10668m
-    q = rho*(a*max_sustained_turn_mach)^2/2; % Pa
-    tw = q*parasitic_drag_coeff_est/ws + (max_sustained_g_force^2/(q*pi*aspect_ratio*span_efficiency))*ws;
+
+%% Define variables
+    AR = aircraft.geometry.AR;
+    
+    e_maneuver = aircraft.aerodynamics.e_maneuver;
+
+    n = aircraft.performance.g_force_upper_limit; % load factor, AKA max sustained g force, n
+    max_sustained_turn_mach = aircraft.performance.max_sustained_turn_mach;
+
+    CD0_clean = aircraft.aerodynamics.CD0_clean;
+
+    [~,~,rho,a] = standard_atmosphere_calc(10668); %35000ft = 10668m
+
+%% calculation
+    q   = rho*(a*max_sustained_turn_mach)^2/2; % Pa
+    T_W = q*CD0_clean/W_S + (n^2/(q*pi*AR*e_maneuver))*W_S;
 end

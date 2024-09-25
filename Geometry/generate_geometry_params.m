@@ -22,12 +22,18 @@ function [aircraft] = generate_geometry_params(aircraft)
 %% WING %%
 %%%%%%%%%%%%%%%%%%
 
-aircraft.wing.placeholder = 0; %placeholder
-aircraft.geometry.aspect_ratio = 2.66; %Assumed from F-35
-aircraft.geometry.AR = 2.663; % Of the F35. TODO CHANGE ESTIMATE
+ft2_to_m2 = 0.092903;
+kg_to_lb = 2.20462;
 
-S_wet = 10^(-.1289)*(aircraft.weight.togw)^0.7506; %Wetted surface area estimate, ft2
-aircraft.aerodynamics.S_wet = S_wet*0.092903;
-aircraft.geometry.S_ref = 0.75*aircraft.aerodynamics.S_wet/aircraft.geometry.aspect_ratio; % Estimated from wetted aspect ratio graph (fig 2.4)
+aircraft.geometry.AR = 2.663; % [unitless] % Of the F35. TODO CHANGE ESTIMATE
 
+c = -0.1289;
+d = 0.7506;
+
+S_wet = 10^(c)*(aircraft.weight.togw*kg_to_lb)^d; % [ft^2] %Wetted surface area estimate, eq metabook 4.9, roskam table 3.22 fighter
+aircraft.geometry.S_wet = S_wet*ft2_to_m2; % [m^2]
+
+aircraft.geometry.S_ref = 0.75*aircraft.geometry.S_wet/aircraft.geometry.AR ; % [m] % Estimated from wetted aspect ratio graph, given a LDmax of 12 (fig 2.4 metabook)
+
+%aircraft.geometry.S = ??; %Todo uncomment when found
 end

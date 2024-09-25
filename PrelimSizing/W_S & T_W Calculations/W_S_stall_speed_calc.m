@@ -1,11 +1,12 @@
 % Aerosp 481 Group 3 - Libellula 
-function [W_S] = W_S_stall_speed_calc(aircraft, alt)
+function [W_S] = W_S_stall_speed_calc(aircraft, rho)
 % Description: 
 % 
 % 
 % INPUTS:
 % --------------------------------------------
 %    aircraft - aircraft struct with specs
+%    rho - air density of stall conditions (alt, temp, etc)
 % 
 % OUTPUTS:
 % --------------------------------------------
@@ -17,9 +18,9 @@ function [W_S] = W_S_stall_speed_calc(aircraft, alt)
 % Version history revision notes:
 %                                  v1: 9/14/2024
 
+% Assume takeoff CL, at takeoff weight, at some higher altitude for buffer
+v_stall = sqrt(2 * aircraft.weight.togw * 9.807/(rho * aircraft.aerodynamics.CL_takeoff_flaps * aircraft.geometry.S_wet));
 
-[~, ~, Rho, ~] = standard_atmosphere_calc(alt);
-stall_speed = sqrt(2*aircraft.weight.togw*9.807/(Rho*aircraft.aerodynamics.CL_takeoff*aircraft.aerodynamics.S_wet)); %Assume takeoff CL, at takeoff weight, at some higher altitude for buffer
-W_S = 0.5*Rho*stall_speed^2*aircraft.aerodynamics.CL_takeoff/9.807;
+W_S = 0.5 * rho * v_stall^2 * aircraft.aerodynamics.CL_takeoff_flaps/9.807;
 
 end

@@ -18,6 +18,8 @@ function T_W_ceiling_constraint = T_W_ceiling_calc()
 % Author:                          Joon
 % Version history revision notes:
 %                                  v1: 9/22/2024
+
+% CURRENTLY UNUSED!
     togw = 9005; %kg, based on DCA mission
     Swet = 10^(-.1289)*(togw)^0.7506; %Wetted surface area estimate, ft2
     Swet = Swet*0.092903; %Wetted surface area estimate, m2
@@ -28,3 +30,5 @@ function T_W_ceiling_constraint = T_W_ceiling_calc()
     CD0 = skin_friction_coefficient*Swet/(Sref);
     G = 1/15; % 1 mile climb per 15 mile traveled; reasonable climb gradient at service ceiling
     T_W_ceiling_constraint = 2*sqrt(CD0/(pi*aspect_ratio*span_efficiency))+G;
+
+end

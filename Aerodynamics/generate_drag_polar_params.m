@@ -20,57 +20,60 @@ function [aircraft] = generate_drag_polar_params(aircraft)
 %                                  v1: 9/23/2024
 
 
-%% Drag Polar and Parasite Drag Coefficent 
+%% Parasite Drag Coefficent & grabbing constants
 
-aircraft.aerodynamics.Cf_clean = 0.0040;  % Skin friction coefficient (from table 12.3)
-aircraft.aerodynamics.c_coeff = -0.1289;   % Constant for Jet Fighter from reference table
-aircraft.aerodynamics.d_coeff = 0.7506;    % Constant for Jet Fighter from reference table
-aircraft.aerodynamics.delta_CD0_clean = 0;
-
+Cf = aircraft.aerodynamics.Cf;  % Skin friction coefficient (metabook table 4.4)
+S_wet = aircraft.geometry.S_wet;
+S_ref = aircraft.geometry.S_ref;
+AR = aircraft.geometry.AR;
 
 %% ----------- Clean Configuration (Cruise) -----------
 % parasite drag coefficient (CD0) for clean configuration
-aircraft.aerodynamics.CD0_clean = parasite_drag_calc(aircraft.weight.togw, aircraft.geometry.S_ref, aircraft.aerodynamics.Cf_clean, aircraft.aerodynamics.c_coeff, aircraft.aerodynamics.d_coeff, 0);
+aircraft.aerodynamics.CD0_clean = CD0_calc(Cf, S_wet, S_ref);
 
-%total drag coefficient using drag polar for cruise
-aircraft.aerodynamics.e_cruise = 0.825;
-aircraft.aerodynamics.CL_cruise = 1.25;
-aircraft.aerodynamics.CD_cruise = drag_polar_calc(aircraft.aerodynamics.CD0_clean, ...
-    aircraft.aerodynamics.CL_cruise, aircraft.geometry.AR, aircraft.aerodynamics.e_cruise);
+aircraft.aerodynamics.e_cruise = 0.80; %from table 4.2 metabook
+aircraft.aerodynamics.CL_cruise = 1.25; % from 06 Preliminary sizing presentation Slide 48
+aircraft.aerodynamics.CD_cruise = CD_parabolic_drag_polar_calc(aircraft.aerodynamics.CD0_clean, aircraft.aerodynamics.CL_cruise,...
+                                                               AR, aircraft.aerodynamics.e_cruise);
 
-%% ----------- Takeoff Configuration (Flaps Deployed) -----------
-aircraft.aerodynamics.delta_CD0_takeoff = 0.015;  % Additional drag due to takeoff flaps
+%% ----------- Takeoff Configuration 2 (Flaps Deployed, gear down ) -----------
 
-%parasite drag coefficient (CD0) for takeoff configuration
-aircraft.aerodynamics.CD0_takeoff = parasite_drag_calc(aircraft.weight.togw, aircraft.geometry.S_ref, aircraft.aerodynamics.Cf_clean, aircraft.aerodynamics.c_coeff, aircraft.aerodynamics.d_coeff, aircraft.aerodynamics.delta_CD0_takeoff);
+aircraft.aerodynamics.e_takeoff_flaps = 0.75; % from table 4.2 metabook
+aircraft.aerodynamics.CL_takeoff_flaps = 1.7; % from 06 Preliminary sizing presentation Slide 48
 
-%total drag coefficient for takeoff using drag polar
-aircraft.aerodynamics.e_takeoff = 0.775;
-aircraft.aerodynamics.CL_takeoff = 1.6;
-aircraft.aerodynamics.CD_takeoff = drag_polar_calc(aircraft.aerodynamics.CD0_takeoff, ...
-                                                    aircraft.aerodynamics.CL_takeoff, aircraft.geometry.AR, aircraft.aerodynamics.e_takeoff);
+% calculate new parasitic drag
+delta_CD0_takeoff_flaps = 0.010;  % Additional drag due to takeoff flaps, metabook table 4.2
+aircraft.aerodynamics.CD0_takeoff_flaps = aircraft.aerodynamics.CD0_clean + delta_CD0_takeoff_flaps;
 
-%% ----------- Landing Configuration (Flaps) -----------
-aircraft.aerodynamics.delta_CD0_landing_flaps = 0.065;  % Additional drag due to landing flaps
+aircraft.aerodynamics.CD_takeoff_flaps_gear = CD_parabolic_drag_polar_calc(aircraft.aerodynamics.CD0_takeoff_flaps, aircraft.aerodynamics.CL_takeoff_flaps, ...
+                                                                           AR, aircraft.aerodynamics.e_takeoff_flaps);
+%% ----------- Takeoff Configuration 1 (Flaps deployed, gear up) -------------
 
-%parasite drag coefficient (CD0) for landing configuration
-aircraft.aerodynamics.CD0_landing_flaps = parasite_drag_calc(aircraft.weight.togw, aircraft.geometry.S_ref, aircraft.aerodynamics.Cf_clean, aircraft.aerodynamics.c_coeff, aircraft.aerodynamics.d_coeff, aircraft.aerodynamics.delta_CD0_landing_flaps);
+delta_CD0_gear_down = 0.015;  % Additional drag due to LG, metabook table 4.2
+aircraft.aerodynamics.CD0_takeoff_flaps_gear = aircraft.aerodynamics.CD0_clean + delta_CD0_takeoff_flaps + delta_CD0_gear_down;
 
-%total drag coefficient for landing using the drag polar equation
-aircraft.aerodynamics.e_landing_flaps = 0.725;
-aircraft.aerodynamics.CL_landing_flaps = 1.9;
-aircraft.aerodynamics.CD_landing_flaps = drag_polar_calc(aircraft.aerodynamics.CD0_landing_flaps, ...
-                                        aircraft.aerodynamics.CL_landing_flaps, aircraft.geometry.AR, aircraft.aerodynamics.e_landing_flaps);
+aircraft.aerodynamics.CD_takeoff_flaps = CD_parabolic_drag_polar_calc(aircraft.aerodynamics.CD0_takeoff_flaps, aircraft.aerodynamics.CL_takeoff_flaps, ...
+                                                                      AR, aircraft.aerodynamics.e_takeoff_flaps);
 
-%% ----------- Landing Configuration (Flaps and Gear Deployed) -----------
-aircraft.aerodynamics.delta_CD0_landing_flaps_gears = 0.020;  % Additional drag due to landing flaps and gear
 
-aircraft.aerodynamics.CD0_landing_flaps_gears = parasite_drag_calc(aircraft.weight.togw, aircraft.geometry.S_ref, aircraft.aerodynamics.Cf_clean, aircraft.aerodynamics.c_coeff, aircraft.aerodynamics.d_coeff, aircraft.aerodynamics.delta_CD0_landing_flaps_gears);
-%total drag coefficient for landing using the drag polar equation
-aircraft.aerodynamics.e_landing_flaps_gears = 1;
-aircraft.aerodynamics.CL_landing_flaps_gears = 2.0;
-aircraft.aerodynamics.CD_landing_flaps_gears = drag_polar_calc(aircraft.aerodynamics.CD0_landing_flaps_gears, ...
-aircraft.aerodynamics.CL_landing_flaps_gears, aircraft.geometry.AR, aircraft.aerodynamics.e_landing_flaps_gears);
+%% ----------- Landing Configuration 1 (Flaps, gear up) -----------
+aircraft.aerodynamics.e_landing_flaps = 0.70; % from table 4.2 metabook
+aircraft.aerodynamics.CL_landing_flaps = 2.0; % from 06 Preliminary sizing presentation Slide 48
+
+% calculate new parasitic drag
+delta_CD0_landing_flaps = 0.055;  % Additional drag due to landing flaps, metabook table 4.2
+aircraft.aerodynamics.CD0_landing_flaps = aircraft.aerodynamics.CD0_clean + delta_CD0_landing_flaps;
+
+aircraft.aerodynamics.CD_landing_flaps = CD_parabolic_drag_polar_calc(aircraft.aerodynamics.CD0_landing_flaps, aircraft.aerodynamics.CL_landing_flaps, ...
+                                                                      AR, aircraft.aerodynamics.e_landing_flaps);
+
+%% ----------- Landing Configuration 2 (Flaps and Gear Deployed) -----------
+
+delta_CD0_gear_down = 0.015;  % Additional drag due to LG, metabook table 4.2
+aircraft.aerodynamics.CD0_landing_flaps_gear = aircraft.aerodynamics.CD0_clean + delta_CD0_landing_flaps + delta_CD0_gear_down;
+
+aircraft.aerodynamics.CD_landing_flaps_gear = CD_parabolic_drag_polar_calc(aircraft.aerodynamics.CD0_landing_flaps_gear, aircraft.aerodynamics.CL_landing_flaps,...
+                                                                           AR, aircraft.aerodynamics.e_landing_flaps);
 
 
 end

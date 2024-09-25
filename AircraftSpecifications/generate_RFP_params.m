@@ -44,11 +44,10 @@ aircraft.performance.g_force_lower_limit = -3; % [g's]
 
 aircraft.performance.cruise_alt = 10668; % [m]
 
+aircraft.performance.max_sustained_turn_mach = 1.2; %[Mach]
 
-%% %% %% %% UTILITY %% %% %% %%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+aircraft.performance.min_sustained_turn_mach = 0.9; %[Mach]
 
-% miscelaneous constants for fluids/ performance calculations
-aircraft.constants = generate_constants();
+aircraft.safety_factor = 1.5;
 
 end
