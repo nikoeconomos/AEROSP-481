@@ -28,5 +28,6 @@ aircraft = generate_climb_segments(aircraft);
 
 % Thrust design point
 % S design point put in
-
+aircraft.propulsion.T_guess = 191000; %N
+aircraft.geometry.S_guess = 41; %m2
 end
