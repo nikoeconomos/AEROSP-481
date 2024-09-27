@@ -19,7 +19,7 @@ function [] = plot_T_W_W_S_space(aircraft)
 %                                  v1: 9/21/2024
 
     l = 1000; % wing loading limit - want this to cover up to 750 kg/m^2
-    t = 1.25; % TW limit
+    t = 1.2; % TW limit
     k = 300; % number of points on the plot
 
     W_S_space =  linspace(0,l,k); %kg per m^2

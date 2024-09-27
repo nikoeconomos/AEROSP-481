@@ -22,7 +22,7 @@ function aircraft = generate_prelim_sizing_params(aircraft)
 %% ***CATEGORY*** %%
 %%%%%%%%%%%%%%%%%%%%
 
-aircraft.performance.cruise_speed_mach = 0.8; % mach number taken from an average in our historical dataset
+aircraft.performance.cruise_mach = 0.8; % mach number taken from an average in our historical dataset
 
 aircraft = generate_climb_segments(aircraft);
 
