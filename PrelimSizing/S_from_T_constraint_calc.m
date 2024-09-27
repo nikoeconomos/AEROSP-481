@@ -1,4 +1,4 @@
-function [S] = S_from_T_constraint_calc(T, f)
+function [S] = S_from_T_constraint_calc(T)
 % Description: This function returns an array of S values from T inputs
 % based on a constraint function f
 %
