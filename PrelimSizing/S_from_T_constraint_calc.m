@@ -23,7 +23,7 @@ function [S] = S_from_T_constraint_calc(T, f)
     
     for i = 1:length(S)
         T0 = T(i);          % Prescribe thrust area
-        S(i) = S_guess;     % Initial wing area guess TODO INSERT ACTUAL GUESS
+        S(i) = 42;     % Initial wing area guess (m2); based on F-35, slightly above; reasoning in notes
         tolerance = 0.1;    % Convergence tolerance
         converged = false;
     

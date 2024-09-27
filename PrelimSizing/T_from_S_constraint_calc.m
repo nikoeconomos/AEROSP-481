@@ -23,7 +23,7 @@ function [T] = T_from_S_constraint_calc(S, f)
     
     for i = 1:length(S)
         S0 = S(i);          % Prescribe wing area
-        T(i) = T_guess;     % Initial thrust guess TODO INSERT
+        T(i) = 191000;     % Initial thrust guess (N); based on F-35, reasoning in notes
         tolerance = 0.1;    % Convergence tolerance
         converged = false;
     
