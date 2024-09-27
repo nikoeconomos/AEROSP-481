@@ -31,22 +31,22 @@ function [] = plot_T_S_space(aircraft)
     S = linspace(s_min,s_max,k); %kg per m^2
     T = linspace(t_min,t_max, k); % N
 
-    T_takeoff_field_length = T_from_S_constraint_calc(S, @T_W_takeoff_field_length_calc);
-    S_landing_field_length = S_from_T_constraint_calc(T, @W_S_landing_field_length_calc);
+    T_takeoff_field_length = T_from_S_constraint_calc(aircraft,S, @T_W_takeoff_field_length_calc);
+    S_landing_field_length = S_from_T_constraint_calc(aircraft,T, @W_S_landing_field_length_calc);
 
-    T_cruise_speed = T_from_S_constraint_calc(S, @T_W_cruise_speed_calc);
-    T_maneuver = T_from_S_constraint_calc(S, @T_W_maneuver_calc);
+    T_cruise_speed = T_from_S_constraint_calc(aircraft, S, @T_W_cruise_speed_calc);
+    T_maneuver = T_from_S_constraint_calc(aircraft, S, @T_W_maneuver_calc);
 
-    T_climb_1 = T_from_S_constraint_calc(S, @T_W_climb1_calc); % TODO UPDATE/test with individualized climb calcs
-    T_climb_2 = T_from_S_constraint_calc(S, @T_W_climb2_calc);
-    T_climb_3 = T_from_S_constraint_calc(S, @T_W_climb3_calc);
-    T_climb_4 = T_from_S_constraint_calc(S, @T_W_climb4_calc);
-    T_climb_5 = T_from_S_constraint_calc(S, @T_W_climb5_calc);
-    T_climb_6 = T_from_S_constraint_calc(S, @T_W_climb6_calc);
+    T_climb_1 = T_from_S_constraint_calc(aircraft, S, @T_W_climb1_calc); % TODO UPDATE/test with individualized climb calcs
+    T_climb_2 = T_from_S_constraint_calc(aircraft, S, @T_W_climb2_calc);
+    T_climb_3 = T_from_S_constraint_calc(aircraft, S, @T_W_climb3_calc);
+    T_climb_4 = T_from_S_constraint_calc(aircraft, S, @T_W_climb4_calc);
+    T_climb_5 = T_from_S_constraint_calc(aircraft, S, @T_W_climb5_calc);
+    T_climb_6 = T_from_S_constraint_calc(aircraft, S, @T_W_climb6_calc);
 
-    T_ceiling = T_from_S_constraint_calc(S, @T_W_ceiling_calc);
+    T_ceiling = T_from_S_constraint_calc(aircraft, S, @T_W_ceiling_calc);
 
-    S_stall_speed = S_from_T_constraint_calc(T, @W_S_stall_speed_calc);
+    S_stall_speed = S_from_T_constraint_calc(aircraft, T, @W_S_stall_speed_calc);
 
     %% Plotting the calculated constraints %%
 
