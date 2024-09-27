@@ -32,7 +32,7 @@ function [togw, w_e] = togw_as_func_of_T_S_calc(aircraft, S)
     % the algorithm given in section 2.5 of the meta guide.
     while delta > epsilon
 
-        S_design = 475;% just plugging in values to test 
+        S_design = 475;
         T_0_design = 0.85;% just plugging in values to test 
         wing_density = 44;
         empty_weight_fraction = (A * w_0^C); % w_e/w_0

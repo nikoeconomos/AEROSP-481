@@ -19,7 +19,7 @@ function T_W = T_W_cruise_calc(aircraft, W_S)
 % Version history revision notes:
 %                                  v1: 9/22/2024
 
-    cruise_mach = aircraft.performance.cruise_mach;    
+    cruise_mach = aircraft.performance.cruise_speed_mach;    
 
     AR = aircraft.geometry.AR;
     
