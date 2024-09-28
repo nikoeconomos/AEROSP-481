@@ -1,4 +1,4 @@
-function [S] = S_from_T_constraint_calc(T, f)
+function [S] = S_from_T_constraint_calc(aircraft, T, f)
 % Description: This function returns an array of S values from T inputs
 % based on a constraint function f
 %
@@ -28,7 +28,7 @@ function [S] = S_from_T_constraint_calc(T, f)
         converged = false;
     
         while ~converged
-            W = togw_as_func_of_T_S_calc(S(i), T0);      % Compute TOGW TODO FINISH THIS FUNC
+            W = togw_as_func_of_T_S_calc(aircraft, T0, S(i));      % Compute TOGW TODO FINISH THIS FUNC
             thrust_to_weight =  T0/W;                    % Compute T/W
             wing_loading_new = f(thrust_to_weight);      % Compute W/S from constraint equation TODO 
             S_new = W/wing_loading_new;                  % Compute new wing area

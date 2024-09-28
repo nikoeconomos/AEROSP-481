@@ -27,7 +27,8 @@ aircraft.performance.cruise_mach = 0.8; % mach number taken from an average in o
 aircraft = generate_climb_segments(aircraft);
 
 % Thrust design point
+aircraft.design_point.T_des = 191000; %N
+
 % S design point put in
-aircraft.propulsion.T_guess = 191000; %N
-aircraft.geometry.S_guess = 41; %m2
+aircraft.design_point.S_des = 41; %m2
 end
