@@ -1,4 +1,4 @@
-function [aircraft] = W_from_S_constraint_calc(S_des,aircraft)
+function [aircraft] = W_from_S_constraint_calc(aircraft,S)
 % Description: This function returns an array of T values from S inputs
 % based on a constraint function f
 %
@@ -25,12 +25,13 @@ delta = 2*tol;
 
 while delta > tol
 
-    empty_weight_fraction = 2.11*W0^-0.13; % From Raymer table 3.1
-    empty_weight = empty_weight_fraction*W0;
-    empty_weight = empty_weight + wing_dens * (aircraft.geometry.S_ref - S_des);
-    empty_weight = empty_weight + w_eng_calc(aircraft.propulsion.T_military) - w_eng_calc(aircraft.design_point.T_des);
+    empty_weight_fraction = 2.11*W0^-0.13; % Re-do regression from Raymer table 3.1
+    empty_weight = empty_weight_fraction*W0; % Find actual empty weight
+    empty_weight = empty_weight + wing_dens * (S - aircraft.design_point.S_des); % Account for wing size from planform area
+    empty_weight = empty_weight + w_eng_calc(aircraft.propulsion.T_military) - ...
+    w_eng_calc(aircraft.design_point.T_des); % Account for engine weight with design point thrust and with original estimated thrust
 
-    fuel_fraction = ff_from_S_calc(aircraft.design_point.S_des);
+    fuel_fraction = ff_total_func_S_calc(aircraft,S); % Use updated fuel fraction now inforporating design point S
     
     W0_new = (aircraft.weight.crew + aircraft.weight.payload) / (1 - fuel_fraction - empty_weight_fraction);
 
