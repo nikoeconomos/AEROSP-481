@@ -1,5 +1,5 @@
 % Aerosp 481 Group 3 - Libellula 
-function [aircraft] = generate_weight_params(aircraft,S)
+function [aircraft] = generate_weight_params(aircraft)
 % Description: This function generates a struct for the weights of aircraft
 % using various helper methods
 % 
@@ -59,13 +59,15 @@ aircraft.weight.payload = aircraft.payload.num_missiles*aircraft.weight.missile 
 
 %% Weight Calculations %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%
-
-aircraft.weight.ff = ff_total_func_S_calc(aircraft,S);
+S = 42; %GUESS PARAMETER FROM F-35
 
 [togw,w_e] = togw_as_func_of_T_S_calc(aircraft,S);
 
 aircraft.weight.togw = togw;
 aircraft.weight.empty = w_e;
+
+aircraft.weight.ff = ff_total_func_S_calc(aircraft,S);
+
 aircraft.weight.fuel = aircraft.weight.ff*aircraft.weight.togw;
 
 aircraft.weight.max_landing_weight = 0.85 * aircraft.weight.togw; % Googled common share of togw that is max landing weight

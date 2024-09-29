@@ -26,11 +26,11 @@ function [ff_total_adjusted] = ff_total_func_S_calc(aircraft,S)
 
 % Lift to drag estimated based on the F-35A, currently omitting the calculation method on the metabook, therefore
 % function argument doesn't matter as lift_to_drag_calc() is currently defined and all argument values can be arbitrary.
-%[LD_max, LD_cruise] = LD_calc(); 
+[LD_max, LD_cruise] = LD_calc(); 
 
 % Expecting decrease in aerodynamic efficiency during dash due to 
 % supersonic flight conditions, arbitrarily picked a loss of 7%
-%LD_dash = 0.93 * LD_cruise; 
+LD_dash = 0.93 * LD_cruise; 
 
 % Assuming aircraft is optimized for combat and has maximum lift_to_drag
 % ratio during this mission segment
@@ -50,8 +50,7 @@ LD_ratio = LD_calc_new(CD0, k);
 cSL = 27191.05; % Specific fuel consumption at sea level [1/hr]
 T = 79.2; % Maximum thrust [kN]
 
-[togw] = togw_as_func_of_T_S_calc(aircraft, S);
-W0 = togw;
+W0 = aircraft.weight.togw;
 
 mission = aircraft.mission;
 mission.ff = NaN(size(mission.segments));

@@ -20,9 +20,7 @@ kg_to_lb = 2.20462;
 
 c = -0.1289;
 d = 0.7506;
-
-[togw] = togw_as_func_of_T_S_calc(aircraft, S);
-W0 = togw;
+W0 = aircraft.weight.togw;
 
 S_wet_rest = 10^(c)*(W0*kg_to_lb)^d;% wetted area of the aircraft excluding the wing
 
