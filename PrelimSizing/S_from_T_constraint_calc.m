@@ -18,7 +18,7 @@ function [S] = S_from_T_constraint_calc(aircraft, T, f)
 % Author:                          Niko
 % Version history revision notes:
 %                                  v1: 9/24/2024
-
+k = 200;
     S = zeros(k);
     
     for i = 1:length(S)
@@ -30,7 +30,7 @@ function [S] = S_from_T_constraint_calc(aircraft, T, f)
         while ~converged
             W = togw_as_func_of_T_S_calc(aircraft, T0, S(i));      % Compute TOGW TODO FINISH THIS FUNC
             thrust_to_weight =  T0/W;                    % Compute T/W
-            wing_loading_new = f(thrust_to_weight);      % Compute W/S from constraint equation TODO 
+            wing_loading_new = f(aircraft,thrust_to_weight);      % Compute W/S from constraint equation TODO 
             S_new = W/wing_loading_new;                  % Compute new wing area
             
             if abs(S_new - S(i)) <= tolerance            % Check for convergence
