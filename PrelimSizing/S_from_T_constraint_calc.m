@@ -18,6 +18,7 @@ function [S] = S_from_T_constraint_calc(aircraft, T, f)
 % Author:                          Niko
 % Version history revision notes:
 %                                  v1: 9/24/2024
+
     k = 200;
     S = zeros(k);
     

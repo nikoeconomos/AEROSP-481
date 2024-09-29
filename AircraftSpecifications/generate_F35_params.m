@@ -68,8 +68,14 @@ aircraft.performance.mach_max_alt = 1.6; %[Mach number]
 % max mach number at sea level
 aircraft.performance.mach_max_SL = 1.06; %[Mach number]
 
+% Cruise mach
+aircraft.performance.cruise_mach = 0.8; % mach number taken from an average in our historical dataset
+
+% Max sustained turn mach
+aircraft.performance.max_sustained_turn_mach = 1.2; % Guessing for an F-35
+
 % g force limit
-aircraft.performance.g_force_limit = 9; % [g's]
+aircraft.performance.g_force_upper_limit = 9; % [g's]
 
 %% GEOMETRY %%
 %%----------%%
@@ -95,12 +101,12 @@ aircraft.aerodynamics.CL_max_takeoff = 1.82; %[Unitless]
 aircraft.aerodynamics.CL_max_landing = 0.81; %[Unitless]
 
 %Stall Speed 
-aircraft.aerodynamics.W_S = wing_loading_calc((aircraft.weight.mtow),(aircraft.geometry.S_ref));
+aircraft.aerodynamics.W_S = (aircraft.weight.mtow)/(aircraft.geometry.S_ref);
 aircraft.aerodynamics.rho = 1.225; %[kg.m^3]
 
-aircraft.aerodynamics.V_stall = stall_speed_calc(aircraft.aerodynamics.W_S,aircraft.aerodynamics.rho,aircraft.aerodynamics.CL_max_takeoff);
+aircraft.aerodynamics.V_stall = v_stall_calc(aircraft.aerodynamics.W_S,aircraft.aerodynamics.rho,aircraft.aerodynamics.CL_max_takeoff);
 
-aircraft.safety_factor = 1.5; % defined from our RFP
+
 
 %% PROPULSION %%
 %%------------%%
@@ -116,5 +122,12 @@ aircraft.propulsion.T_max = aircraft.propulsion.engine_count*191273.53; %[N]
 
 % military thrust
 aircraft.propulsion.T_military = aircraft.propulsion.engine_count*124550.2; %[N]
+
+aircraft.safety_factor = 1.5;
+%% %% %% %% UTILITY %% %% %% %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% miscelaneous constants for fluids/ performance calculations
+aircraft.constants = generate_constants();
 
 end
