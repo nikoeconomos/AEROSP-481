@@ -34,7 +34,7 @@ LD_dash = 0.93 * LD_cruise;
 
 % Assuming aircraft is optimized for combat and has maximum lift_to_drag
 % ratio during this mission segment
-AR = 2.663; %based on historical data
+AR = aircraft.geometry.AR; %based on historical data
 e = 0.75;%based on historical data
 k = 1 / (pi * AR * e);
 % Calculate Drag Coefficient, Lift-to-Drag Ratio, and Cruise

@@ -1,4 +1,4 @@
-function TW_corrected = T_W_climb_calc(aircraft, W_S)
+function TW_corrected = T_W_climb1_calc(aircraft, W_S)
 % Description: 
 % Function calculates T_W climb for various values
 % 
@@ -14,10 +14,10 @@ function TW_corrected = T_W_climb_calc(aircraft, W_S)
 % Version history revision notes:
 %                                  v1: 9/22/2024
 
-TW = ((aircraft.mission.climb.ks).^2 .* aircraft.mission.climb.CD0 ./ aircraft.mission.climb.CL_max) + ...
-        (aircraft.mission.climb.CL_max ./ (pi * aircraft.geometry.AR .* aircraft.aerodynamics.e_cruise ...
-     .* (aircraft.mission.climb.ks).^2)) + aircraft.mission.climb.G;
+TW = ((aircraft.mission.climb.ks(1)).^2 .* aircraft.mission.climb.CD0(1) ./ aircraft.mission.climb.CL_max(1)) + ...
+        (aircraft.mission.climb.CL_max(1) ./ (pi * aircraft.geometry.AR .* aircraft.mission.climb.e(1) ...
+     .* (aircraft.mission.climb.ks(1)).^2)) + aircraft.mission.climb.G(1);
 
-TW_corrected = aircraft.mission.climb.TW_corrections .* TW;
+TW_corrected = aircraft.mission.climb.TW_corrections(2) .* TW;
 
 end

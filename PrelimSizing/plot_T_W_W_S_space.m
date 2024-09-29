@@ -38,7 +38,7 @@ function [] = plot_T_W_W_S_space(aircraft)
     end
 
     % climb calculations
-    T_W_climb_arr = T_W_climb_calc(aircraft, NaN); % does not depend on W_S
+    T_W_climb_arr = T_W_climb_general_calc(aircraft, NaN); % does not depend on W_S
 
     climb_1_T_W = T_W_climb_arr(1);
     climb_2_T_W = T_W_climb_arr(2);
@@ -65,45 +65,46 @@ function [] = plot_T_W_W_S_space(aircraft)
     % W_S_stall_speed_arr = ones(1,k) .* W_S_stall_speed_calc(aircraft, NaN); % STALL SPEED IS DEPRECATED, AS IT REQUIRES US TO WORK BACKWARDS and we don't know stall speed already.
 
     %% Plotting the calculated values %%
-
     figure('Position', [50, 50, 1000, 800]); % Adjust figure size
     hold on;
     
     % Takeoff and Landing Constraints
-    to = plot(W_S_space, T_W_takeoff_field_length_arr, 'Color', [0.8, 0.1, 0.1], 'LineWidth', 1.2); % Distinct dark red
-    lf = plot(W_S_landing_field_length_arr, T_W_space, 'Color', [0.1, 0.1, 0.8], 'LineWidth', 1.2); % Deep blue
+    to = plot(W_S_space, T_W_takeoff_field_length_arr, 'Color', [1, 0, 0], 'LineWidth', 1.2); % Bright Red
+    lf = plot(W_S_landing_field_length_arr, T_W_space, 'Color', [1, 0.5, 0], 'LineWidth', 1.2); % Bright Orange
     
     % Cruise Constraint
-    cs = plot(W_S_space, T_W_cruise_arr, 'Color', [0.1, 0.7, 0.2], 'LineWidth', 1.2); % Distinct green
+    cs = plot(W_S_space, T_W_cruise_arr, 'Color', [1, 1, 0], 'LineWidth', 1.2); % Bright Yellow
     
     % Maneuver Constraint
-    m = plot(W_S_space, T_W_maneuver_arr, 'Color', [1, 0.6, 0], 'LineWidth', 1.2); % Bright orange
+    m = plot(W_S_space, T_W_maneuver_arr, 'Color', [0, 1, 0], 'LineWidth', 1.2); % Bright Green
     
-    % Climb Constraints with very distinct colors
-    c1 = plot(W_S_space, T_W_climb_1_arr, 'Color', [0.1, 0.8, 1], 'LineWidth', 1.2);  % Light sky blue
-    c2 = plot(W_S_space, T_W_climb_2_arr, 'Color', [0.9, 0.1, 0.9], 'LineWidth', 1.2); % Bright magenta
-    c3 = plot(W_S_space, T_W_climb_3_arr, 'Color', [0.5, 0.5, 0], 'LineWidth', 1.2);   % Olive green
-    c4 = plot(W_S_space, T_W_climb_4_arr, 'Color', [0.2, 0.5, 0.9], 'LineWidth', 1.2); % Soft blue
-    c5 = plot(W_S_space, T_W_climb_5_arr, 'Color', [1, 0.3, 0.3], 'LineWidth', 1.2);   % Light coral
-    c6 = plot(W_S_space, T_W_climb_6_arr, 'Color', [0.6, 0.2, 0.6], 'LineWidth', 1.2); % Plum purple
+    % Climb Constraints with distinct colors
+    c1 = plot(W_S_space, T_W_climb_1_arr, 'Color', [0, 1, 1], 'LineWidth', 1.2);  % Bright Cyan
+    c2 = plot(W_S_space, T_W_climb_2_arr, 'Color', [0, 0, 1], 'LineWidth', 1.2);  % Bright Blue
+    c3 = plot(W_S_space, T_W_climb_3_arr, 'Color', [1, 0.6, 0], 'LineWidth', 1.2); % Bright Amber
+    c4 = plot(W_S_space, T_W_climb_4_arr, 'Color', [0.1, 0.6, 0.8], 'LineWidth', 1.2); % Turquoise
+    c5 = plot(W_S_space, T_W_climb_5_arr, 'Color', [0.8, 0.3, 0], 'LineWidth', 1.2); % Orange-red
+    c6 = plot(W_S_space, T_W_climb_6_arr, 'Color', [0, 0.8, 0.4], 'LineWidth', 1.2); % Bright Mint Green
     
     % Ceiling Constraint
-    ceil = plot(W_S_space, T_W_ceiling_arr, 'Color', [0.2, 0.9, 0.6], 'LineWidth', 1.2); % Sea green
+    ceil = plot(W_S_space, T_W_ceiling_arr, 'Color', [0.9, 0, 0.5], 'LineWidth', 1.2); % Bright Rose
     
-    % ss = plot(W_S_stall_speed_arr, T_W_space, 'Color', [0.9, 0.9, 0.1], 'LineWidth', 1.2); % STALL SPEED IS DEPRECATED
-
-    
+    % Add legend
     legend([to,lf,cs,m,c1,c2,c3,c4,c5,c6,ceil], ...
         {'Takeoff field length','Landing field length','Cruise', ...
         'Maneuver','Takeoff climb','Transition climb', ...
         'Second segment climb','Enroute climb','Balked landing climb (AEO)', ...
         'Balked landing climb (OEI)','Ceiling'});
-
+    
+    % Set axes limits and labels
     xlim([0 l]); 
     ylim([0 t]);
     xlabel('W/S [kg/m^2]');
     ylabel('T/W [N/N]');
     title('T/W - W/S plot for Libellula''s custom interceptor');
+    
+    hold off;
 
-    hold off;   
+
+
 end

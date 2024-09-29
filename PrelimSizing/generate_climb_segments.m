@@ -35,6 +35,12 @@ aircraft.mission.climb.G = [0.012 * G_overshoot, 0*G_overshoot, 0.024*G_overshoo
 aircraft.mission.climb.ks = [1.2, 1.2, 1.2,...
                              1.25, 1.3, 1.5]; % from FAR 25 requirements in metabook
 
+%% e %%
+%%%%%%%
+
+aircraft.mission.climb.e = [aircraft.aerodynamics.e_takeoff_flaps, aircraft.aerodynamics.e_takeoff_flaps, aircraft.aerodynamics.e_takeoff_flaps,...
+                            aircraft.aerodynamics.e_cruise, aircraft.aerodynamics.e_landing_flaps, 0.85*aircraft.aerodynamics.e_landing_flaps];
+
 %% MAXIMUM LIFT COEFFICIENT %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

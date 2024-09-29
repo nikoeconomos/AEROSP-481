@@ -18,7 +18,7 @@ function [T] = T_from_S_constraint_calc(aircraft,S, f)
 % Author:                          Niko
 % Version history revision notes:
 %                                  v1: 9/24/2024
-k = 200;
+    k = 200;
     T = zeros(k);
     
     for i = 1:length(S)
