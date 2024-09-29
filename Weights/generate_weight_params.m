@@ -61,12 +61,16 @@ aircraft.weight.payload = aircraft.payload.num_missiles*aircraft.weight.missile 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 S = 42; %GUESS PARAMETER FROM F-35
 
-[togw,w_e] = togw_as_func_of_T_S_calc(aircraft,S);
+
+aircraft.weight.ff = ff_total_calc(aircraft);
+
+% INITIAL GUESS, TO BE UPDATED LATER IN PRELIM SIZING
+[togw,w_e] = togw_and_w_empty_calc(aircraft);
 
 aircraft.weight.togw = togw;
 aircraft.weight.empty = w_e;
 
-aircraft.weight.ff = ff_total_func_S_calc(aircraft,S);
+%aircraft.weight.ff = ff_total_func_S_calc(aircraft,S);
 
 aircraft.weight.fuel = aircraft.weight.ff*aircraft.weight.togw;
 

@@ -44,6 +44,8 @@ aircraft.performance.g_force_lower_limit = -3; % [g's]
 
 aircraft.performance.cruise_alt = 10668; % [m]
 
+aircraft.performance.cruise_mach = 0.85; % TODO UPDATE --> estimate from online
+
 aircraft.performance.max_sustained_turn_mach = 1.2; %[Mach]
 
 aircraft.performance.min_sustained_turn_mach = 0.9; %[Mach]

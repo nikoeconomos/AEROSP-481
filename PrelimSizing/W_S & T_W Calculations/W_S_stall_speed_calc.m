@@ -1,7 +1,7 @@
 % Aerosp 481 Group 3 - Libellula 
-function [W_S] = W_S_stall_speed_calc(aircraft, rho)
+function [W_S] = W_S_stall_speed_calc(aircraft, T_W)
 % Description: 
-% 
+% calculates stall speed and then on a hot day at sea level
 % 
 % INPUTS:
 % --------------------------------------------
@@ -18,9 +18,13 @@ function [W_S] = W_S_stall_speed_calc(aircraft, rho)
 % Version history revision notes:
 %                                  v1: 9/14/2024
 
-% Assume takeoff CL, at takeoff weight, at some higher altitude for buffer
-v_stall = sqrt(2 * aircraft.weight.togw * 9.807/(rho * aircraft.aerodynamics.CL_takeoff_flaps * aircraft.geometry.S_wet));
+%% DEPRECATED DO NOT USE%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-W_S = 0.5 * rho * v_stall^2 * aircraft.aerodynamics.CL_takeoff_flaps/9.807;
+rho = aircraft.environment.rho_SL_45C; % stall speed at landing/takeoff on a hot day
+
+v_stall = NaN; % THIS FUNCTION IS DEPCRETATED. CAN BE USED ONCE STALL SPEED IS CALCULATED.
+
+W_S = 0.5 * rho * v_stall^2 * aircraft.aerodynamics.CL_takeoff_flaps;
 
 end

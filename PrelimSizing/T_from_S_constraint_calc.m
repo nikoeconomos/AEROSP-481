@@ -30,7 +30,7 @@ k = 200;
         while ~converged
             W = togw_as_func_of_T_S_calc(aircraft, T(i), S0);      % Compute TOGW TODO FINISH THIS FUNC
             wing_loading =  W/S0;                        % Compute wing loading
-            thrust_to_weight_new = f(wing_loading);      % Compute T=W from constraint equation TODO 
+            thrust_to_weight_new = f(aircraft, wing_loading);      % Compute T=W from constraint equation TODO 
             T_new = thrust_to_weight_new*W ;             % Compute new total thrust
             
             if abs(T_new - T(i)) <= tolerance            % Check for convergence

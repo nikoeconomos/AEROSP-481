@@ -1,6 +1,6 @@
 
 
-function V_stall = stall_speed_calc(W_S, rho, CL_max)
+function v_stall = v_stall_calc(W_S, rho, CL_max)
 %Description:
 % Function calculates the stall speed and related speeds (takeoff, approach, landing)
 % for an aircraft based on wing loading, air density, and maximum lift coefficient. 
@@ -25,7 +25,7 @@ function V_stall = stall_speed_calc(W_S, rho, CL_max)
 %                                  v1: 9/18/2024
 % Calculate stall speed in m/s 
 
-    V_stall = sqrt((2 * W_S) / (rho * CL_max));
+    v_stall = sqrt((2 * W_S) / (rho * CL_max));
 
 end
 

@@ -43,6 +43,11 @@ aircraft = generate_drag_polar_params(aircraft);
 aircraft.environment.rho_SL_15C = 1.225; %[kg.m^3]  % 15 degrees celsius, sea level
 aircraft.environment.rho_SL_45C = 1.109; % [kg/m^3] % 45 degrees celsius, sea level. Calculated from an online calc
 
+aircraft.performance.max_alt = 15240; %[m], got this from f35 guess (50,000 feet). Needs to be updated with our actual max altitude. TOD UPDATE
+
+[~, ~, rho_max_alt, ~] = standard_atmosphere_calc(aircraft.performance.max_alt);
+aircraft.environment.rho_max_alt = rho_max_alt;
+
 %aircraft.aerodynamics.V_stall = stall_speed_calc(aircraft.aerodynamics.W_S,aircraft.aerodynamics.rho,aircraft.aerodynamics.CL_max_takeoff);
 
 

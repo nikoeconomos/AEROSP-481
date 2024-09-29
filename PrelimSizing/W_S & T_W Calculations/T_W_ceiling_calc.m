@@ -1,6 +1,6 @@
-function T_W_ceiling_constraint = T_W_ceiling_calc()
-% Description: This function generates a struct of aircraft parameters that
-% relate to assignment 4, preliminary sizing.
+function T_W_ceiling_corrected = T_W_ceiling_calc(aircraft, W_S)
+% Description: This function calculates the ceiling parameter. Independent
+% of W_S.
 % 
 % 
 % INPUTS:
@@ -15,20 +15,13 @@ function T_W_ceiling_constraint = T_W_ceiling_calc()
 %                       
 % 
 % See also: None
-% Author:                          Joon
+% Author:                          Niko
 % Version history revision notes:
-%                                  v1: 9/22/2024
+%                                  v1: 9/29/2024
 
-% CURRENTLY UNUSED!
-    togw = 9005; %kg, based on DCA mission
-    Swet = 10^(-.1289)*(togw)^0.7506; %Wetted surface area estimate, ft2
-    Swet = Swet*0.092903; %Wetted surface area estimate, m2
-    skin_friction_coefficient = 0.0035; % skin friction coefficient estimate
-    aspect_ratio = 2.66; %Assumed from F-35
-    Sref = 0.75*Swet/aspect_ratio; % Estimated from wetted aspect ratio graph (fig 2.4)
-    span_efficiency = 0.85;
-    CD0 = skin_friction_coefficient*Swet/(Sref);
-    G = 1/15; % 1 mile climb per 15 mile traveled; reasonable climb gradient at service ceiling
-    T_W_ceiling_constraint = 2*sqrt(CD0/(pi*aspect_ratio*span_efficiency))+G;
+
+TW_ceiling = 2*sqrt(aircraft.aerodynamics.CD0_clean/(pi * aircraft.geometry.AR * aircraft.aerodynamics.e_cruise)) + 0.006; % assume G is half of enroute climb so 0.6%
+
+T_W_ceiling_corrected = aircraft.mission.climb.TW_ceiling_correction .* TW_ceiling;
 
 end

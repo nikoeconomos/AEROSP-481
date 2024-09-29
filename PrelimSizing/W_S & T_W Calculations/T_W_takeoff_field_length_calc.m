@@ -20,7 +20,8 @@ function T_W = T_W_takeoff_field_length_calc(aircraft, W_S)
 % Version history revision notes:
 %                                  v1: 9/22/2024
 
-safety_factor = aircraft.safety_factor; %this is per our RFP requirements and should be used throughout
+% Your original code here
+safety_factor = aircraft.safety_factor; % this is per our RFP requirements and should be used throughout
 
 CL_max = aircraft.aerodynamics.CL_takeoff_flaps; %This was from Cinar to use - estimated from similar aircraft with plain flaps and will be updated once we choose flaps to use
 
