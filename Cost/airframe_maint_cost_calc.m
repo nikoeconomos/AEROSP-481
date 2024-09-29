@@ -1,4 +1,4 @@
-function maintenance_costs_adjusted = airframe_maint_cost_calc(aircraft)
+    function maintenance_costs_adjusted = airframe_maint_cost_calc(aircraft)
     % Description: This function calculates the airframe maintenance costs 
     % incurred for multiple missions based on block times and aircraft weight.
     %
