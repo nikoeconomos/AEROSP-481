@@ -39,7 +39,7 @@ aircraft.weight.crew = aircraft.weight.num_crew_members*aircraft.weight.crew_mem
 aircraft.weight.m61a1 = 124.738; %[kg]
 
 % A guess weight for the start of the togw calculation. The empty weight of an F-35
-aircraft.weight.guess = 13290; % [kg]
+aircraft.weight.guess = 5000; % [kg]
 
 %% PAYLOAD WEIGHTS %%
 %%%%%%%%%%%%%%%%%%%%%
