@@ -16,6 +16,6 @@ function [CD0] = CD0_func_S_calc(S_wet_rest, S, Cf)
 
 S_wet = S_wet_rest + 2*S; %from 4.58 in metabook
 
-CD0 = Cf*S_wet/S;
+CD0 = Cf*(S_wet/S);
 
 end

@@ -28,7 +28,10 @@ function [S] = S_from_T_constraint_calc(aircraft, T, f)
         tolerance = 0.1;    % Convergence tolerance
         converged = false;
     
+        iteration_counter = 0;
         while ~converged
+            iteration_counter = iteration_counter + 1;
+            
             W = togw_as_func_of_T_S_calc(aircraft, T0, S(i));      % Compute TOGW TODO FINISH THIS FUNC
             thrust_to_weight =  T0/W;                    % Compute T/W
             wing_loading_new = f(aircraft, thrust_to_weight);      % Compute W/S from constraint equation TODO 

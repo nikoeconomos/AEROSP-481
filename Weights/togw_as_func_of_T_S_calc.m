@@ -44,8 +44,8 @@ function [togw, w_e] = togw_as_func_of_T_S_calc(aircraft, T_0, S)
         T_0_design = (w_0*g)*TW_design; % [kg*m/s2 = N * N/N = [N]]
 
         S_wet_curr = S_wet_calc(w_0);
-        S_ref_curr = S_ref_from_S_wet_calc(aircraft, S_wet_curr);
-        S_wet_rest = S_wet_curr - 2*S_ref_curr; % from metabook 4.58
+        % S_ref_curr = S_ref_from_S_wet_calc(aircraft, S_wet_curr); DEPRECATED
+        S_wet_rest = S_wet_curr - 2*S_design; % from metabook 4.58
 
         empty_weight_fraction = A * w_0^C; % w_e/w_0
         

@@ -16,7 +16,7 @@ function S_ref = S_ref_from_S_wet_calc(aircraft, S_wet)
 % Version history revision notes:
 %                                  v1: 9/29/2024
 
-
+    % CURRENTLY DEPRECATED
     S_ref = S_wet / aircraft.geometry.S_wet_over_S_ref;
 
 end

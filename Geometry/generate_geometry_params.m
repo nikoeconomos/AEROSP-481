@@ -24,11 +24,11 @@ function [aircraft] = generate_geometry_params(aircraft)
 
 aircraft.geometry.S_wet = S_wet_calc(aircraft.weight.togw); % [m^2]
 
-aircraft.geometry.S_wet_over_S_ref = 4.15; % Estimated from wetted area ratio graph, eyeballed it TODO UPDATE (fig 2.5 metabook)
+aircraft.geometry.S_wet_over_S_ref = 4.15; % Estimated from wetted area ratio graph, eyeballed it [CURRENTLY DEPRECATED]
 
 aircraft.geometry.S_ref = S_ref_from_S_wet_calc(aircraft, aircraft.geometry.S_wet); % [m] 
 
-aircraft.geometry.AR = 2.663; %Estimate from f35. Will change.
+aircraft.geometry.AR = 3; %Estimate! SWEEP THROUGH AND CHANGE!
 
 %aircraft.geometry.S = ??; %Todo uncomment when found
 end
