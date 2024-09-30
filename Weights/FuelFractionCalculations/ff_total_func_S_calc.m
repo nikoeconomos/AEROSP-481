@@ -1,6 +1,7 @@
-function [ff_total_adjusted] = ff_total_func_S_calc(aircraft,S)
+function [ff_total_adjusted] = ff_total_func_S_calc(aircraft, W_0, S_wet_rest, S, T_0)
 % Description: This function calculates the total fuel fraction for the
-% any mission profile, using S to calculate CD0. 
+% any mission profile, using S to calculate CD0. From algorithm 3 pg 50 of
+% metabook
 %
 % mission profile specs are generated on a case by case basis in their
 % respective functions
@@ -21,36 +22,44 @@ function [ff_total_adjusted] = ff_total_func_S_calc(aircraft,S)
 %% LD CALCULATIONS %%
 %%%%%%%%%%%%%%%%%%%%%
 
-% TODO : EDIT FOR NEW CONSIDERATIONS. LD AND ALL OUR CONSTANTS SHOULD BE A VARIABLE WE CALCULATE
-% UPFRONT IN THE AERODYNAMICS CODE AND ACCESS LATER
+% REPLACED BY WHAT IS BELOW. 
 
-% Lift to drag estimated based on the F-35A, currently omitting the calculation method on the metabook, therefore
-% function argument doesn't matter as lift_to_drag_calc() is currently defined and all argument values can be arbitrary.
-[LD_max, LD_cruise] = LD_calc(); 
+%{
+LD_max = aircraft.aerodynamics.LD_max;
+LD_cruise = aircraft.aerodynamics.LD_cruise;
 
-% Expecting decrease in aerodynamic efficiency during dash due to 
-% supersonic flight conditions, arbitrarily picked a loss of 7%
-LD_dash = 0.93 * LD_cruise; 
+LD_dash = aircraft.aerodynamics.LD_dash;
+%}
 
-% Assuming aircraft is optimized for combat and has maximum lift_to_drag
-% ratio during this mission segment
-AR = aircraft.geometry.AR; %based on historical data
-e = 0.75;%based on historical data
-k = 1 / (pi * AR * e);
-% Calculate Drag Coefficient, Lift-to-Drag Ratio, and Cruise
-Cf = 0.0035; % skin friction coefficient estimate figure 4.4 meta 
-CD0 = CD0_func_S_calc(aircraft, S, Cf); % Calculate C_D0 as function of S
 
-% Call the calculate_LD function
-LD_ratio = LD_calc_new(CD0, k);
+%% Calculate CD0, CL, LD for a given S
+
+% NOTE: This LD does not change based on the part of flight we're on.
+% (takeoff, climb, cruise, dash, etc). This may need to be accounted for
+% later.
+
+% -------CALCULATE k ----------------
+S_wet = S_wet_rest + 2*S;
+AR_wetted = aircraft.geometry.AR_wetted; % function of ld max, which is constant currently.
+b2 = AR_wetted*S_wet;
+AR = b2/S;
+
+e = aircraft.aerodynamics.e_cruise; % TODO UPDATE: this should change based on the part of flight we're in.
+
+k = k_calc(AR, e);
+
+% ----------- CALCULATE CD0, CL, L/D
+
+Cf = aircraft.aerodynamics.Cf;
+CD0 = CD0_func_S_calc(S_wet_rest, S, Cf); % Calculate C_D0 as function of S
+
+CL = CL_from_CD0_calc(CD0, k);
+
+LD = LD_from_CL_and_CD0_calc(CL, CD0, k);
+
 
 %% FUEL FRACTION DETERMINATION %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-cSL = 27191.05; % Specific fuel consumption at sea level [1/hr]
-T = 79.2; % Maximum thrust [kN]
-
-W0 = aircraft.weight.togw;
 
 mission = aircraft.mission;
 mission.ff = NaN(size(mission.segments));
@@ -59,40 +68,49 @@ mission.ff = NaN(size(mission.segments));
 % the FF based on the defined type.
 for i = 1:length(aircraft.mission.segments)
 
-    if mission.segments(i) == "takeoff"
-        mission.ff(i) = 1 - cSL * (15/60) * (0.05 * T / W0); % 15 min at 5% max thrust
+    if mission.segments(i) == "start"
+        TSFC = mission.TSFC(i);
+        time = mission.time(i);
+        
+        mission.ff(i) = 1 - TSFC * time * (0.05 * T_0 / W_0); % 5% max thrust
+    
+    elseif mission.segments(i) == "takeoff"
+        TSFC = mission.TSFC(i);
+        time = mission.time(i);
+
+        mission.ff(i) = 1 - TSFC * time * (T_0 / W_0); % max thrust
 
     elseif mission.segments(i) == "climb"
-        mission.ff(i) = 1 - cSL * (1/60) * (T / W0); % [unitless], pulled from meta guide
+        mission.ff(i) = 0.985; % [unitless], pulled from meta guide
 
     elseif mission.segments(i) == "cruise"
         range = mission.range(i);
         TSFC = mission.TSFC(i);
         velocity = mission.velocity(i);
-        mission.ff(i) = ff_cruise_calc(range, TSFC, velocity, LD_cruise);
+        mission.ff(i) = ff_cruise_calc(range, TSFC, velocity, LD);
 
     elseif mission.segments(i) == "dash" % differs only in LD from cruise
         range = mission.range(i);
         TSFC = mission.TSFC(i);
         velocity = mission.velocity(i);
-        mission.ff(i) = ff_cruise_calc(range, TSFC, velocity, LD_dash);
+        mission.ff(i) = ff_cruise_calc(range, TSFC, velocity, LD);
 
     elseif mission.segments(i) == "combat" % differs only in LD from cruise, assumed to use max as it's optimized for combat
         range = mission.range(i);
         TSFC = mission.TSFC(i);
         velocity = mission.velocity(i);
-        mission.ff(i) = ff_cruise_calc(range, TSFC, velocity, LD_max);
+        mission.ff(i) = ff_cruise_calc(range, TSFC, velocity, LD);
 
     elseif mission.segments(i) == "escort" % differs only in LD from cruise, assumed to use max but subject to change
         range = mission.range(i);
         TSFC = mission.TSFC(i);
         velocity = mission.velocity(i);
-        mission.ff(i) = ff_cruise_calc(range, TSFC, velocity, LD_max);
+        mission.ff(i) = ff_cruise_calc(range, TSFC, velocity, LD);
 
     elseif mission.segments(i) == "loiter" || mission.segments(i) == "reserve" % currently no difference between them
         endurance = mission.endurance(i);
         TSFC = mission.TSFC(i);
-        mission.ff(i) = ff_loiter_calc(endurance,TSFC,LD_cruise);
+        mission.ff(i) = ff_loiter_calc(endurance,TSFC,LD);
 
     elseif mission.segments(i) == "optimize" % TODO: UNSURE IF NEEDED. From the "return to optimal alt/speed" line in RFP.
         mission.ff(i) = 1; % set to 1 so it has no effect on total

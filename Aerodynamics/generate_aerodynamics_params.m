@@ -22,12 +22,8 @@ function [aircraft] = generate_aerodynamics_params(aircraft)
 %% Lift to Drag %%
 %%%%%%%%%%%%%%%%%%
 
-%[LD_max, LD_cruise] = LD_calc(); % TODO UNCOMMENT WHEN THE FUNCTION WORKS
-%aircraft.aerodynamics.LD_max = LD_max;
-%aircraft.aerodynamics.LD_cruise = LD_cruise;
-
-aircraft.aerodynamics.LD_max = 12; % TODO: UPDATE, ESTIMATION, from hand calculation & graph
-aircraft.aerodynamics.LD_cruise = 0.943*aircraft.aerodynamics.LD_max; % next to eq 2.15
+%aircraft.aerodynamics.LD_max = 12; % TODO: UPDATE, ESTIMATION, from hand calculation & graph
+%aircraft.aerodynamics.LD_cruise = 0.943*aircraft.aerodynamics.LD_max; % 
 
 aircraft.aerodynamics.Cf = 0.0035; % skin friction coefficient estimate figure 4.4 meta 
 
@@ -36,7 +32,13 @@ aircraft.aerodynamics.e_maneuver = 0.8; % TODO not sure if this changes. Used in
 %% Drag polar %%
 %%%%%%%%%%%%%%%%
 
-aircraft = generate_drag_polar_params(aircraft);
+aircraft = generate_drag_polar_params(aircraft, aircraft.geometry.AR);
+aircraft.aerodynamics.LD_max = aircraft.aerodynamics.LD_max_cruise/0.943; % next to eq 2.15 in metabook
+aircraft.aerodynamics.LD_dash = 0.93 * aircraft.aerodynamics.LD_max_cruise; 
+
+%% AR wetted (STORES IN GEOMETRY)
+
+aircraft.geometry.AR_wetted = AR_wetted_calc(aircraft.aerodynamics.LD_max); 
 
 %% Stall Speed at takeoff 
 

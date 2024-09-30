@@ -33,7 +33,6 @@ else
 end
 
 %%
-%S = linspace(2000, 6000, (1/(pi*2.663*0.75))); % Define your wing area array or value
 
 aircraft = generate_weight_params(aircraft);%S);
 aircraft = generate_prop_params(aircraft);

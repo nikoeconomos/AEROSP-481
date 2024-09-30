@@ -46,7 +46,10 @@ mission.ff = NaN(size(mission.segments));
 % the FF based on the defined type.
 for i = 1:length(aircraft.mission.segments)
 
-    if mission.segments(i) == "takeoff"
+    if mission.segments(i) == "start"
+        mission.ff(i) = 1;
+
+    elseif mission.segments(i) == "takeoff"
         mission.ff(i) = 0.970; % [unitless] pulled from meta guide
 
     elseif mission.segments(i) == "climb"

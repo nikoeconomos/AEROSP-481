@@ -26,21 +26,21 @@ function [aircraft] = generate_ESCORT_mission(aircraft)
 %%%%%%%%%%%%%%%%%%%%%%
 
 %TODO RFP says climb back to altitude. labeled OPTIMIZE. UNSURE IF NEEDED
-mission.segments = ["takeoff", "climb", "dash",...
+mission.segments = ["start", "takeoff", "climb", "dash",...
                     "escort", "optimize", "cruise", ...
                     "descent", "reserve"]; 
 
 %% MACH NUMBER %%
 %%%%%%%%%%%%%%%%%
 
-mission.mach = [NaN, NaN, 1.8,...
+mission.mach = [NaN, NaN, NaN, 1.8,...
                 0.7, NaN, aircraft.performance.cruise_mach ...
                 NaN, 0.16]; % from RFP
 
 %% ALTITUDE %%
 %%%%%%%%%%%%%%
 
-mission.alt = [0, NaN, 10668,...
+mission.alt = [0, 0, NaN, 10668,...
                10668, NaN, 10668, ... % TODO: DETERMINE "OPTIMUM" SPEED AND ALTITUDE
                NaN, 0]; % [m]
 
@@ -58,15 +58,15 @@ end
 %% RANGE AND ENDURANCE %%
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
-mission.range_type = ["NA", "NA", "range",...
+mission.range_type = ["NA", "NA", "NA", "range",...
                       "range", "NA", "range", ...
                       "NA", "endurance"];
 
-mission.range = [NaN, NaN, 370400,...
+mission.range = [NaN, NaN, NaN, 370400,...
                  555600, NaN, 926000 ...
                  NaN, NaN]; % [m] or , depending on type
 
-mission.endurance = [NaN, NaN, NaN,...
+mission.endurance = [NaN, NaN, NaN, NaN,...
                      NaN, NaN, NaN, ...
                      NaN, 1800]; %[s]
 
@@ -82,7 +82,7 @@ time_dash = time_from_range_flight_cond(mission.range(1,3), mission.mach(1,3), m
 time_escort = time_from_range_flight_cond(mission.range(1,4), mission.mach(1,4), mission.alt(1,4));
 time_cruise_in = time_from_range_flight_cond(mission.range(1,5), mission.mach(1,5), mission.alt(1,5));
 
-mission.time = [360, 60, time_dash, ...
+mission.time = [900, 60, 360, time_dash, ...
                 time_escort, NaN, time_cruise_in ...
                 240, mission.endurance(1,7)]; %[s]
 
@@ -91,12 +91,18 @@ mission.time_total = sum(mission.time(~isnan(mission.time)));
 %% TSFC %%
 %%%%%%%%%%
 
-TSFC_dash = 1.2 / 7938; % [kg/kg*s] First number from left to right is TSFC in lbm/hr*lbf, next rumber is conversion factor to 1/s
-TSFC_escort = 0.8 / 7938; % [kg/kg*s] First number from left to right is TSFC in lbm/hr*lbf, next rumber is conversion factor to 1/s
-TSFC_cruise_in = 0.86 / 7938; % [kg/kg*s] First number from left to right is TSFC in lbm/hr*lbf, next rumber is conversion factor to 1/s
-TSFC_reserve = 0.71 / 7938; % [kg/kg*s] First number from left to right is TSFC in lbm/hr*lbf, next rumber is conversion factor to 1/s
+% pulled from figure 2.3
 
-mission.TSFC = [NaN, NaN, TSFC_dash, ...
+conversion_factor = 2.838*10^-5; %lbm/s/lbf to kg/s/N
+
+TSFC_idle = 0.7 * conversion_factor; 
+TSFC_takeoff = 0.8 * conversion_factor; % ESTIMATED FROM ONLINE
+TSFC_dash = 1.2 * conversion_factor; % [kg/kg*s] First number from left to right is TSFC in lbm/hr*lbf, next rumber is conversion factor to 1/s
+TSFC_escort = 0.8 * conversion_factor; % [kg/kg*s] First number from left to right is TSFC in lbm/hr*lbf, next rumber is conversion factor to 1/s
+TSFC_cruise_in = 0.86 * conversion_factor; % [kg/kg*s] First number from left to right is TSFC in lbm/hr*lbf, next rumber is conversion factor to 1/s
+TSFC_reserve = 0.71 * conversion_factor; % [kg/kg*s] First number from left to right is TSFC in lbm/hr*lbf, next rumber is conversion factor to 1/s
+
+mission.TSFC = [TSFC_idle, TSFC_takeoff, NaN, TSFC_dash, ...
                 TSFC_escort, NaN, TSFC_cruise_in ... 
                 NaN, TSFC_reserve];
 

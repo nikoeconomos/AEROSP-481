@@ -59,8 +59,6 @@ aircraft.weight.payload = aircraft.payload.num_missiles*aircraft.weight.missile 
 
 %% Weight Calculations %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%
-S = 42; %GUESS PARAMETER FROM F-35
-
 
 aircraft.weight.ff = ff_total_calc(aircraft);
 

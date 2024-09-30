@@ -1,5 +1,3 @@
-
-
 function v_stall = v_stall_calc(W_S, rho, CL_max)
 %Description:
 % Function calculates the stall speed and related speeds (takeoff, approach, landing)
