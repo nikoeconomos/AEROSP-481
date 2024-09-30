@@ -41,7 +41,10 @@ aircraft = generate_geometry_params(aircraft);
 aircraft = generate_aerodynamics_params(aircraft);
 aircraft = generate_prelim_sizing_params(aircraft);
 
+figure()
 plot_T_W_W_S_space(aircraft)
+
+figure('Position', [100, 100, 1000, 800])
 plot_T_S_space(aircraft)
 drawnow
 

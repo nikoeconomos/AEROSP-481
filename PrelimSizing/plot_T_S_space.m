@@ -53,7 +53,6 @@ function [] = plot_T_S_space(aircraft)
 
     %% Plotting the calculated constraints %%
 
-    figure('Position', [100, 100, 1000, 800]); % Adjust figure size
     hold on;
     
     to = plot(S, T_takeoff_field_length, 'b',LineWidth=1.2);
