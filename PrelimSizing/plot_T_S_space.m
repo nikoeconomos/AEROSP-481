@@ -20,11 +20,11 @@ function [] = plot_T_S_space(aircraft)
 
 %% Calculate constraint curves for distinct functions %%
 
-    S_min = 200; %TODO update with actual values
-    S_max = 600; % TODO update with actual values
+    S_min = 10; %TODO update with actual values
+    S_max = 100; % TODO update with actual values
 
     T_min = 0; % TODO update with actual values
-    T_max = 1550000; % TODO update with actual values
+    T_max = 300000; % TODO update with actual values
 
     k = 300; % number of points on the plot
     
