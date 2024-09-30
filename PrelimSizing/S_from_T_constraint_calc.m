@@ -19,8 +19,8 @@ function [S] = S_from_T_constraint_calc(aircraft, T, f)
 % Version history revision notes:
 %                                  v1: 9/24/2024
 
-    k = 200;
-    S = zeros(k);
+    k = 300;
+    S = zeros(1,k);
     
     for i = 1:length(S)
         T0 = T(i);          % Prescribe thrust area

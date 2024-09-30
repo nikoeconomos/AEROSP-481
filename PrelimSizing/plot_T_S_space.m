@@ -20,18 +20,21 @@ function [] = plot_T_S_space(aircraft)
 
 %% Calculate constraint curves for distinct functions %%
 
-    s_min = 2000; %TODO update with actual values
-    s_max = 6000; % TODO update with actual values
+    S_min = 200; %TODO update with actual values
+    S_max = 600; % TODO update with actual values
 
-    t_min = 0; % TODO update with actual values
-    t_max = 350000; % TODO update with actual values
+    T_min = 0; % TODO update with actual values
+    T_max = 1550000; % TODO update with actual values
 
     k = 300; % number of points on the plot
     
-    S = linspace(s_min,s_max,k); %kg per m^2
-    T = linspace(t_min,t_max, k); % N
+    S = linspace(S_min, S_max,k); %kg per m^2
+    T = linspace(T_min,T_max, k); % N
 
-    T_takeoff_field_length = T_from_S_constraint_calc(aircraft,S, @T_W_takeoff_field_length_calc);
+    T_takeoff_field_length = T_from_S_constraint_calc(aircraft, S, @T_W_takeoff_field_length_calc);
+
+    to = plot(S, T_takeoff_field_length, 'b',LineWidth=1.2);
+
     S_landing_field_length = S_from_T_constraint_calc(aircraft,T, @W_S_landing_field_length_calc);
 
     T_cruise_speed = T_from_S_constraint_calc(aircraft, S, @T_W_cruise_calc);
