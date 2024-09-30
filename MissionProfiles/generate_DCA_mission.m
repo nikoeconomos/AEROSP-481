@@ -66,8 +66,9 @@ mission.range_type = ["NA", "NA", "NA", "range",...
 
 range_combat1 = basic_360_turn_distance(mission.velocity(1,6), 89); % accepts mission velocity [m/s] and [degrees] of bank angle TODO FIX
 range_combat2 = basic_360_turn_distance(mission.velocity(1,7), 89); % accepts mission velocity [m/s] and [degrees] of bank angle TODO FIX
+
 mission.range = [NaN, NaN, NaN, 555600, NaN, 185200, range_combat1 ...
-                 range_combat2, NaN, 740800, NaN, NaN]; % [m] or , depending on type
+                 range_combat2, NaN, 740800, NaN, NaN]; % [m]
 
 mission.endurance = [NaN, NaN, NaN, NaN,...
                      14400, NaN, NaN, ...
@@ -98,7 +99,7 @@ mission.time_total = sum(mission.time(~isnan(mission.time)));
 %% TSFC %%
 %%%%%%%%%%
 
-% pulled from figure 2.3
+% pulled from figure 2.3 UPDATE 
 
 conversion_factor = 2.838*10^-5; %lbm/s/lbf to kg/s/N
 
