@@ -20,10 +20,10 @@ function S_wet = S_wet_calc(w0)
     kg_to_lb = 2.20462;
     ft2_to_m2 = 0.092903;
 
-    c = -0.1289; %table 4.4 metabook
+    c = -0.1289; %table 3.5 Roskam, values for clean MTOW, for fighter jet / figure 3.22
     d = 0.7506;
 
-    S_wet = 10^(c)*(w0*kg_to_lb)^d; % [ft^2] %Wetted surface area estimate, eq metabook 4.9, roskam table 3.22 fighter
+    S_wet = 10^(c)*(w0*kg_to_lb)^d; % [ft^2] %Wetted surface area estimate, eq metabook 4.9
 
     S_wet = S_wet*ft2_to_m2; % [m^2]
 

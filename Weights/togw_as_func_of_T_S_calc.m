@@ -37,34 +37,41 @@ function [togw, w_e] = togw_as_func_of_T_S_calc(aircraft, T_0, S)
     % the algorithm given in section 2.5 of the meta guide.
     k = 0;
     while delta > epsilon
-
         k = k+1;
 
-        S_design = w_0/WS_design; %[m2]
-        T_0_design = (w_0*g)*TW_design; % [kg*m/s2 = N * N/N = [N]]
+        S_design = w_0/WS_design; %[m2] W / W/S = S
+        T_0_design = (w_0*g)*TW_design; % [kg*m/s2 = N * N/N = [N]] W * T/W = T
 
+        % S_ref_curr = S_ref_from_S_wet_calc(aircraft, S_wet_curr); % DEPRECATED
         S_wet_curr = S_wet_calc(w_0);
-        % S_ref_curr = S_ref_from_S_wet_calc(aircraft, S_wet_curr); DEPRECATED
         S_wet_rest = S_wet_curr - 2*S_design; % from metabook 4.58
+
+        if w_0 < 1 %DEBUG
+            disp('HALT')
+        end
 
         empty_weight_fraction = A * w_0^C; % w_e/w_0
         
         w_e = empty_weight_fraction * w_0;
 
-        w_e = w_e + wing_density * (S-S_design);  %What is S vs S design?
+        w_e = w_e + wing_density * (S-S_design);
         w_e = w_e + w_eng_calc(T_0)-w_eng_calc(T_0_design);
     
         ff = ff_total_func_S_calc(aircraft, w_0, S_wet_rest, S, T_0);
+
+        if (ff + empty_weight_fraction) > 1 %DEBUG
+            disp('ahem')
+        end
 
         w_0_new = (w_crew + w_payload)/(1 - ff - empty_weight_fraction);
 
         delta = abs(w_0_new-w_0)/abs(w_0_new);
 
-        if mod(k, 500) == 0
-            disp(delta)
+        if isnan(w_0_new) || isinf(w_0_new) %DEBUG
+            error("w_0_new is NaN or Inf at iteration %d", k);
         end
-        
-        if abs(delta-0.3304) < 0.00001
+
+        if mod(k, 500) == 0 % FOR DEBUGGING
             disp(delta)
         end
 

@@ -77,13 +77,14 @@ for i = 1:length(aircraft.mission.segments)
         TSFC = mission.TSFC(i);
         time = mission.time(i);
         
-        mission.ff(i) = 1 - TSFC * time * (0.05 * T_0 / W_0); % 5% max thrust
+        % kg / s / N * s * N / kg
+        mission.ff(i) = 1 - TSFC * time * (0.05 * T_0 / W_0); % 5% max thrust % DEBUG---------------------THIS IS GETTING TOO BIG
     
     elseif mission.segments(i) == "takeoff"
         TSFC = mission.TSFC(i);
         time = mission.time(i);
 
-        mission.ff(i) = 1 - TSFC * time * (T_0 / W_0); % max thrust
+        mission.ff(i) = 1 - TSFC * time * (T_0 / W_0); % max thrust % DEBUG---------------------THIS IS GETTING TOO BIG. ALSO SHOULD USE W1...
 
     elseif mission.segments(i) == "climb"
         mission.ff(i) = 0.985; % [unitless], pulled from meta guide
@@ -146,6 +147,10 @@ end
 
 % Using equation 2.33 from metabook to account for trapped and reserve fuel
 ff_total_adjusted = 1.06*(1-ff_total);
+
+if ff_total_adjusted > 0.25 % DEBUG
+    disp('HALT')
+end
 
 end
 

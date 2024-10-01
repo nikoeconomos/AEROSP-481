@@ -113,6 +113,5 @@ end
 
 % Using equation 2.33 from metabook to account for trapped and reserve fuel
 ff_total_adjusted = 1.06*(1-ff_total);
-
 end
 
