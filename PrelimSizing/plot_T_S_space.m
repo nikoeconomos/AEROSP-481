@@ -20,34 +20,34 @@ function [] = plot_T_S_space(aircraft)
 
 %% Calculate constraint curves for distinct functions %%
 
-    S_min = 10; %TODO update with actual values
-    S_max = 100; % TODO update with actual values
+    S_min = 50; %TODO update with actual values
+    S_max = 80; % TODO update with actual values
 
-    T_min = 0; % TODO update with actual values
-    T_max = 300000; % TODO update with actual values
+    T_min = 10000; % TODO update with actual values
+    T_max = 200000; % TODO update with actual values
 
-    k = 300; % number of points on the plot
+    k = 200; % number of points on the plot
     
-    S = linspace(S_min, S_max,k); %kg per m^2
-    T = linspace(T_min,T_max, k); % N
+    S = linspace(S_min, S_max, k); %kg per m^2
+    T = linspace(T_min, T_max, k); % N
 
     T_takeoff_field_length = T_from_S_constraint_calc(aircraft, S, @T_W_takeoff_field_length_calc);
 
-    to = plot(S, T_takeoff_field_length, 'b',LineWidth=1.2);
+    to = plot(S, T_takeoff_field_length, 'b',LineWidth=1.2); % DEBUG
 
-    S_landing_field_length = S_from_T_constraint_calc(aircraft,T, @W_S_landing_field_length_calc);
+    T_cruise_speed  = T_from_S_constraint_calc(aircraft, S, @T_W_cruise_calc);
+    T_maneuver      = T_from_S_constraint_calc(aircraft, S, @T_W_maneuver_calc);
 
-    T_cruise_speed = T_from_S_constraint_calc(aircraft, S, @T_W_cruise_calc);
-    T_maneuver = T_from_S_constraint_calc(aircraft, S, @T_W_maneuver_calc);
+    T_climb_1       = T_from_S_constraint_calc(aircraft, S, @T_W_climb1_calc); % TODO UPDATE/test with individualized climb calcs
+    T_climb_2       = T_from_S_constraint_calc(aircraft, S, @T_W_climb2_calc);
+    T_climb_3       = T_from_S_constraint_calc(aircraft, S, @T_W_climb3_calc);
+    T_climb_4       = T_from_S_constraint_calc(aircraft, S, @T_W_climb4_calc);
+    T_climb_5       = T_from_S_constraint_calc(aircraft, S, @T_W_climb5_calc);
+    T_climb_6       = T_from_S_constraint_calc(aircraft, S, @T_W_climb6_calc);
 
-    T_climb_1 = T_from_S_constraint_calc(aircraft, S, @T_W_climb1_calc); % TODO UPDATE/test with individualized climb calcs
-    T_climb_2 = T_from_S_constraint_calc(aircraft, S, @T_W_climb2_calc);
-    T_climb_3 = T_from_S_constraint_calc(aircraft, S, @T_W_climb3_calc);
-    T_climb_4 = T_from_S_constraint_calc(aircraft, S, @T_W_climb4_calc);
-    T_climb_5 = T_from_S_constraint_calc(aircraft, S, @T_W_climb5_calc);
-    T_climb_6 = T_from_S_constraint_calc(aircraft, S, @T_W_climb6_calc);
+    T_ceiling       = T_from_S_constraint_calc(aircraft, S, @T_W_ceiling_calc);
 
-    T_ceiling = T_from_S_constraint_calc(aircraft, S, @T_W_ceiling_calc);
+    S_landing_field_length = S_from_T_constraint_calc(aircraft, T, @W_S_landing_field_length_calc);
 
     %S_stall_speed = S_from_T_constraint_calc(aircraft, T, @W_S_stall_speed_calc); DEPRECATED
 

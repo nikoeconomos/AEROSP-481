@@ -46,9 +46,15 @@ aircraft.performance.cruise_alt = 10668; % [m]
 
 aircraft.performance.cruise_mach = 0.85; % TODO UPDATE --> estimate from online
 
+aircraft.performance.dash_mach = 1.8; % TODO UPDATE --> estimate from online
+
+aircraft.performance.endurance_mach = 0.4;
+
 aircraft.performance.max_sustained_turn_mach = 1.2; %[Mach]
 
 aircraft.performance.min_sustained_turn_mach = 0.9; %[Mach]
+
+aircraft.performance.bank_angle_360 = 60; %[Deg] ESTIMATE FROM ONLINE
 
 aircraft.safety_factor = 1.5;
 

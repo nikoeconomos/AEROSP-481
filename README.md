@@ -23,4 +23,16 @@ into this function.
 
 ff gets saved and then togw is calculated using this ff.
 
-TODOs:
+INSTRUCTIONS FOR RUNNING:
+
+Open sizing.m and run.
+
+Type in "c" and "dca" to run a custom aircraft for the dca mission.
+
+The assignment 5 task is run in the function "plot_TS_space.m" in the PrelimSizing folder
+
+The first iteration of calculating the TOGW occurs on line 32 of "T_from_S_constraint.m" in the PrelimSizing folder
+
+The TOGW as a function of S is calculated in the function "togw_as_func_of_T_S_calc.m" in the Weights folder
+
+w_0 is updated on line 65 of this function.

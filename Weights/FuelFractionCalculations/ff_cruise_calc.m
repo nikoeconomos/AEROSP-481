@@ -7,7 +7,7 @@ function segment_fuel_fraction = ff_cruise_calc(range, TSFC, velocity, LD)
 % --------------------------------------------
 %    range - Double defined in fuel_weight function. Segment/maneuver's range [m] 
 % 
-%    SFC - Double defined in section 1 of main.m 
+%    TSFC - Double defined in section 1 of main.m 
 %    Assumed specific fuel consumption for the PW F100-229 engine [kg/(kg*hr)]
 % 
 %    velocity - Double defined in fuel_weight fucntion after calling 
@@ -27,6 +27,7 @@ function segment_fuel_fraction = ff_cruise_calc(range, TSFC, velocity, LD)
 % Version history revision notes:
 %                                  v1: 9/10/2024
 
-segment_fuel_fraction = exp(-range*TSFC/(velocity*LD));
+g = 9.81;
+segment_fuel_fraction = exp( (-range*TSFC*g)/(velocity*LD));
 
 end

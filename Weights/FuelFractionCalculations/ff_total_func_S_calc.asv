@@ -60,8 +60,6 @@ CL = CL_from_CD0_calc(CD0, k);
 
 LD = LD_from_CL_and_CD0_calc(CL, CD0, k);
 
-LD = 10;
-
 
 %% FUEL FRACTION DETERMINATION %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -77,7 +77,7 @@ aircraft.weight.max_landing_weight = 0.85 * aircraft.weight.togw; % Googled comm
 %% COMPONENT DENSITIES %%
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
-aircraft.weight.wing_density = 44; % kg/m^2, from Metabook pg 76
+aircraft.weight.wing_area_density = 44; % kg/m^2, from Metabook pg 76
 
 %% PROPULSION WEIGHT %%
 %%%%%%%%%%%%%%%%%%%%%%%

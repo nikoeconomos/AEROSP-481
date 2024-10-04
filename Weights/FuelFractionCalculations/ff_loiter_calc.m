@@ -24,6 +24,7 @@ function [segment_fuel_fraction] = ff_loiter_calc(endurance,TSFC,LD)
 % Version history revision notes:
 %                                  v1: 9/10/2024
 
-segment_fuel_fraction = exp(-endurance*TSFC/LD);
+g = 9.81;
+segment_fuel_fraction = exp( (-endurance*TSFC*g)/LD);
 
 end

@@ -1,4 +1,4 @@
-function [turn_range] = basic_360_turn_distance(flight_velocity,bank_ang)
+function [turn_range] = basic_360_turn_distance(bank_ang, mach, alt)
 % Description: This function uses a basic equation to calculate the
 % distance an aircraft will cover in a 360 degree turn depending on it's
 % velocity and its bank angle. It's based on a simple force balance
@@ -20,9 +20,13 @@ function [turn_range] = basic_360_turn_distance(flight_velocity,bank_ang)
 % Version history revision notes:
 %                                  v1: 9/10/2024
 
+[~, ~, ~, a] = standard_atmosphere_calc(alt);
+
+velocity = a*mach; % Solve for velocity from relationship with mach number and speed of sound
+
 g = 9.81; 
 
-radius = flight_velocity^2/(g*tand(bank_ang));
+radius = velocity^2/(g*tand(bank_ang));
 
 turn_range = 2*pi*radius;
 

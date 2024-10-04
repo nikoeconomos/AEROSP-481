@@ -27,7 +27,6 @@ function [T] = T_from_S_constraint_calc(aircraft,S, f)
         tolerance = 0.1;    % Convergence tolerance
         converged = false;
     
-        iteration = 0;
         while ~converged
             w_0           = togw_as_func_of_T_S_calc(aircraft, T(i), S0);      % Compute TOGW TODO FINISH THIS FUNC
             wing_loading = w_0/S0;                                  % Compute wing loading
@@ -38,15 +37,11 @@ function [T] = T_from_S_constraint_calc(aircraft,S, f)
                 converged = true;
             end
     
-            alpha = 0.5; % FOR DEBUGGING, RELAXATION FACTOR
-            T(i)   = alpha*T_new + (1 - alpha)*T(i);
-            %T(i) = T_new;   % Update thrust value
-            
-            iteration = iteration + 1;
+            T(i) = T_new;   % Update thrust value
         end
-        disp(['Converged for S = ', S0])
-        disp(['T:    ', T(i)])
-        disp(['TOGW: ', w_0])
+        disp('Converged for S = ', S0)
+        disp('T:    ')
+        disp('TOGW: ', w_0)
     end
 
 end
