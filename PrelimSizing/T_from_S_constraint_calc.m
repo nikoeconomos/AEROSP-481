@@ -1,4 +1,4 @@
-function [T] = T_from_S_constraint_calc(aircraft,S, f)
+function [T] = T_from_S_constraint_calc(aircraft, S, f, k)
 % Description: This function returns an array of T values from S inputs
 % based on a constraint function f
 %
@@ -18,7 +18,6 @@ function [T] = T_from_S_constraint_calc(aircraft,S, f)
 % Author:                          Niko
 % Version history revision notes:
 %                                  v1: 9/24/2024
-    k = 200;
     T = zeros(1,k);
     
     for i = 1:length(S)
@@ -44,9 +43,9 @@ function [T] = T_from_S_constraint_calc(aircraft,S, f)
             
             iteration = iteration + 1;
         end
-        disp(['Converged for S = ', S0])
-        disp(['T:    ', T(i)])
-        disp(['TOGW: ', w_0])
+        fprintf('Converged for S = %d\n', S0)
+        fprintf('T = %d\n', T(i))
+        fprintf('TOGW: %d\n', w_0)
     end
 
 end

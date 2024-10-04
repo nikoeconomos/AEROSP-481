@@ -39,14 +39,13 @@ LD_dash = aircraft.aerodynamics.LD_dash;
 % -------CALCULATE k ----------------
 
 % THE CODE BELOW SELECTS WETTED ASPECT RATIO FIRST. NOW WE SELECT AR.
-%{ 
+
 S_wet = S_wet_rest + 2*S;
 AR_wetted = aircraft.geometry.AR_wetted; % function of ld max, which is constant currently.
 b2 = AR_wetted*S_wet;
 AR = b2/S; % check if reasonable TRY OUT NEW ARs
-%}
 
-AR = aircraft.geometry.AR;
+%AR = aircraft.geometry.AR;
 e = aircraft.aerodynamics.e_cruise; % TODO UPDATE: this should change based on the part of flight we're in.
 
 k = k_calc(AR, e);
@@ -60,8 +59,7 @@ CL = CL_from_CD0_calc(CD0, k);
 
 LD = LD_from_CL_and_CD0_calc(CL, CD0, k);
 
-LD = 10;
-
+%LD = 10;
 
 %% FUEL FRACTION DETERMINATION %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -41,7 +41,7 @@ aircraft = generate_geometry_params(aircraft);
 aircraft = generate_aerodynamics_params(aircraft);
 aircraft = generate_prelim_sizing_params(aircraft);
 
-plot_T_W_W_S_space(aircraft)
+%plot_T_W_W_S_space(aircraft)
 
 plot_T_S_space(aircraft)
 drawnow
