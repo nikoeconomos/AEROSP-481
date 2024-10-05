@@ -28,7 +28,7 @@ aircraft.geometry.S_wet_over_S_ref = 4.15; % Estimated from wetted area ratio gr
 
 aircraft.geometry.S_ref = S_ref_from_S_wet_calc(aircraft, aircraft.geometry.S_wet); % [m] 
 
-aircraft.geometry.AR = 3; %Estimate! SWEEP THROUGH AND CHANGE!
+aircraft.geometry.AR = 6; %Estimate! SWEEP THROUGH AND CHANGE!
 
 %aircraft.geometry.S = ??; %Todo uncomment when found
 end

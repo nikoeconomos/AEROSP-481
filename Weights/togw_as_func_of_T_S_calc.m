@@ -31,13 +31,11 @@ function [togw, w_e] = togw_as_func_of_T_S_calc(aircraft, T_0, S)
     TW_design = aircraft.sizing.TW_design; % A SPOT WE CHOOSE FROM THE TW-WS DIAGRAM
     WS_design = aircraft.sizing.WS_design; % A SPOT WE CHOOSE FROM THE TW-WS DIAGRAM
 
-    epsilon = 10e-3; % error for convergence
+    epsilon = 10e-5; % error for convergence
     delta   = 2*epsilon; % the amount the we are off from converging
 
     % DEBUGGING PARAMS
     iteration = 0;
-    debug_w0_array = zeros(1, 300);
-    it = 1:300;
 
     %% Start the convergence loop. Based on alg 2, section 4.12 %%
     while delta > epsilon
@@ -51,7 +49,6 @@ function [togw, w_e] = togw_as_func_of_T_S_calc(aircraft, T_0, S)
 
         % Calculate empty weight fraction and empty weight
         empty_weight_fraction = A * w_0^C; % w_e/w_0
-        %empty_weight_fraction = 0.45;
 
         w_e = empty_weight_fraction * w_0; % we/w0 * w0
 
@@ -77,30 +74,11 @@ function [togw, w_e] = togw_as_func_of_T_S_calc(aircraft, T_0, S)
         if (ff + empty_weight_fraction) > 1
             disp('ff + empty weight frac > 1')
         end
-        %%%%%%%%%%%%%%%%%
-        % DEBUGGING PRINTS
-        if isnan(w_0_new) || isinf(w_0_new) %DEBUG
-            error("w_0_new is NaN or Inf at iteration %d", iteration);
-        end
-        if mod(iteration, 500) == 0 % FOR DEBUGGING
-            %fprintf('Delta: %d\n', delta);
-        end
-        %%%%%%%%%%%%%%%%%%
-
 
         alpha = 1; % RELAXATION FACTOR
         w_0   = alpha*w_0_new + (1 - alpha)*w_0;
-        %w_0 = w_0_new;
 
-        %%%% DEBUGGING %%
         iteration = iteration+1; % FOR DEBUGGING
-        debug_w0_array(iteration) = w_0;
-        if iteration == 300
-            figure();
-            plot(it, debug_w0_array)
-            disp('plotting');
-            break
-        end
     end
     
     togw = w_0;

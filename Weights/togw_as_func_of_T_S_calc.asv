@@ -25,19 +25,17 @@ function [togw, w_e] = togw_as_func_of_T_S_calc(aircraft, T_0, S)
     w_payload = aircraft.weight.payload;
 
     % Regression constant, assuming jet fighter, from Raymer table 3.1, conventional metallic structure
-    A = 2.11; % unitless parameters, metric
-    C = -0.13; % unitless, metric
+    A = 0.88; % unitless parameters, metric FROM OTHER TEAM, MAKE OUR OWN
+    C = -0.055; % unitless, metric
 
     TW_design = aircraft.sizing.TW_design; % A SPOT WE CHOOSE FROM THE TW-WS DIAGRAM
     WS_design = aircraft.sizing.WS_design; % A SPOT WE CHOOSE FROM THE TW-WS DIAGRAM
 
-    epsilon = 10e-3; % error for convergence
+    epsilon = 10e-6; % error for convergence
     delta   = 2*epsilon; % the amount the we are off from converging
 
     % DEBUGGING PARAMS
     iteration = 0;
-    debug_w0_array = zeros(1, 300);
-    it = 1:300;
 
     %% Start the convergence loop. Based on alg 2, section 4.12 %%
     while delta > epsilon
@@ -50,8 +48,7 @@ function [togw, w_e] = togw_as_func_of_T_S_calc(aircraft, T_0, S)
         S_wet_rest = S_wet_curr - 2*S_design; % from metabook 4.58
 
         % Calculate empty weight fraction and empty weight
-        %empty_weight_fraction = A * w_0^C; % w_e/w_0
-        empty_weight_fraction = 0.45;
+        empty_weight_fraction = A * w_0^C; % w_e/w_0
 
         w_e = empty_weight_fraction * w_0; % we/w0 * w0
 
@@ -83,24 +80,14 @@ function [togw, w_e] = togw_as_func_of_T_S_calc(aircraft, T_0, S)
             error("w_0_new is NaN or Inf at iteration %d", iteration);
         end
         if mod(iteration, 500) == 0 % FOR DEBUGGING
-            fprintf('Delta: %d\n', delta);
+            %fprintf('Delta: %d\n', delta);
         end
         %%%%%%%%%%%%%%%%%%
 
-
         alpha = 1; % RELAXATION FACTOR
         w_0   = alpha*w_0_new + (1 - alpha)*w_0;
-        %w_0 = w_0_new;
 
-        %%%% DEBUGGING %%
         iteration = iteration+1; % FOR DEBUGGING
-        debug_w0_array(iteration) = w_0;
-        if iteration == 300
-            figure();
-            plot(it, debug_w0_array)
-            disp('plotting');
-            break
-        end
     end
     
     togw = w_0;

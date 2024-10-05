@@ -21,10 +21,10 @@ function [] = plot_T_S_space(aircraft)
 %% Calculate constraint curves for distinct functions %%
 
     S_min = 10; %TODO update with actual values
-    S_max = 80; % TODO update with actual values
+    S_max = 60; % TODO update with actual values
 
     T_min = 0; % TODO update with actual values
-    T_max = 300000; % TODO update with actual values
+    T_max = 150000; % TODO update with actual values
 
     k = 100; % number of points on the plot
     
@@ -74,8 +74,9 @@ function [] = plot_T_S_space(aircraft)
     hold on;
 
     % Plot contour
-    %contour(S, T, TOGW, 20);  % 20 contour levels
-    %colorbar;                  % Display colorbar
+    contour(S, T, TOGW, 15);        % plot contours
+    colorbar_handle = colorbar;     % Display colorbar
+    ylabel(colorbar_handle, 'TOGW (kg)')
     
     % Takeoff and Landing Constraints
     to = plot(S, T_takeoff_field_length, 'Color', [1, 0, 0], 'LineWidth', 1.2); % Bright Red
@@ -106,8 +107,8 @@ function [] = plot_T_S_space(aircraft)
         'Second segment climb','Enroute climb','Balked landing climb (AEO)', ...
         'Balked landing climb (OEI)','Ceiling'});
 
-    %xlim([s_min s_max]); 
-    %ylim([t_min t_max]);
+    xlim([S_min S_max]); 
+    ylim([T_min T_max]);
     xlabel('S [m^2]');
     ylabel('T [N]');
     title('T- S plot for Libellula''s custom interceptor');
