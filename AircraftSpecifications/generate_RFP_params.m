@@ -46,9 +46,9 @@ aircraft.performance.cruise_alt = 10668; % [m]
 
 aircraft.performance.cruise_mach = 0.85; % TODO UPDATE --> estimate from online
 
-aircraft.performance.dash_mach = 1.8; % TODO UPDATE --> estimate from online
+aircraft.performance.dash_mach = 1.6; % from rfp
 
-aircraft.performance.endurance_mach = 0.4;
+aircraft.performance.endurance_mach = 0.4; % estimate from online
 
 aircraft.performance.max_sustained_turn_mach = 1.2; %[Mach]
 
