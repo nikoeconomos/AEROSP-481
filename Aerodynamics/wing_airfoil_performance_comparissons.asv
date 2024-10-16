@@ -57,9 +57,9 @@ for j = 1:N_alpha_to_c
         % run the solver, plot the results 
         m.solve
         
-        cl_alpha_64A210(j,i) = m.post.cl;
-        cd_alpha_64A210(j,i) = m.post.cd;
-        cm_alpha_64A210(j,i) = m.post.cm;
+        cl_polar_64A210(j,i) = m.post.cl;
+        cd_polar_64A210(j,i) = m.post.cd;
+        cm_polar_64A210(j,i) = m.post.cm;
     end
 end
 
