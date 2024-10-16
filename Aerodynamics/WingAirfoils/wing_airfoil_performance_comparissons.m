@@ -63,6 +63,62 @@ for j = 1:N_alpha_to_c
     end
 end
 
+% plot airfoil characteristics
+figure()
 
+% 0 AOA drag polar
+subplot(2,2,1)
 
+plot(cd_polar_64A210,cl_polar_64A210,'r',LineWidth=1.5);
+
+legend('NACA 64A210')
+
+xlabel('Drag Coefficicent');
+ylabel('Lift Coefficicent');
+title('Drag Polar at 0 AOA')
+
+% CL vs alpha 3 speeds
+subplot(2,2,2)
+
+plot(alpha,cl_alpha_64A210(1,:),'r',LineWidth=1.5);
+hold on
+plot(alpha,cl_alpha_64A210(2,:),'r',LineWidth=1.5,LineStyle='--');
+hold on
+plot(alpha,cl_alpha_64A210(3,:),'r',LineWidth=1.5,LineStyle=':');
+hold off
+
+legend('NACA 64A210 TO','NACA 64A210 M-0.7','NACA 64A210 M-0.8')
+
+xlabel('Angle of Attack (degrees)');
+ylabel('Lift Coefficicent');
+
+% CD vs alpha 3 speeds
+subplot(2,2,3)
+
+plot(alpha,cd_alpha_64A210(1,:),'r',LineWidth=1.5);
+hold on
+plot(alpha,cd_alpha_64A210(2,:),'r',LineWidth=1.5,LineStyle='--');
+hold on
+plot(alpha,cd_alpha_64A210(3,:),'r',LineWidth=1.5,LineStyle=':');
+hold off
+
+legend('NACA 64A210 TO','NACA 64A210 M-0.7','NACA 64A210 M-0.8')
+
+xlabel('Angle of Attack (degrees)');
+ylabel('Total Drag Coefficicent');
+
+% CM vs alpha 3 speeds
+subplot(2,2,4)
+
+plot(alpha,cm_alpha_64A210(1,:),'r',LineWidth=1.5);
+hold on
+plot(alpha,cm_alpha_64A210(2,:),'r',LineWidth=1.5,LineStyle='--');
+hold on
+plot(alpha,cm_alpha_64A210(3,:),'r',LineWidth=1.5,LineStyle=':');
+hold off
+
+legend('NACA 64A210 TO','NACA 64A210 M-0.7','NACA 64A210 M-0.8')
+
+xlabel('Angle of Attack (degres)');
+ylabel('Moment Coefficicent');
 
