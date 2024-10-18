@@ -30,8 +30,8 @@ aircraft.cost.target_year = 2024;
 %% PROPULSION %%
 aircraft.cost.propulsion.fuel_price = 2.14/0.00378541; % $/m3 as of September 13, 2024
 aircraft.cost.propulsion.oil_price = 113.92/0.00378541; % $/m3 as of September 13, 2024
-aircraft.cost.propulsion.fuel_cost = 1.02*aircraft.weight.ff*aircraft.weight.togw*aircraft.cost.propulsion.fuel_price/aircraft.weight.propulsion.fuel_density;
-aircraft.cost.propulsion.oil_cost = 1.02*aircraft.weight.propulsion.oil*aircraft.cost.propulsion.oil_price/aircraft.weight.propulsion.oil_density;
+aircraft.cost.propulsion.fuel_cost = 1.02*aircraft.weight.ff*aircraft.weight.togw*aircraft.cost.propulsion.fuel_price/aircraft.weight.fuel_density;
+aircraft.cost.propulsion.oil_cost = 1.02*aircraft.weight.oil*aircraft.cost.propulsion.oil_price/aircraft.weight.oil_density;
 
 % Engine cost
 aircraft.cost.propulsion.engine.base_year = 1993;

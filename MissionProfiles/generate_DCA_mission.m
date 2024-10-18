@@ -128,23 +128,20 @@ mission.time_total = sum(mission.time(~isnan(mission.time)));
 
 % pulled from figure 2.3 UPDATE 
 
-conversion_factor = 2.838*10^-5; %lbm/s/lbf to kg/s/N
-
-TSFC_idle         = 0.90 * conversion_factor; 
-TSFC_takeoff      = 0.80 * conversion_factor; % ESTIMATED FROM ONLINE
-TSFC_cruise_out   = 0.85 * conversion_factor; % [kg/N*s] First number from left to right is TSFC in lbm/hr*lbf, next number is conversion factor to 1/s
-TSFC_loiter       = 0.5 * conversion_factor; % 
-TSFC_dash         = 1.50 * conversion_factor; % 
-TSFC_combat1      = 1.20 * conversion_factor; % 
-TSFC_combat2      = 1.20 * conversion_factor; % 
-TSFC_cruise_in    = 0.85 * conversion_factor; % 
-TSFC_reserve      = 0.70 * conversion_factor; % 
+TSFC_idle         = ConvTSFC(0.90, 'Imp', 'SI'); 
+TSFC_takeoff      = ConvTSFC(0.80, 'Imp', 'SI');  % ESTIMATED FROM ONLINE
+TSFC_cruise       = ConvTSFC(0.65, 'Imp', 'SI');  % [kg/N*s] First number from left to right is TSFC in lbm/hr*lbf, next number is conversion factor to 1/s
+TSFC_loiter       = ConvTSFC(0.50, 'Imp', 'SI');  % 
+TSFC_dash         = ConvTSFC(1.70, 'Imp', 'SI');  % 
+TSFC_combat1      = ConvTSFC(1.20, 'Imp', 'SI');  % 
+TSFC_combat2      = ConvTSFC(1.00, 'Imp', 'SI');  % 
+TSFC_reserve      = ConvTSFC(0.70, 'Imp', 'SI');  % 
 
 mission.TSFC      = [ TSFC_idle,    TSFC_takeoff, ...
-                      NaN,          TSFC_cruise_out, ...
+                      NaN,          TSFC_cruise, ...
                       TSFC_loiter,  TSFC_dash, ...
                       TSFC_combat1, TSFC_combat2, ...
-                      NaN,          TSFC_cruise_in, ...
+                      NaN,          TSFC_cruise, ...
                       NaN,          TSFC_reserve ];
 
 %% SAVE TO AIRCRAFT %%
