@@ -32,8 +32,9 @@ function [T] = T_from_S_constraint_calc(aircraft, Sin, f, k)
         iter = 0;
         while ~converged
 
-            W_0 = togw_as_func_of_T_S_calc(aircraft, T(i), S_0); % Compute TOGW TODO FINISH THIS FUNC
-            
+            [W_0,ff] = togw_as_func_of_T_S_calc(aircraft, T(i), S_0); % Compute TOGW TODO FINISH THIS FUNC
+            aircraft.weight.ff = ff;
+
             if isnan(W_0)
                 T(i) = NaN;
                 break;
@@ -54,6 +55,7 @@ function [T] = T_from_S_constraint_calc(aircraft, Sin, f, k)
         end
 
     end
+    disp([func2str(f), ' complete.'])
 
 end
 

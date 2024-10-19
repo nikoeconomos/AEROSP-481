@@ -23,19 +23,45 @@ function W_S = W_S_landing_field_length_calc(aircraft, T_W)
 % Version history revision notes:
 %                                  v1: 9/22/2024
 
-ks = .107; %[kg/m^3] - comes from raymer textbook LDG equation
-landing_distance = 2438.4; %[m] which is = 8,000 ft (from RFP)
-Sa = 182.88; %[m] - military aircraft Sa distance according to raymer txtbook (WHERE?) (essentially an "error" factor)
+s_land = 2438.4; %[m] which is = 8,000 ft (from RFP)
+s_a = 305; %[m] - 1000 ft, commercial aircraft Sa distance according to raymer txtbook (essentially an "error" factor)
 
-landing_distance_adjusted = landing_distance - Sa; %[m] - essentially an error calc - the landing distance availible must be > landing distance it takes by 600 ft
-
-rho_SL_45C = aircraft.environment.rho_SL_45C; %[kg/m^3]
+rho_SL_30C = aircraft.environment.rho_SL_30C; %[kg/m^3]
 [~,~, rho_1219_MSL, ~] = standard_atmosphere_calc(1219.2); %[kg/m^3] - calculating this at 4000 ft MSL, 1219.2 m, per RFP
 
-CL_max = aircraft.aerodynamics.CL_landing_flaps;   
+sigma = rho_SL_30C/rho_1219_MSL;
 
-W_S = ks*(rho_1219_MSL/rho_SL_45C)*CL_max*landing_distance_adjusted; %[kg/m^2]
+CL_max = aircraft.aerodynamics.CL_landing_flaps;  
 
-%(((rho/rho_SL)*CL_max) / 80)*(landing_distance*1.67-Sa); % multiply by 1.67 for the 2/3 safety margin
+%% Metabook
+
+% W_S = (s_land-s_a)/5 * sigma * CL_max;
+
+%% Hamburg
+
+kl = .107; %[kg/m^3] - comes from raymer textbook LDG equation
+
+W_S_L = kl*sigma*CL_max*(s_land-s_a); %[kg/m^2]
+
+W_S = W_S_L/0.85; % factor of 0.85 is Mlanding/Mtakeoff (90%)
+
+%% Raymer 5.5
+%W_S = sigma*CL_max*(s_land-s_a)/5; % raymer 5.5
+
+%% Roskam 3.1
+
+%{
+va_kt = sqrt(27000); %kts
+vs_kts = va_kt/1.2; %kts
+vs_fts = vs_kts*1.688; %ft/s
+
+rho_imp = rho_SL_30C/515.379; %slug/ft^3 from m/kg^3
+
+W_S_L = vs_fts^2*rho_imp*CL_max/2; %ft2/s2*slug/ft3
+
+W_S_TO = W_S_L/0.8;%lb/ft2
+
+W_S = W_S_TO*4.88243; %kg/m2 
+%}
 
 end

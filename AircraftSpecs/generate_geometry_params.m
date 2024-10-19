@@ -25,14 +25,16 @@ function [aircraft] = generate_geometry_params(aircraft)
 % [m^2]  %table 3.5 Roskam, values for clean MTOW, for fighter jet / figure 3.22, eq metabook 4.9
 % CHANGE IF WRONG
 
-%aircraft.geometry.S_wet_regression_calc = @(W0) ConvArea( 10^(-0.1289)*(ConvMass(W0,'kg','lbm'))^0.7506, 'ft2','m2'); 
-aircraft.geometry.S_wet_regression_calc = @(S) 4*S;
+aircraft.geometry.S_wet_regression_calc = @(W0) ConvArea( 10^(-0.1289)*(ConvMass(W0,'kg','lbm'))^0.7506, 'ft2','m2'); 
+%aircraft.geometry.S_wet_regression_calc = @(S) 4*S;
 
 aircraft.geometry.length_regression_calc = @(W0) 0.389*W0^0.39; % this is a historical regression from Raymer table 6.3
 
 aircraft.geometry.S_wet_over_S_ref = 4.15; % Estimated from wetted area ratio graph, eyeballed it [CURRENTLY DEPRECATED]
 
-aircraft.geometry.AR = 4; %Estimate! SWEEP THROUGH AND CHANGE!
+aircraft.geometry.AR = 4; %Estimate!!
+
+aircraft.geometry.sweep = deg2rad(40); %radians
 
 %aircraft.geometry.S = ??; %Todo uncomment when found
 end

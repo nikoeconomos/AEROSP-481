@@ -22,11 +22,7 @@ function [aircraft] = generate_aerodynamics_params(aircraft)
 %% Lift to Drag %%
 %%%%%%%%%%%%%%%%%%
 
-%aircraft.aerodynamics.LD_max = 12; % TODO: UPDATE, ESTIMATION, from hand calculation & graph
-%aircraft.aerodynamics.LD_cruise = 0.943*aircraft.aerodynamics.LD_max; % 
-
 aircraft.aerodynamics.Cf = 0.0035; % skin friction coefficient estimate figure 4.4 meta 
-
 
 %% Functions %%
 %%%%%%%%%%%%%%%
@@ -58,7 +54,7 @@ aircraft.geometry.AR_wetted = (aircraft.aerodynamics.LD_max/14)^2 ; % from rayme
 %% Stall Speed at takeoff 
 
 aircraft.environment.rho_SL_15C = 1.225; %[kg.m^3]  % 15 degrees celsius, sea level
-aircraft.environment.rho_SL_45C = 1.109; % [kg/m^3] % 45 degrees celsius, sea level. Calculated from an online calc
+aircraft.environment.rho_SL_30C = 1.1644; % [kg/m^3] % 45 degrees celsius, sea level. Calculated from an online calc
 
 aircraft.performance.max_alt = 15240; %[m], got this from f35 guess (50,000 feet). Needs to be updated with our actual max altitude. TOD UPDATE
 

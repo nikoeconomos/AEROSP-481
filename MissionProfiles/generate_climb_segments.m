@@ -26,8 +26,8 @@ aircraft.mission.climb.segment_names = ["takeoff climb", "transition climb", "se
 G_overshoot = 1;  % Given that we are often trying to complete interception missions, a larger climb gradient 
 % may be desirable in climb scenarios when the aircraft is heading out to complete its mission 
 
-aircraft.mission.climb.G = [0.012 * G_overshoot, 0*G_overshoot, 0.024*G_overshoot,...
-                            0.012*G_overshoot, 0.032, 0.021]; % from FAR 25 requirements in metabook
+aircraft.mission.climb.G = [0.025 * G_overshoot, 0*G_overshoot, 0.025*G_overshoot,...
+                            0.025*G_overshoot, 0.032, 0.025]; % from FAR 25 requirements in metabook
 
 %% STALL SPEED RATIO %%
 %%%%%%%%%%%%%%%%%%%%%%%
@@ -67,15 +67,15 @@ aircraft.mission.climb.weight = [aircraft.weight.togw, aircraft.weight.togw, air
 %% ACTIVE ENGINES %%
 %%%%%%%%%%%%%%%%%%%%
 aircraft.mission.climb.engines_active = [1, 1, 1,...
-                                         1, 1, 1]; % from FAR 25 requirements in metabook. Our plane will only have 1 engine TODO UPDATE
+                                         1, 2, 1]; % from FAR 25 requirements in metabook. Our plane will only have 1 engine TODO UPDATE
 
 %% THRUST CORRECTIONS %%
 %%%%%%%%%%%%%%%%%%%%%%%% 
 
 OEI_correction = 2; % Using formula (N_engines/(N_engines-1)) for 2 engines
 W_correction = aircraft.weight.max_landing_weight/aircraft.weight.togw; % Only applies for balked landing scenario with maximum landing weight
-Temp_correction = 1/0.8; % TODO WHERE DOES THIS COME FROM?
-Max_T_correction = 1/0.94; % TODO WHERE DO THESE COME FROM?
+Temp_correction = 1/0.8; % metabook --> fahrenheit?
+Max_T_correction = 1/0.94; % for max continuous thrust decrease from max thrust
 
 aircraft.mission.climb.TW_corrections = [Temp_correction*OEI_correction, Temp_correction*OEI_correction, Temp_correction*OEI_correction, ...
                                          Temp_correction*OEI_correction*Max_T_correction, Temp_correction*W_correction, Temp_correction*OEI_correction*W_correction]; 

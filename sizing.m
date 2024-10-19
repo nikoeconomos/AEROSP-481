@@ -19,7 +19,6 @@ aircraft = generate_prop_params(aircraft);
 aircraft = generate_cost_params(aircraft);
 aircraft = generate_climb_segments(aircraft);
 
-%plot_T_W_W_S_space(aircraft)
 plot_T_W_W_S_space(aircraft)
 drawnow
 

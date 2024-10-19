@@ -61,13 +61,11 @@ function [] = plot_T_S_space(aircraft)
 %% Calculate constraint curves for distinct functions %%
 
     T_takeoff_field_length = T_from_S_constraint_calc(aircraft, S, @T_W_takeoff_field_length_calc, k);
-    S_landing_field_length = S_from_T_constraint_calc(aircraft, T, @W_S_landing_field_length_calc, k);
 
     T_cruise_speed  = T_from_S_constraint_calc(aircraft, S, @T_W_cruise_calc, k);
 
     T_sustained_turn_max = T_from_S_constraint_calc(aircraft, S, @T_W_sustained_turn_max_calc, k);
     T_sustained_turn_min = T_from_S_constraint_calc(aircraft, S, @T_W_sustained_turn_min_calc, k);
-    S_instantaneous_turn = S_from_T_constraint_calc(aircraft, T, @W_S_instantaneous_turn_calc, k);
 
     T_climb_1       = T_from_S_constraint_calc(aircraft, S, @T_W_climb1_calc, k); % TODO UPDATE/test with individualized climb calcs
     T_climb_2       = T_from_S_constraint_calc(aircraft, S, @T_W_climb2_calc, k);
@@ -77,6 +75,8 @@ function [] = plot_T_S_space(aircraft)
     T_climb_6       = T_from_S_constraint_calc(aircraft, S, @T_W_climb6_calc, k);
 
     T_ceiling       = T_from_S_constraint_calc(aircraft, S, @T_W_ceiling_calc, k);
+
+    S_landing_field_length = S_from_T_constraint_calc(aircraft, T, @W_S_landing_field_length_calc, k);
 
     %% Plotting the calculated constraints %%
 
@@ -93,8 +93,7 @@ function [] = plot_T_S_space(aircraft)
     
     % Maneuver Constraint
     m12 = plot(S, T_sustained_turn_max, 'Color', [0, 1, 0], 'LineWidth', 1.0); % Bright Green
-    m9 = plot(S, T_sustained_turn_min, 'Color', [0, 1, 0], 'LineWidth', 1.0); % Bright Green
-    it = plot(S_instantaneous_turn, T, 'Color', [0, 0, 0], 'LineWidth', 1.0); % Bright Green
+    m9 = plot(S, T_sustained_turn_max, 'Color', [0, 1, 0], 'LineWidth', 1.0); % Bright Green
     
     % Climb Constraints with distinct colors
     c1 = plot(S, T_climb_1, 'Color', [0, 1, 1], 'LineWidth', 1.0);  % Bright Cyan
@@ -108,9 +107,9 @@ function [] = plot_T_S_space(aircraft)
     ceil = plot(S, T_ceiling, 'Color', [0.9, 0, 0.5], 'LineWidth', 1.0); % Bright Rose
     
     % Add legend
-    legend([to,lf,cs,m12,m9,it,c1,c2,c3,c4,c5,c6,ceil], ...
+    legend([to,lf,cs,m12,m9,c1,c2,c3,c4,c5,c6,ceil], ...
         {'Takeoff field length','Landing field length','Cruise', ...
-        'Mach 1.2 Sustained Turn', 'Mach 0.9 Sustained Turn','Instantaneous','Takeoff climb','Transition climb', ...
+        'Maneuver','Takeoff climb','Transition climb', ...
         'Second segment climb','Enroute climb','Balked landing climb (AEO)', ...
         'Balked landing climb (OEI)','Ceiling'});
 

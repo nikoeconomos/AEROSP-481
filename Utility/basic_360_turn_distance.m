@@ -26,7 +26,7 @@ velocity = a*mach; % Solve for velocity from relationship with mach number and s
 
 g = 9.81; 
 
-radius = velocity^2/(g*tand(bank_ang));
+radius = velocity^2/(g*tan(bank_ang));
 
 turn_range = 2*pi*radius;
 

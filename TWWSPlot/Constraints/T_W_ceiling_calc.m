@@ -19,8 +19,9 @@ function T_W_ceiling_corrected = T_W_ceiling_calc(aircraft, W_S)
 % Version history revision notes:
 %                                  v1: 9/29/2024
 
+G = 0.006; % assume G is half of enroute climb so 0.6%
 
-TW_ceiling = 2*sqrt(aircraft.aerodynamics.CD0_clean/(pi * aircraft.geometry.AR * aircraft.aerodynamics.e_cruise)) + 0.006; % assume G is half of enroute climb so 0.6%
+TW_ceiling = 2*sqrt(aircraft.aerodynamics.CD0_clean/(pi * aircraft.geometry.AR * aircraft.aerodynamics.e_cruise)) + G; 
 
 T_W_ceiling_corrected = aircraft.mission.climb.TW_ceiling_correction .* TW_ceiling;
 

@@ -1,4 +1,4 @@
-function [T_W] = T_W_maneuver_calc(aircraft, W_S)
+function [W_S] = W_S_instantaneous_turn_calc(aircraft, T_W)
 % Description: This function generates T/W for a given W/S value for the
 % aircraft's max sustained turn, mach 1.2. this is derived from equation 4.33
 % 
@@ -20,18 +20,21 @@ function [T_W] = T_W_maneuver_calc(aircraft, W_S)
 %                                  v1: 9/21/2024
 
 %% Define variables
-    AR = aircraft.geometry.AR;
+
+    g = 9.8067;
+
+    CL_combat = aircraft.aerodynamics.CL_combat;
+
+    [~,~,rho,~] = standard_atmosphere_calc(10668); %35000ft = 10668m
+
+    corner_speed = aircraft.performance.corner_speed; %upper limit in range from Raymer, 560 km/hr
     
-    e_maneuver = aircraft.aerodynamics.e_maneuver;
-
-    n = aircraft.performance.load_factor_upper_limit; % load factor, AKA max sustained g force, n
-    max_sustained_turn_mach = aircraft.performance.max_sustained_turn_mach;
-
-    CD0_clean = aircraft.aerodynamics.CD0_clean;
-
-    [~,~,rho,a] = standard_atmosphere_calc(10668); %35000ft = 10668m
+    psi = aircraft.performance.max_instantaneous_turn_rate; %rad/s
+    n = sqrt( ((psi*corner_speed)/g)^2+1); %raymer 5.19
 
 %% calculation
-    q   = rho*(a*max_sustained_turn_mach)^2/2; % Pa
-    T_W = q*CD0_clean/W_S + (n^2/(q*pi*AR*e_maneuver))*W_S;
+
+    q   = rho*(corner_speed)^2/2; 
+    W_S = q*CL_combat/n; %raymer 5.20
+
 end

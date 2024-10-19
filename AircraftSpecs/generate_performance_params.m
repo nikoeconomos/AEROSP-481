@@ -26,8 +26,6 @@ aircraft.performance.WS_design = 475; % A SPOT WE MANUALLY CHOOSE FROM THE TW-WS
 
 %% MOSTLY FROM RFP %%
 
-
-
 % loads
 aircraft.performance.load_factor_upper_limit = 7; % [g's] with 50% fuel
 aircraft.performance.load_factor_lower_limit = -3; % [g's]  with 50% fuel
@@ -45,8 +43,12 @@ aircraft.performance.endurance_mach = 0.4; % estimate from online
 aircraft.performance.max_sustained_turn_mach = 1.2; %[Mach] from RFP
 aircraft.performance.min_sustained_turn_mach = 0.9; %[Mach] from RFP
 
+aircraft.performance.corner_speed = 155.556; % m/s, 550 km/hr in raymer page 138
+
 % misc
-aircraft.performance.bank_angle_360 = 60; %[Deg] ESTIMATE FROM ONLINE
+aircraft.performance.bank_angle_360 = deg2rad(60); %[rad] ESTIMATE FROM ONLINE
+
+aircraft.performance.max_instantaneous_turn_rate = deg2rad(18); %rad/s
 
 aircraft.safety_factor = 1.5;
 

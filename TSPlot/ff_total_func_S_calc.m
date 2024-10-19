@@ -23,7 +23,8 @@ function [ff_total_adjusted] = ff_total_func_S_calc(aircraft, W_0, Sin)
 
 % NOTE: This LD does not change based on the part of flight we're on. (takeoff, climb, cruise, dash, etc). This may need to be accounted for later.
 
-S_wet = aircraft.geometry.S_wet_regression_calc(Sin); % 4* sin
+S_wet = aircraft.geometry.S_wet_regression_calc(W_0); % 4* sin
+%S_wet = aircraft.geometry.S_wet_regression_calc(Sin); % 4* sin
 CD0   = aircraft.aerodynamics.CD0_calc(S_wet, Sin); % Calculate C_D0 as function of S
 
 e = aircraft.aerodynamics.e_cruise; % TODO UPDATE: this should change based on the part of flight we're in?
