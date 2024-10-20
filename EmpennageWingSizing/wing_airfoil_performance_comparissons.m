@@ -80,7 +80,7 @@ N_mach_to_c = length(mach_to_c);
 X = load('NACA_64A210_mfoil.txt');
 
 % make/panel an airfoil out of these coordinates  
-m = mfoil('coords', X, 'npanel',50)
+m = mfoil('coords', X, 'npanel',50);
 
 % introduce a flap at x=0.8, y=0, 10deg down  
 %m.geom_flap([0.8,0], 10)
@@ -139,7 +139,7 @@ N_mach_to_c = length(mach_to_c);
 X = load('NACA_64A210_mfoil.txt');
 
 % make/panel an airfoil out of these coordinates  
-m = mfoil('coords', X, 'npanel',50)
+m = mfoil('coords', X, 'npanel',50);
 
 % introduce a flap at x=0.8, y=0, 10deg down  
 %m.geom_flap([0.8,0], 10)
@@ -198,7 +198,7 @@ N_mach_to_c = length(mach_to_c);
 X = load('NACA_64A210_mfoil.txt');
 
 % make/panel an airfoil out of these coordinates  
-m = mfoil('coords', X, 'npanel',50)
+m = mfoil('coords', X, 'npanel',50);
 
 % introduce a flap at x=0.8, y=0, 10deg down  
 %m.geom_flap([0.8,0], 10)
