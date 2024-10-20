@@ -80,6 +80,6 @@ aircraft.weight.fuel_density = 802.837; %[kg/m^3] 6.7 lb per gal from RFP
 
 aircraft.weight.oil_density = 1003.55; % kg/m3
 
-aircraft.weight.oil = 0.0125*aircraft.weight.ff*aircraft.weight.togw*block_time_calc(aircraft)/100;
+aircraft.weight.oil = 0.0125*aircraft.weight.fuel*block_time_calc(aircraft)/100;
 
 end

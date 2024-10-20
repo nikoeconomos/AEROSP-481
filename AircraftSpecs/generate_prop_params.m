@@ -25,13 +25,13 @@ function [aircraft] = generate_prop_params(aircraft)
 %%%%%%%%%%%%%%%%
 
 % number of engines
-aircraft.propulsion.num_engines = 2;
+aircraft.propulsion.num_engines = 1;
 
 % max thrust
-aircraft.propulsion.T_max = aircraft.propulsion.num_engines*129710.14; %[N] TOTAL THRUST FROM BOTH ENGINES
+aircraft.propulsion.T_max = aircraft.propulsion.num_engines*131200; %[N] TOTAL THRUST FROM BOTH ENGINES
 
 % military thrust
-aircraft.propulsion.T_military = aircraft.propulsion.num_engines*79178.344; %[N] TOTAL THRUST FROM BOTH ENGINES
+aircraft.propulsion.T_military = aircraft.propulsion.num_engines*76300; %[N] TOTAL THRUST FROM BOTH ENGINES
 
 
 end
