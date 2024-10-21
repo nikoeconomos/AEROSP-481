@@ -2,7 +2,7 @@ clear
 close all
 clc
 AR = 3.068;
-S_W = 41;
+S_W = 36;
 b_W = sqrt(AR*S_W);
 
 lambda = 0.35; % taper ratio
