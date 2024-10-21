@@ -1,0 +1,30 @@
+function [T_W] = T_W_sp_ex_pwr_calc_4(aircraft, W_S)
+%
+% function [T_W] = SpecExcessPower(aircraft, W_S)
+%
+% Calculate required thrust-to-weigth ratio from a given wing-loading for a
+% sustained turn at a specific excess power Ps, (along with flight 
+% conditions and aircraft specs: parasitic drag coefficient and aspect 
+% ratio). Feeds into the general calculation, this function is for deciding
+% values.
+%
+% Parameter = Description [units]
+%   
+% INPUTS:
+%   aircraft
+%   W_S = Wing loading (at takeoff)          [N/m^2]
+%
+% OUTPUTS:
+%   T_W = Thrust-to-weight ratio             []
+% -------------------------------------------------------------------------
+
+alt = ConvLength(15000,'ft','m');
+mach = 0.9;
+CD0 = aircraft.aerodynamics.CD0_clean;
+e = aircraft.aerodynamics.e_cruise;
+n = 1;
+Ps = ConvLength(400,'ft','m');
+
+T_W = T_W_spec_excess_power_calc_general(aircraft, W_S, alt, mach, CD0, e, n, Ps);
+
+end 
