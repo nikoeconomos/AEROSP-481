@@ -11,19 +11,28 @@ aircraft = generate_DCA_mission(aircraft);
 
 %%
 
-aircraft = generate_weight_params(aircraft);
+aircraft = generate_init_weight_params(aircraft);
 aircraft = generate_geometry_params(aircraft);
 aircraft = generate_aerodynamics_params(aircraft);
-aircraft = generate_weight_params(aircraft);
+aircraft = generate_init_weight_params(aircraft);
 aircraft = generate_prop_params(aircraft);
-aircraft = generate_cost_params(aircraft);
+
 aircraft = generate_climb_segments(aircraft);
+
+%plot_drag_polar(aircraft);
+drawnow
+
+aircraft = generate_component_weights(aircraft);
 
 plot_T_W_W_S_space(aircraft)
 drawnow
 
 plot_T_S_space(aircraft)
 drawnow
+
+aircraft = generate_aerodynamics_params(aircraft);
+
+aircraft = generate_cost_params(aircraft);
 
 %%
 disp(newline)

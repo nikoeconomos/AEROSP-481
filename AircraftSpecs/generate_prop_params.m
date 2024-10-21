@@ -24,14 +24,24 @@ function [aircraft] = generate_prop_params(aircraft)
 %% PARAMETERS %%
 %%%%%%%%%%%%%%%%
 
+aircraft.propulsion.engine_name = 'F110-GE-129';
+
 % number of engines
-aircraft.propulsion.num_engines = 2;
+aircraft.propulsion.num_engines = 1;
 
 % max thrust
-aircraft.propulsion.T_max = aircraft.propulsion.num_engines*129710.14; %[N] TOTAL THRUST FROM BOTH ENGINES
+aircraft.propulsion.T_max = 129000; %[N] TOTAL THRUST FROM BOTH ENGINES
 
 % military thrust
-aircraft.propulsion.T_military = aircraft.propulsion.num_engines*79178.344; %[N] TOTAL THRUST FROM BOTH ENGINES
+aircraft.propulsion.T_military = 76300; %[N] TOTAL THRUST
+
+aircraft.propulsion.bypass_ratio = 0.76;
+
+aircraft.propulsion.max_diameter = 1.2; %m
+
+aircraft.propulsion.airflow = 122.4; %kg/s
+
+aircraft.propulsion.length = 4.6; %m
 
 
 end

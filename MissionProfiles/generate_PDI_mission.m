@@ -30,9 +30,9 @@ mission.segments = ["start", "takeoff", "climb", "dash",...
 %% MACH NUMBER %%
 %%%%%%%%%%%%%%%%%
 
-mission.mach = [NaN, NaN, NaN, 1.8,...
+mission.mach = [NaN, NaN, NaN, 1.6,...
                 1.2, 0.9, NaN ...
-                aircraft.performance.cruise_mach, NaN, 0.16]; % TODO fix reserve mach
+                aircraft.performance.cruise_mach, NaN, 0.4]; % TODO fix reserve mach
 
 %% ALTITUDE %%
 %%%%%%%%%%%%%%
@@ -93,19 +93,17 @@ mission.time_total = sum(mission.time(~isnan(mission.time)));
 
 % pulled from figure 2.3
 
-conversion_factor = 2.838*10^-5; %lbm/s/lbf to kg/s/N
-
-TSFC_idle = 0.7 * conversion_factor; 
-TSFC_takeoff = 0.8 * conversion_factor; % online average
-TSFC_dash = 1.2 * conversion_factor; % [kg/kg*s] First number from left to right is TSFC in lbm/hr*lbf, next rumber is conversion factor to 1/s
-TSFC_combat1 = 1.2 * conversion_factor; % [kg/kg*s] First number from left to right is TSFC in lbm/hr*lbf, next rumber is conversion factor to 1/s
-TSFC_combat2 = 1.2 * conversion_factor; % [kg/kg*s] First number from left to right is TSFC in lbm/hr*lbf, next rumber is conversion factor to 1/s
-TSFC_cruise_in = 0.86 * conversion_factor; % [kg/kg*s] First number from left to right is TSFC in lbm/hr*lbf, next rumber is conversion factor to 1/s
-TSFC_reserve = 0.71 * conversion_factor; % [kg/kg*s] First number from left to right is TSFC in lbm/hr*lbf, next rumber is conversion factor to 1/s
+TSFC_idle         = ConvTSFC(0.90, 'Imp', 'SI'); 
+TSFC_takeoff      = ConvTSFC(0.80, 'Imp', 'SI');  % ESTIMATED FROM ONLINE
+TSFC_cruise       = ConvTSFC(0.65, 'Imp', 'SI');  % [kg/N*s] First number from left to right is TSFC in lbm/hr*lbf, next number is conversion factor to 1/s
+TSFC_dash         = ConvTSFC(1.70, 'Imp', 'SI');  % 
+TSFC_combat1      = ConvTSFC(1.20, 'Imp', 'SI');  % 
+TSFC_combat2      = ConvTSFC(1.00, 'Imp', 'SI');  % 
+TSFC_reserve      = ConvTSFC(0.70, 'Imp', 'SI');  % 
 
 mission.TSFC = [TSFC_idle, TSFC_takeoff, NaN, TSFC_dash, ...
                 TSFC_combat1, TSFC_combat2, NaN ... 
-                TSFC_cruise_in, NaN, TSFC_reserve];
+                TSFC_cruise, NaN, TSFC_reserve];
 
 %% SAVE TO AIRCRAFT %%
 %%%%%%%%%%%%%%%%%%%%%%
