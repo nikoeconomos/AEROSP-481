@@ -20,11 +20,11 @@ function [togw, ff] = togw_as_func_of_T_S_calc(aircraft, Tin, Sin)
     
     % Set constants
     g = 9.80665;
-    wing_area_density = aircraft.weight.wing_area_density; % 44 [kg/m^2]
+    wing_area_density = aircraft.weight.density.wing_area; % 44 [kg/m^2]
 
     W_0       = aircraft.weight.togw; % set the w0 to our initial guess calculated earlier
-    W_crew    = aircraft.weight.crew;
-    W_payload = aircraft.weight.payload;
+    W_crew    = aircraft.weight.components.crew;
+    W_payload = aircraft.weight.components.payload;
 
     TW_design = aircraft.performance.TW_design; % A SPOT WE CHOOSE FROM THE TW-WS DIAGRAM
     WS_design = aircraft.performance.WS_design; % A SPOT WE CHOOSE FROM THE TW-WS DIAGRAM

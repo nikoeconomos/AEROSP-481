@@ -35,11 +35,11 @@ mission.segments = [ "start",    "takeoff",   ...
 %% MACH NUMBER %%
 %%%%%%%%%%%%%%%%%
 
-cruise_mach             = aircraft.performance.cruise_mach;
-dash_mach               = aircraft.performance.dash_mach;
-max_sustained_turn_mach = aircraft.performance.max_sustained_turn_mach;
-min_sustained_turn_mach = aircraft.performance.min_sustained_turn_mach;
-endurance_mach          = aircraft.performance.endurance_mach;
+cruise_mach             = aircraft.performance.mach.cruise;
+dash_mach               = aircraft.performance.mach.dash;
+max_sustained_turn_mach = aircraft.performance.mach.max_sustained_turn;
+min_sustained_turn_mach = aircraft.performance.mach.min_sustained_turn;
+endurance_mach          = aircraft.performance.mach.endurance;
 
 mission.mach = [  NaN,                      NaN,   ... 
                   NaN,                      cruise_mach, ...

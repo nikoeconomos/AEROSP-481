@@ -29,9 +29,9 @@ aircraft.geometry.S_wet_regression_calc = @(W0) ConvArea( 10^(-0.1289)*(ConvMass
 
 aircraft.geometry.length_regression_calc = @(W0) 0.389*W0^0.39; % this is a historical regression from Raymer table 6.3
 
-aircraft.geometry.AR = 3.068; %From raymer calc
+aircraft.geometry.AR = 4; %From raymer calc
 
-aircraft.geometry.wing.sweep_LE = deg2rad(40.6); %radians
+aircraft.geometry.wing.sweep_LE = deg2rad(44.9); %radians
 
 aircraft.geometry.wing.S_ref = 24.5;
 

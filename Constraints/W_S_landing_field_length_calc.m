@@ -31,7 +31,7 @@ rho_SL_30C = aircraft.environment.rho_SL_30C; %[kg/m^3]
 
 sigma = rho_SL_30C/rho_1219_MSL;
 
-CL_max = aircraft.aerodynamics.CL_landing_flaps;  
+CL_max = aircraft.aerodynamics.CL.landing_flaps;  
 
 %% Hamburg
 
@@ -39,7 +39,7 @@ kl = .107; %[kg/m^3] - comes from raymer textbook LDG equation
 
 W_S_L = kl*sigma*CL_max*(s_land-s_a); %[kg/m^2]
 
-aircraft = generate_PDI_mission(aircraft);
+%aircraft = generate_PDI_mission(aircraft);
 ff = ff_total_calc(aircraft);
 
 ac_50_fuel = 1-(ff/2);

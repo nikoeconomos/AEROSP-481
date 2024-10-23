@@ -44,12 +44,12 @@ aircraft.aerodynamics.LD_from_CL_and_CD0_calc = @ (CL, CD0, k) 0.94*CL/(CD0 + k 
 %%%%%%%%%%%%%%%%
 
 aircraft = generate_drag_polar_params(aircraft);
-aircraft.aerodynamics.LD_max = aircraft.aerodynamics.LD_max_cruise/0.943; % next to eq 2.15 in metabook
-aircraft.aerodynamics.LD_dash = 0.93 * aircraft.aerodynamics.LD_max_cruise; 
+aircraft.aerodynamics.LD.max = aircraft.aerodynamics.LD.max_cruise/0.943; % next to eq 2.15 in metabook
+aircraft.aerodynamics.LD.dash = 0.93 * aircraft.aerodynamics.LD.max_cruise; 
 
 %% AR wetted (STORES IN GEOMETRY)
 
-aircraft.geometry.AR_wetted = (aircraft.aerodynamics.LD_max/14)^2 ; % from raymer new edition pg 40, for military aircraft, KLD = 14
+aircraft.geometry.AR_wetted = (aircraft.aerodynamics.LD.max/14)^2 ; % from raymer new edition pg 40, for military aircraft, KLD = 14
 
 %% Stall Speed at takeoff 
 

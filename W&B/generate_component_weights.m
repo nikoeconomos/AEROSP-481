@@ -31,9 +31,9 @@ function aircraft = generate_component_weights(aircraft)
    
     % (Metabook 7.3.4)
 
-    aircraft.weight.wing_fudge_factor = 0.85;
-    aircraft.weight.tail_fudge_factor = 0.83;
-    aircraft.weight.fuselage_fudge_factor = 0.9;
+    aircraft.weight.fudge_factor.wing = 0.85;
+    aircraft.weight.fudge_factor.tail = 0.83;
+    aircraft.weight.fudge_factor.fuselage = 0.9;
 
     %%%%%%%%%%%%%%
     %% FUSELAGE %%
@@ -41,9 +41,9 @@ function aircraft = generate_component_weights(aircraft)
 
     aircraft.geometry.fuselage.S_wet = 90.9387; % m2 from CAD
 
-    aircraft.weight.fuselage_area_density = 23; %kg/m2 metabook p76
+    aircraft.weight.density.fuselage_area = 23; %kg/m2 metabook p76
 
-    aircraft.weight.fuselage = (aircraft.geometry.fuselage.S_wet*aircraft.weight.fuselage_area_density) * aircraft.weight.fuselage_fudge_factor;
+    aircraft.weight.components.fuselage = (aircraft.geometry.fuselage.S_wet*aircraft.weight.density.fuselage_area) * aircraft.weight.fudge_factor.fuselage;
 
     %%%%%%%%%%
     %% WING %%
@@ -54,7 +54,7 @@ function aircraft = generate_component_weights(aircraft)
     % for convenience
     wing = aircraft.geometry.wing;
 
-    wing.S_ref = 24.5; %m2
+    wing.S_ref = aircraft.geometry.wing.S_ref; %m2, updated in geometry
 
     wing.S_wet = wing.S_ref*2; %m2 APPROXIMATION, UPDATE WITH A BETTER ONE
     wing.b = sqrt(wing.AR*wing.S_ref);
@@ -71,7 +71,7 @@ function aircraft = generate_component_weights(aircraft)
     % AREA DENSITY ALREADY DEFINED IN GEOMETRY
 
     % weight
-    aircraft.weight.wing = (wing.S_ref * aircraft.weight.wing_area_density) * aircraft.weight.wing_fudge_factor; % 44 * S
+    aircraft.weight.components.wing = (wing.S_ref * aircraft.weight.density.wing_area) * aircraft.weight.fudge_factor.wing; % 44 * S
 
     % MAC and wing
     wing.MAC = MAC_calc(wing.c_root, wing.c_tip);
@@ -110,10 +110,10 @@ function aircraft = generate_component_weights(aircraft)
     %% HTAIL MASS AND CG %%
 
     % density
-    aircraft.weight.htail_area_density = 20; % kg/m2
+    aircraft.weight.density.htail_area = 20; % kg/m2
     
     % weight calc
-    aircraft.weight.htail = (htail.S_ref*aircraft.weight.htail_area_density) * aircraft.weight.tail_fudge_factor;
+    aircraft.weight.components.htail = (htail.S_ref*aircraft.weight.density.htail_area) * aircraft.weight.fudge_factor.tail;
 
     % MAC and CG = at 0.4MAC
     htail.MAC  = MAC_calc(htail.c_root, htail.c_tip);
@@ -151,10 +151,10 @@ function aircraft = generate_component_weights(aircraft)
     %% VTAIL MASS AND CG %%
 
     % density
-    aircraft.weight.vtail_area_density = 26; %kg/m2
+    aircraft.weight.density.vtail_area = 26; %kg/m2
     
     % weight calc
-    aircraft.weight.vtail = (vtail.S_ref*aircraft.weight.vtail_area_density) * aircraft.weight.tail_fudge_factor;
+    aircraft.weight.components.vtail = (vtail.S_ref*aircraft.weight.density.vtail_area) * aircraft.weight.fudge_factor.tail;
 
     % MAC and CG = at 0.4MAC
     vtail.MAC = MAC_calc(vtail.c_root, vtail.c_tip);
@@ -170,19 +170,19 @@ function aircraft = generate_component_weights(aircraft)
     %% ENGINE WEIGHT %%
     %%%%%%%%%%%%%%%%%%%
 
-    aircraft.weight.engine_dry = 1800; %kg, the f110
+    aircraft.weight.components.engine_dry = 1800; %kg, the f110
 
     theoretical_engine_weight     = w_eng_calc(aircraft.propulsion.T_max);
     theoretical_engine_dry_weight = ConvMass((0.521*ConvForce(aircraft.propulsion.T_max, 'N', 'lbf')^0.9),'lbm', 'kg');
-    aircraft.weight.engine_total  = theoretical_engine_weight - theoretical_engine_dry_weight  + aircraft.weight.engine_dry;
+    aircraft.weight.components.engine_total  = theoretical_engine_weight - theoretical_engine_dry_weight  + aircraft.weight.components.engine_dry;
 
     %%%%%%%%%%%%
     %% CANNON %%
     %%%%%%%%%%%%
     
     % after firing everything
-    aircraft.weight.m61a1.lost_mass     = aircraft.weight.m61a1.bullet*aircraft.weight.m61a1.num_rounds;
-    aircraft.weight.m61a1.returned_mass = aircraft.weight.m61a1.feed_system + aircraft.weight.m61a1.casing*aircraft.weight.m61a1.num_rounds;
+    aircraft.weight.weapons.m61a1.lost_mass     = aircraft.weight.weapons.m61a1.bullet*aircraft.weight.weapons.m61a1.num_rounds;
+    aircraft.weight.weapons.m61a1.returned_mass = aircraft.weight.weapons.m61a1.feed_system + aircraft.weight.weapons.m61a1.casing*aircraft.weight.weapons.m61a1.num_rounds;
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %% TOGW UPDATE, ALGORITHM 5 (METABOOK) %%
@@ -192,7 +192,7 @@ function aircraft = generate_component_weights(aircraft)
     w = aircraft.weight;
 
     %% ALGORITHM %%    
-
+    
     % intial estimate
     [W_0, ff] = togw_as_func_of_T_S_calc(aircraft, aircraft.propulsion.T_max, aircraft.geometry.wing.S_ref);
 
@@ -200,11 +200,19 @@ function aircraft = generate_component_weights(aircraft)
     converged = false;
     while converged == false
         
-        w.fuel = ff    * W_0;
-        w.lg   = 0.043 * W_0;
-        w.xtra = 0.17  * W_0;
+        w.components.fuel = ff    * W_0;
+        w.components.lg   = 0.043 * W_0;
+        w.components.xtra = 0.17  * W_0;
 
-        W_0_new = w.engine_total + w.wing + w.htail + w.vtail + w.fuselage + w.xtra + w.lg + w.fuel + w.payload;
+        W_0_new = w.components.engine_total ...
+            + w.components.wing ...
+            + w.components.htail ...
+            + w.components.vtail ...
+            + w.components.fuselage ...
+            + w.components.xtra ...
+            + w.components.lg ...
+            + w.components.fuel ...
+            + w.components.payload;
 
         if abs(W_0_new - W_0) <= tol
             converged = true;
@@ -217,9 +225,9 @@ function aircraft = generate_component_weights(aircraft)
 
     % re update with new vals
     w.ff   = ff;
-    w.fuel = ff    * W_0;
-    w.lg   = 0.043 * W_0;
-    w.xtra = 0.17  * W_0;
+    w.components.fuel = ff    * W_0;
+    w.components.lg   = 0.043 * W_0;
+    w.components.xtra = 0.17  * W_0;
 
     % togw, empty weight, landing weight
     w.togw = W_0;
@@ -230,7 +238,7 @@ function aircraft = generate_component_weights(aircraft)
     %% FUEL VOLUME %%
     %%%%%%%%%%%%%%%%%
 
-    w.fuel_vol.total_used  = w.fuel/w.fuel_density; %m3
+    w.fuel_vol.total_used  = w.components.fuel/w.density.fuel; %m3
 
     f = w.fuel_vol;
     
@@ -263,6 +271,8 @@ function aircraft = generate_component_weights(aircraft)
     %%%%%%%%%%%%%%%%%%%%%%%
 
     %% CG LOCATIONS %%  
+
+    % POSITIONS FROM CAD
 
     w.cg_pos.engine = [14.32, 0, 0.724];
 
@@ -297,8 +307,6 @@ function aircraft = generate_component_weights(aircraft)
     %w.cg_pos.lg_main = [?,?,?];
     %w.cg_pos.lg_nose = [?,?,?];
 
-    %% MAKE EMPTY ARRAYS %%
-
 
     %% CALCULATE OVERALL CG %%
   
@@ -307,37 +315,37 @@ function aircraft = generate_component_weights(aircraft)
     for i = 1:3
         
         cg_sum(i) = sum([...
-            w.cg_pos.engine(i)       * w.engine_total; 
-            w.cg_pos.vtail(i)        * w.vtail;
-            w.cg_pos.htail(i)        * w.htail; 
-            w.cg_pos.wing(i)         * w.wing;
-            w.cg_pos.fuselage(i)     * w.fuselage; 
-            w.cg_pos.cannon(i)       * w.m61a1.cannon; 
-            w.cg_pos.cannon_feed_system(i) * w.m61a1.returned_mass; 
-            w.cg_pos.cannon_feed_system(i) * w.m61a1.lost_mass; 
-            w.cg_pos.missile_1(i)    * w.missile; 
-            w.cg_pos.missile_2(i)    * w.missile; 
-            w.cg_pos.missile_3(i)    * w.missile; 
-            w.cg_pos.missile_4(i)    * w.missile; 
-            w.cg_pos.missile_5(i)    * w.missile; 
-            w.cg_pos.missile_6(i)    * w.missile; 
-            w.cg_pos.xtra(i)         * w.xtra; 
-            w.cg_pos.nose_fuel(i)            * w.fuel * w.fuel_vol.nose_pct; 
-            w.cg_pos.cannon_fuel(i)          * w.fuel * w.fuel_vol.cannon_pct; 
-            w.cg_pos.engine_fuel(i)          * w.fuel * w.fuel_vol.engine_pct; 
-            w.cg_pos.left_wing_fuel(i)       * w.fuel * w.fuel_vol.left_wing_pct; 
-            w.cg_pos.right_wing_fuel(i)      * w.fuel * w.fuel_vol.right_wing_pct; 
-            w.cg_pos.left_conformal_fuel(i)  * w.fuel * w.fuel_vol.left_conformal_pct; 
-            w.cg_pos.right_conformal_fuel(i) * w.fuel * w.fuel_vol.right_conformal_pct; 
-            %w.cg_pos.lg_nose(i) * w.lg_nose ...
-            %w.cg_pos.lg_main(i) * w.lg_main ...
+            w.cg_pos.engine(i)       * w.components.engine_total; 
+            w.cg_pos.vtail(i)        * w.components.vtail;
+            w.cg_pos.htail(i)        * w.components.htail; 
+            w.cg_pos.wing(i)         * w.components.wing;
+            w.cg_pos.fuselage(i)     * w.components.fuselage; 
+            w.cg_pos.cannon(i)       * w.weapons.m61a1.cannon; 
+            w.cg_pos.cannon_feed_system(i) * w.weapons.m61a1.returned_mass; 
+            w.cg_pos.cannon_feed_system(i) * w.weapons.m61a1.lost_mass; 
+            w.cg_pos.missile_1(i)    * w.weapons.missile; 
+            w.cg_pos.missile_2(i)    * w.weapons.missile; 
+            w.cg_pos.missile_3(i)    * w.weapons.missile; 
+            w.cg_pos.missile_4(i)    * w.weapons.missile; 
+            w.cg_pos.missile_5(i)    * w.weapons.missile; 
+            w.cg_pos.missile_6(i)    * w.weapons.missile; 
+            w.cg_pos.xtra(i)         * w.components.xtra; 
+            w.cg_pos.nose_fuel(i)            * w.components.fuel * w.fuel_vol.nose_pct; 
+            w.cg_pos.cannon_fuel(i)          * w.components.fuel * w.fuel_vol.cannon_pct; 
+            w.cg_pos.engine_fuel(i)          * w.components.fuel * w.fuel_vol.engine_pct; 
+            w.cg_pos.left_wing_fuel(i)       * w.components.fuel * w.fuel_vol.left_wing_pct; 
+            w.cg_pos.right_wing_fuel(i)      * w.components.fuel * w.fuel_vol.right_wing_pct; 
+            w.cg_pos.left_conformal_fuel(i)  * w.components.fuel * w.fuel_vol.left_conformal_pct; 
+            w.cg_pos.right_conformal_fuel(i) * w.components.fuel * w.fuel_vol.right_conformal_pct; 
+            %w.cg_pos.lg_nose(i) * w.components.lg_nose ...
+            %w.cg_pos.lg_main(i) * w.components.lg_main ...
         ]);
 
-        w.cg(i) = cg_sum(i)/(w.togw-w.lg); % switch out when placed LG
+        w.cg(i) = cg_sum(i)/(w.togw-w.components.lg); % switch out when placed LG
         %w.cg(i) = cg_sum(i)/(w.togw);
     end
     w.cg
-
+   
     %%%%%%%%%%%%%%%%%%%
     %% UPDATE STRUCT %%
     %%%%%%%%%%%%%%%%%%%

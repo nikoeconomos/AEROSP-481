@@ -23,7 +23,7 @@ function [W_S] = W_S_instantaneous_turn_calc(aircraft, T_W)
 
     g = 9.8067;
 
-    CL_combat = aircraft.aerodynamics.CL_combat;
+    CL_combat = aircraft.aerodynamics.CL.combat;
 
     [~,~,rho,~] = standard_atmosphere_calc(10668); %35000ft = 10668m
 
