@@ -30,6 +30,7 @@ drawnow
 plot_T_S_space(aircraft)
 drawnow
 
+aircraft = generate_component_weights(aircraft);
 aircraft = generate_aerodynamics_params(aircraft);
 
 aircraft = generate_cost_params(aircraft);
