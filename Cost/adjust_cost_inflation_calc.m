@@ -1,4 +1,4 @@
-function adjusted_cost = adjust_cost_inflation_calc(aircraft)
+function adjusted_cost = adjust_cost_inflation_calc(base_cost, base_year, target_year)
 % AE 481: Aircraft Design - Group 3: Libellula
 % Inflation Adjustment Function for Avionics and Weapons Cost
 %
@@ -27,7 +27,7 @@ function adjusted_cost = adjust_cost_inflation_calc(aircraft)
 % Inflation adjustment function using the CEF method
 
 % Calculate bCEF (Base Year CEF) and tCEF (Then Year CEF)
-bCEF = 5.17053 + 0.104981 * (base_year - 2006);  % Base year CEF
+bCEF = 5.17053 + 0.104981 * (base_year - 2006);  % Base year CEF TODO why is this 2006
 tCEF = 5.17053 + 0.104981 * (target_year - 2006); % Target year CEF
 
 % Calculate the effective CEF

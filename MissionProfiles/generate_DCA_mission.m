@@ -24,49 +24,40 @@ function [aircraft] = generate_DCA_mission(aircraft)
 %% MISSION SEGMENTS %%
 %%%%%%%%%%%%%%%%%%%%%%
 
-%TODO RFP says climb back to altitude. labeled OPTIMIZE. UNSURE IF NEEDED
-mission.segments = ["takeoff", "climb", "cruise",...
-                    "loiter", "dash", "combat", ...
-                    "combat", "optimize", "cruise",...
-                    "descent", "reserve"]; 
+% TODO RFP says climb back to altitude. labeled OPTIMIZE. UNSURE IF NEEDED
+mission.segments = [ "start",    "takeoff",   ...
+                     "climb",    "cruise",    ...
+                     "loiter",   "dash",      ...
+                     "combat",   "combat",    ...
+                     "optimize", "cruise",    ...
+                     "descent",  "reserve" ];
 
 %% MACH NUMBER %%
 %%%%%%%%%%%%%%%%%
 
-mission.mach = [NaN, NaN, 0.95,...
-                0.95, 1.8, 1.2 ...
-                0.9, NaN, 0.95,...
-                NaN, 0.16]; % from RFP
+cruise_mach             = aircraft.performance.cruise_mach;
+dash_mach               = aircraft.performance.dash_mach;
+max_sustained_turn_mach = aircraft.performance.max_sustained_turn_mach;
+min_sustained_turn_mach = aircraft.performance.min_sustained_turn_mach;
+endurance_mach          = aircraft.performance.endurance_mach;
+
+mission.mach = [  NaN,                      NaN,   ... 
+                  NaN,                      cruise_mach, ...
+                  cruise_mach,              dash_mach,   ...
+                  max_sustained_turn_mach,  min_sustained_turn_mach,   ...
+                  NaN,                      cruise_mach, ...
+                  NaN,                      endurance_mach]; % from RFP
 
 %% ALTITUDE %%
 %%%%%%%%%%%%%%
 
-mission.alt = [0, NaN, 10668,...
-               10668, 10668, 10668 ... % TODO: DETERMINE "OPTIMUM" SPEED AND ALTITUDE
-               10668, NaN, 10668,...
-               NaN, 0]; % [m]
+mission.alt = [ 0,     0,     ...
+                NaN,   10668,  ...
+                10668, 10668,  ...
+                10668, 10668,  ...
+                NaN,   10668,  ...
+                NaN,   0 ]; % [m]
 
-%% AMBIENT DENSITY %%
-%%%%%%%%%%%%%%
-
-mission.rho_amb = NaN(size(mission.segments));
-for i = 1:length(mission.segments)
-    if ~isnan(mission.alt(1,i))
-        [~, ~, Rho] = std_atm(mission.alt(i));
-        mission.rho_amb(i) = Rho; % [m/s]
-    end
-end
-
-%% AMBIENT TEMPERATURE %%
-%%%%%%%%%%%%%%
-
-mission.t_amb = NaN(size(mission.segments));
-for i = 1:length(mission.segments)
-    if ~isnan(mission.alt(1,i))
-        [T, ~, ~] = std_atm(mission.alt(i));
-        mission.t_amb(i) = T; % [m/s]
-    end
-end
 
 %% VELOCITY %%
 %%%%%%%%%%%%%%
@@ -74,68 +65,89 @@ end
 mission.velocity = NaN(size(mission.segments));
 for i = 1:length(mission.segments)
     if ~isnan(mission.mach(1,i))
-        mission.velocity(i) = velocity_from_flight_cond(mission.mach(i),mission.t_amb(i),mission.rho_amb(i),aircraft.constants.r_air); % [m/s]
+        mission.velocity(i) = velocity_from_flight_cond(mission.mach(i),mission.alt(i)); % [m/s]
     end
 end
 
 %% RANGE AND ENDURANCE %%
-%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%
 
-mission.range_type = ["NA", "NA", "range",...
-                      "endurance", "range", "range", ...
-                      "range", "NA", "range",...
-                      "NA", "endurance"];
+mission.range_type = [ "NA",        "NA",      ... 
+                       "NA",        "range",   ...
+                       "endurance", "range",   ...
+                       "range",     "range",   ...
+                       "NA",        "range",   ...
+                       "NA",        "endurance" ];
 
-range_combat1 = basic_360_turn_distance(mission.velocity(1,6), 89); % accepts mission velocity [m/s] and [degrees] of bank angle TODO FIX
-range_combat2 = basic_360_turn_distance(mission.velocity(1,7), 89); % accepts mission velocity [m/s] and [degrees] of bank angle TODO FIX
-mission.range = [NaN, NaN, 555600, NaN, 185200, range_combat1 ...
-                 range_combat2, NaN, 740800, NaN, NaN]; % [m] or , depending on type
+bank_angle = aircraft.performance.bank_angle_360;
 
-mission.endurance = [NaN, NaN, NaN,...
-                     14400, NaN, NaN, ...
-                     NaN, NaN, NaN,...
-                     NaN, 1800]; %[s]
+range_combat1 = basic_360_turn_distance(bank_angle, mission.mach(7), mission.alt(7));  % accepts mission velocity [m/s] and [degrees] of bank angle TODO FIX
+range_combat2 = basic_360_turn_distance(bank_angle, mission.mach(8), mission.alt(8));  % accepts mission velocity [m/s] and [degrees] of bank angle TODO FIX
+
+mission.range     = [ NaN,              NaN,        ...
+                      NaN,              555600,     ...
+                      NaN,              185200,     ...
+                      range_combat1,    range_combat2, ...
+                      NaN,              740800,     ...
+                      NaN,              NaN ];      % [m]
+
+mission.endurance = [ NaN,        NaN,        ...
+                      NaN,        NaN,        ...
+                      14400,      NaN,        ...
+                      NaN,        NaN,        ...
+                      NaN,        NaN,        ...
+                      NaN,        1800 ];     %[s]
 
 %% FLIGHT TIME %%
 %%%%%%%%%%%%%%%%%
 
-% Takeoff is averaged from data online (~6 min)
-% Climb is an overestimate from data online (~1 min)
+% Startup is an estimate from metabook algorithm
+% Takeoff is averaged from data online (~1 min)
+% Climb is an overestimate from data online (~10 min) TODO UPDATE
 % Second climb is currently undefined
-% Descent comes from averaged historical data for deccent time
+% Descent comes from averaged historical data for descent time
 
-time_cruise_out = time_from_range_flight_cond(mission.range(1,3), mission.mach(1,3), mission.alt(1,3));
-time_dash = time_from_range_flight_cond(mission.range(1,5), mission.mach(1,5), mission.alt(1,5));
-time_combat1 = time_from_range_flight_cond(mission.range(1,6), mission.mach(1,6), mission.alt(1,6));
-time_combat2 = time_from_range_flight_cond(mission.range(1,7), mission.mach(1,7), mission.alt(1,7));
-time_cruise_in = time_from_range_flight_cond(mission.range(1,9), mission.mach(1,9), mission.alt(1,9));
 
-mission.time = [360, 60, time_cruise_out,...
-                mission.endurance(1,4), time_dash, time_combat1 ...
-                time_combat2, NaN, time_cruise_in,...
-                240, mission.endurance(1,11)]; %[s]
+time_cruise_out = time_from_range_flight_cond(mission.range(4),  mission.mach(4),  mission.alt(4));
+time_dash       = time_from_range_flight_cond(mission.range(6),  mission.mach(6),  mission.alt(6));
+time_combat1    = time_from_range_flight_cond(mission.range(7),  mission.mach(7),  mission.alt(7));
+time_combat2    = time_from_range_flight_cond(mission.range(8),  mission.mach(8),  mission.alt(8));
+time_cruise_in  = time_from_range_flight_cond(mission.range(10), mission.mach(10), mission.alt(10));
+
+mission.time    = [ 900,                  60,          ...
+                    600,                  time_cruise_out, ... %600 seconds comes from online for climb
+                    mission.endurance(5), time_dash, ...
+                    time_combat1,         time_combat2, ...
+                    NaN,                  time_cruise_in, ...
+                    240,                  mission.endurance(12) ]; % [s]
 
 mission.time_total = sum(mission.time(~isnan(mission.time)));
 
 %% TSFC %%
 %%%%%%%%%%
 
-TSFC_cruise_out = 0.86 / 7938; % [kg/kg*s] First number from left to right is TSFC in lbm/hr*lbf, next rumber is conversion factor to 1/s
-TSFC_loiter = 0.86 / 7938; % [kg/kg*s] First number from left to right is TSFC in lbm/hr*lbf, next rumber is conversion factor to 1/s
-TSFC_dash = 1.2 / 7938; % [kg/kg*s] First number from left to right is TSFC in lbm/hr*lbf, next rumber is conversion factor to 1/s
-TSFC_combat1 = 1.2 / 7938; % [kg/kg*s] First number from left to right is TSFC in lbm/hr*lbf, next rumber is conversion factor to kgm/s*kgf
-TSFC_combat2 = 1.2 / 7938; % [kg/kg*s] First number from left to right is TSFC in lbm/hr*lbf, next rumber is conversion factor to kgm/s*kgf
-TSFC_cruise_in = 0.86 / 7938; % [kg/kg*s] First number from left to right is TSFC in lbm/hr*lbf, next rumber is conversion factor to 1/s
-TSFC_reserve = 0.71 / 7938; % [kg/kg*s] First number from left to right is TSFC in lbm/hr*lbf, next rumber is conversion factor to 1/s
+% pulled from figure 2.3 UPDATE 
 
-mission.TSFC = [NaN, NaN, TSFC_cruise_out,...
-                TSFC_loiter, TSFC_dash, TSFC_combat1 ... 
-                TSFC_combat2, NaN, TSFC_cruise_in,...
-                NaN, TSFC_reserve];
+TSFC_idle         = ConvTSFC(0.90, 'Imp', 'SI'); 
+TSFC_takeoff      = ConvTSFC(0.80, 'Imp', 'SI');  % ESTIMATED FROM ONLINE
+TSFC_cruise       = ConvTSFC(0.65, 'Imp', 'SI');  % [kg/N*s] First number from left to right is TSFC in lbm/hr*lbf, next number is conversion factor to 1/s
+TSFC_loiter       = ConvTSFC(0.50, 'Imp', 'SI');  % 
+TSFC_dash         = ConvTSFC(1.70, 'Imp', 'SI');  % 
+TSFC_combat1      = ConvTSFC(1.20, 'Imp', 'SI');  % 
+TSFC_combat2      = ConvTSFC(1.00, 'Imp', 'SI');  % 
+TSFC_reserve      = ConvTSFC(0.70, 'Imp', 'SI');  % 
+
+mission.TSFC      = [ TSFC_idle,    TSFC_takeoff, ...
+                      NaN,          TSFC_cruise, ...
+                      TSFC_loiter,  TSFC_dash, ...
+                      TSFC_combat1, TSFC_combat2, ...
+                      NaN,          TSFC_cruise, ...
+                      NaN,          TSFC_reserve ];
 
 %% SAVE TO AIRCRAFT %%
 %%%%%%%%%%%%%%%%%%%%%%
 
 aircraft.mission = mission;
+
 
 end
