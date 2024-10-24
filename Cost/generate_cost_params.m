@@ -78,7 +78,7 @@ cost.crew.total = adjust_cost_inflation_calc(crew_costs, crew_base_year, target_
 
 %% Airframe maintenance %
 
-airframe_weight = aircraft.weight.empty - aircraft.weight.components.engine_total;
+airframe_weight = aircraft.weight.empty - aircraft.weight.components.engine; % TODO UPDATE
 
 Cml_af = 1.03*(3+0.067*airframe_weight/1000)*maintenance_labor_rate;
 

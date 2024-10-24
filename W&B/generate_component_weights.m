@@ -21,11 +21,11 @@ function aircraft = generate_component_weights(aircraft)
 
     %% FORMULAS AND CALCULATIONS %%
 
-    MAC_calc = @(c_root, c_tip) 2/3*(c_root + c_tip - (c_root*c_tip)/(c_root + c_tip));
+    aircraft.weight.func.MAC_calc = @(c_root, c_tip) 2/3*(c_root + c_tip - (c_root*c_tip)/(c_root + c_tip));
 
-    xMAC_calc = @(xRLE, b, c_root, c_tip, sweep_LE) xRLE + b/6 * (c_root + 2*c_tip)/(c_root + c_tip) + tan(sweep_LE);
+    aircraft.weight.func.xMAC_calc = @(xRLE, b, c_root, c_tip, sweep_LE) xRLE + b/6 * (c_root + 2*c_tip)/(c_root + c_tip) + tan(sweep_LE);
 
-    x40MAC_calc = @(xMAC, MAC) xMAC + 0.4*MAC;
+    aircraft.weight.func.x40MAC_calc = @(xMAC, MAC) xMAC + 0.4*MAC;
 
     %% FUDGE FACTORS %% 
    
@@ -74,11 +74,11 @@ function aircraft = generate_component_weights(aircraft)
     aircraft.weight.components.wing = (wing.S_ref * aircraft.weight.density.wing_area) * aircraft.weight.fudge_factor.wing; % 44 * S
 
     % MAC and wing
-    wing.MAC = MAC_calc(wing.c_root, wing.c_tip);
+    wing.MAC = aircraft.weight.func.MAC_calc(wing.c_root, wing.c_tip);
 
-    wing.xMAC = xMAC_calc(wing.xRLE, wing.b, wing.c_root, wing.c_tip, wing.sweep_LE);
+    wing.xMAC = aircraft.weight.func.xMAC_calc(wing.xRLE, wing.b, wing.c_root, wing.c_tip, wing.sweep_LE);
 
-    x40MAC_wing = x40MAC_calc(wing.xMAC, wing.MAC);
+    wing.x40MAC = aircraft.weight.func.x40MAC_calc(wing.xMAC, wing.MAC);
     
     % re update
     aircraft.geometry.wing = wing;
@@ -116,11 +116,11 @@ function aircraft = generate_component_weights(aircraft)
     aircraft.weight.components.htail = (htail.S_ref*aircraft.weight.density.htail_area) * aircraft.weight.fudge_factor.tail;
 
     % MAC and CG = at 0.4MAC
-    htail.MAC  = MAC_calc(htail.c_root, htail.c_tip);
+    htail.MAC  = aircraft.weight.func.MAC_calc(htail.c_root, htail.c_tip);
 
-    htail.xMAC = xMAC_calc(htail.xRLE, htail.b, htail.c_root, htail.c_tip, htail.sweep_LE);
+    htail.xMAC = aircraft.weight.func.xMAC_calc(htail.xRLE, htail.b, htail.c_root, htail.c_tip, htail.sweep_LE);
 
-    x40MAC_htail = x40MAC_calc(htail.xMAC, htail.MAC);
+    htail.x40MAC = aircraft.weight.func.x40MAC_calc(htail.xMAC, htail.MAC);
     
     % re update
     aircraft.geometry.htail = htail;
@@ -157,11 +157,11 @@ function aircraft = generate_component_weights(aircraft)
     aircraft.weight.components.vtail = (vtail.S_ref*aircraft.weight.density.vtail_area) * aircraft.weight.fudge_factor.tail;
 
     % MAC and CG = at 0.4MAC
-    vtail.MAC = MAC_calc(vtail.c_root, vtail.c_tip);
+    vtail.MAC = aircraft.weight.func.MAC_calc(vtail.c_root, vtail.c_tip);
 
-    vtail.xMAC = xMAC_calc(vtail.xRLE, vtail.b, vtail.c_root, vtail.c_tip, vtail.sweep_LE);
+    vtail.xMAC = aircraft.weight.func.xMAC_calc(vtail.xRLE, vtail.b, vtail.c_root, vtail.c_tip, vtail.sweep_LE);
 
-    x40MAC_vtail = x40MAC_calc(vtail.xMAC, vtail.MAC);
+    vtail.x40MAC = aircraft.weight.func.x40MAC_calc(vtail.xMAC, vtail.MAC);
 
     % re update struct
     aircraft.geometry.vtail = vtail;
@@ -172,16 +172,18 @@ function aircraft = generate_component_weights(aircraft)
 
     aircraft.weight.components.engine_dry = 1800; %kg, the f110
 
-    theoretical_engine_weight     = w_eng_calc(aircraft.propulsion.T_max);
-    theoretical_engine_dry_weight = ConvMass((0.521*ConvForce(aircraft.propulsion.T_max, 'N', 'lbf')^0.9),'lbm', 'kg');
-    aircraft.weight.components.engine_total  = theoretical_engine_weight - theoretical_engine_dry_weight  + aircraft.weight.components.engine_dry;
+    theoretical_engine_weight          = w_eng_calc(aircraft.propulsion.T_max);
+    theoretical_engine_dry_weight      = ConvMass((0.521*ConvForce(aircraft.propulsion.T_max, 'N', 'lbf')^0.9),'lbm', 'kg');
+    aircraft.weight.components.engine  = theoretical_engine_weight - theoretical_engine_dry_weight  + aircraft.weight.components.engine_dry;
 
     %%%%%%%%%%%%
     %% CANNON %%
     %%%%%%%%%%%%
     
+    aircraft.weight.weapons.m61a1.loaded_feed_system = aircraft.weight.weapons.m61a1.feed_system + aircraft.weight.weapons.m61a1.ammo;
+
     % after firing everything
-    aircraft.weight.weapons.m61a1.lost_mass     = aircraft.weight.weapons.m61a1.bullet*aircraft.weight.weapons.m61a1.num_rounds;
+    aircraft.weight.weapons.m61a1.bullets       = aircraft.weight.weapons.m61a1.bullet*aircraft.weight.weapons.m61a1.num_rounds;
     aircraft.weight.weapons.m61a1.returned_mass = aircraft.weight.weapons.m61a1.feed_system + aircraft.weight.weapons.m61a1.casing*aircraft.weight.weapons.m61a1.num_rounds;
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -204,15 +206,15 @@ function aircraft = generate_component_weights(aircraft)
         w.components.lg   = 0.043 * W_0;
         w.components.xtra = 0.17  * W_0;
 
-        W_0_new = w.components.engine_total ...
-            + w.components.wing ...
-            + w.components.htail ...
-            + w.components.vtail ...
-            + w.components.fuselage ...
-            + w.components.xtra ...
-            + w.components.lg ...
-            + w.components.fuel ...
-            + w.components.payload;
+        W_0_new = w.components.engine ...
+                + w.components.wing ...
+                + w.components.htail ...
+                + w.components.vtail ...
+                + w.components.fuselage ...
+                + w.components.xtra ...
+                + w.components.lg ...
+                + w.components.fuel ...
+                + w.components.payload;
 
         if abs(W_0_new - W_0) <= tol
             converged = true;
@@ -231,7 +233,7 @@ function aircraft = generate_component_weights(aircraft)
 
     % togw, empty weight, landing weight
     w.togw = W_0;
-    w.empty = W_0*w.W_e_regression_calc(w.togw);
+    w.empty = w.togw - w.components.fuel - w.components.payload;
     w.max_landing_weight = (1-(w.PDI_ff/2))* w.togw;
 
     %%%%%%%%%%%%%%%%%
@@ -244,11 +246,11 @@ function aircraft = generate_component_weights(aircraft)
     
     f.nose            = 1.474; %m3
     f.cannon          = 1.204;
-    f.left_wing       = 1.478;
+    f.left_wing       = 1.480;
     f.right_wing      = f.left_wing; 
-    f.left_conformal  = 0.571;
+    f.left_conformal  = 0.575;
     f.right_conformal = f.left_conformal;
-    f.engine          = 1.267;
+    f.engine          = 1.273;
 
     f.total_available = sum([f.nose, f.cannon, f.left_wing, f.right_wing, f.left_conformal, f.right_conformal, f.engine]);
 
@@ -265,93 +267,18 @@ function aircraft = generate_component_weights(aircraft)
     f.right_conformal_pct = f.right_conformal/ f.total_used; 
 
     w.fuel_vol = f;
-    
-    %%%%%%%%%%%%%%%%%%%%%%%
-    %% CENTER OF GRAVITY %%
-    %%%%%%%%%%%%%%%%%%%%%%%
-
-    %% CG LOCATIONS %%  
-
-    % POSITIONS FROM CAD
-
-    w.cg_pos.engine = [14.32, 0, 0.724];
-
-    w.cg_pos.vtail  = [x40MAC_vtail, 0, 0];
-    w.cg_pos.htail  = [x40MAC_htail, 0, 0];
-    w.cg_pos.wing   = [x40MAC_wing, 0, 0.863];
-
-    w.cg_pos.fuselage = [10.634, 0, 0.517]; % m, CENTROID OF THE FUSELAGE FROM CAD
-
-    w.cg_pos.cannon             = [7.124, 0.661, 0.957];
-    w.cg_pos.cannon_feed_system = [7.5445, 0.411, 0.957]; 
-
-    w.cg_pos.missile_1 = [8.065, -0.47,  0.367];
-    w.cg_pos.missile_2 = [8.065, 0.47,  0.367];
-
-    w.cg_pos.missile_3 = [8.065, -0.74, 0.627];
-    w.cg_pos.missile_4 = [8.065, 0.74, 0.627];
-
-    w.cg_pos.missile_5 = [8.065, -0.2, 0.627];
-    w.cg_pos.missile_6 = [8.065, 0.2, 0.627];
-
-    w.cg_pos.xtra = [7.9029, 0, 0]; % 45% of fuse lngth (raymer table)
-
-    w.cg_pos.nose_fuel            = [5.876, -0.084,  0.743];
-    w.cg_pos.cannon_fuel          = [7.78,  -0.096,  1.135];
-    w.cg_pos.engine_fuel          = [12.989, 0,      0.459];
-    w.cg_pos.left_wing_fuel       = [10.505, -2.395, 0.861];
-    w.cg_pos.right_wing_fuel      = [10.505, 2.395,  0.861]; 
-    w.cg_pos.left_conformal_fuel  = [10.726, -0.699, 1.307];
-    w.cg_pos.right_conformal_fuel = [10.726, 0.699,  1.307];
-
-    %w.cg_pos.lg_main = [?,?,?];
-    %w.cg_pos.lg_nose = [?,?,?];
-
-
-    %% CALCULATE OVERALL CG %%
-  
-    cg_sum = zeros(3, 1);
-    % for each coordinate, multiply component weight by cg position
-    for i = 1:3
-        
-        cg_sum(i) = sum([...
-            w.cg_pos.engine(i)       * w.components.engine_total; 
-            w.cg_pos.vtail(i)        * w.components.vtail;
-            w.cg_pos.htail(i)        * w.components.htail; 
-            w.cg_pos.wing(i)         * w.components.wing;
-            w.cg_pos.fuselage(i)     * w.components.fuselage; 
-            w.cg_pos.cannon(i)       * w.weapons.m61a1.cannon; 
-            w.cg_pos.cannon_feed_system(i) * w.weapons.m61a1.returned_mass; 
-            w.cg_pos.cannon_feed_system(i) * w.weapons.m61a1.lost_mass; 
-            w.cg_pos.missile_1(i)    * w.weapons.missile; 
-            w.cg_pos.missile_2(i)    * w.weapons.missile; 
-            w.cg_pos.missile_3(i)    * w.weapons.missile; 
-            w.cg_pos.missile_4(i)    * w.weapons.missile; 
-            w.cg_pos.missile_5(i)    * w.weapons.missile; 
-            w.cg_pos.missile_6(i)    * w.weapons.missile; 
-            w.cg_pos.xtra(i)         * w.components.xtra; 
-            w.cg_pos.nose_fuel(i)            * w.components.fuel * w.fuel_vol.nose_pct; 
-            w.cg_pos.cannon_fuel(i)          * w.components.fuel * w.fuel_vol.cannon_pct; 
-            w.cg_pos.engine_fuel(i)          * w.components.fuel * w.fuel_vol.engine_pct; 
-            w.cg_pos.left_wing_fuel(i)       * w.components.fuel * w.fuel_vol.left_wing_pct; 
-            w.cg_pos.right_wing_fuel(i)      * w.components.fuel * w.fuel_vol.right_wing_pct; 
-            w.cg_pos.left_conformal_fuel(i)  * w.components.fuel * w.fuel_vol.left_conformal_pct; 
-            w.cg_pos.right_conformal_fuel(i) * w.components.fuel * w.fuel_vol.right_conformal_pct; 
-            %w.cg_pos.lg_nose(i) * w.components.lg_nose ...
-            %w.cg_pos.lg_main(i) * w.components.lg_main ...
-        ]);
-
-        w.cg(i) = cg_sum(i)/(w.togw-w.components.lg); % switch out when placed LG
-        %w.cg(i) = cg_sum(i)/(w.togw);
-    end
-    w.cg
-   
+     
     %%%%%%%%%%%%%%%%%%%
     %% UPDATE STRUCT %%
     %%%%%%%%%%%%%%%%%%%
 
     aircraft.weight = w;
-    aircraft.weight
+
+    %%%%%%%%%%%%%%%%%%%%
+    %% CG CALCULATION %%
+    %%%%%%%%%%%%%%%%%%%%
+
+    aircraft = cg_calc(aircraft);
 
     %% COST UPDATE %%
     aircraft.cost.avg_flyaway_cost = avg_flyaway_cost_calc(aircraft.weight.togw);
