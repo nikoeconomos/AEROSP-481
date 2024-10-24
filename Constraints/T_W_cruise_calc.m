@@ -22,11 +22,11 @@ function T_W = T_W_cruise_calc(aircraft, W_S)
     g = 9.8067;
 
     AR = aircraft.geometry.AR;
-    e = aircraft.aerodynamics.e_cruise; % span efficiency
+    e = aircraft.aerodynamics.e.cruise; % span efficiency
 
-    CD0_clean = aircraft.aerodynamics.CD0_clean;
+    CD0_clean = aircraft.aerodynamics.CD0.clean;
 
-    cruise_mach = aircraft.performance.cruise_mach;
+    cruise_mach = aircraft.performance.mach.cruise;
     [~,~,rho,~] = standard_atmosphere_calc(10668); %35000ft = 10668m
     cruise_velocity = velocity_from_flight_cond(cruise_mach, 10668); %35000 ft
 

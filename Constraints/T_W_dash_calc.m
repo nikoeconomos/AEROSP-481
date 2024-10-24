@@ -22,11 +22,11 @@ function T_W = T_W_dash_calc(aircraft, W_S)
     g = 9.8067;
 
     AR = aircraft.geometry.AR;
-    e = aircraft.aerodynamics.e_supersonic; % span efficiency
+    e = aircraft.aerodynamics.e.supersonic; % span efficiency
 
-    CD0_clean = aircraft.aerodynamics.CD0_clean;
+    CD0_clean = aircraft.aerodynamics.CD0.clean;
 
-    dash_mach = aircraft.performance.dash_mach;
+    dash_mach = aircraft.performance.mach.dash;
     [~,~,rho,~] = standard_atmosphere_calc(10668); %35000ft = 10668m
     dash_velocity = velocity_from_flight_cond(dash_mach, 10668); %35000 ft
 

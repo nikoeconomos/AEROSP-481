@@ -26,22 +26,22 @@ aircraft.performance.TW_design = 1.05; % A SPOT WE MANUALLY CHOOSE FROM THE TW-W
 aircraft.performance.WS_design = 525; % A SPOT WE MANUALLY CHOOSE FROM THE TW-WS DIAGRAM, [N/m^2]
 
 %% loads
-aircraft.performance.load_factor_upper_limit = 7; % [g's] with 50% fuel
-aircraft.performance.load_factor_lower_limit = -3; % [g's]  with 50% fuel
+aircraft.performance.load_factor.upper_limit = 7; % [g's] with 50% fuel
+aircraft.performance.load_factor.lower_limit = -3; % [g's]  with 50% fuel
 aircraft.performance.dynamic_pressure_load = 102128.48; %[Pa], 2133 psf in rfp
 
 %% altitude
 aircraft.performance.cruise_alt = 10668; % [m]
 
 %% mach numbers
-aircraft.performance.cruise_mach = 0.85; % TODO UPDATE --> estimate from online
-aircraft.performance.dash_mach = 1.6; % from rfp
-aircraft.performance.mach_max_alt = 1.6; %[Mach number], at 35000 feet
-aircraft.performance.endurance_mach = 0.4; % estimate from online
+aircraft.performance.mach.cruise = 0.85; % TODO UPDATE --> estimate from online
+aircraft.performance.mach.dash = 1.6; % from rfp
+aircraft.performance.mach.max_alt = 1.6; %[Mach number], at 35000 feet
+aircraft.performance.mach.endurance = 0.4; % estimate from online
 
 %% SUSTAINED TURN
-aircraft.performance.max_sustained_turn_mach = 1.2; %[Mach] from RFP
-aircraft.performance.min_sustained_turn_mach = 0.9; %[Mach] from RFP
+aircraft.performance.mach.max_sustained_turn = 1.2; %[Mach] from RFP
+aircraft.performance.mach.min_sustained_turn = 0.9; %[Mach] from RFP
 
 aircraft.performance.bank_angle_360 = deg2rad(60); %[rad] ESTIMATE FROM ONLINE
 

@@ -20,7 +20,7 @@ function [] = plot_T_S_space(aircraft)
 
 %% SET LIMITS %%
 
-    k = 100; % number of points on the plot
+    k = 15; % number of points on the plot
 
     S_min = 15; %TODO update with actual values
     S_max = 45; % TODO update with actual values
@@ -177,6 +177,8 @@ function [] = plot_T_S_space(aircraft)
     
     sp1 = plot(S, T_sp_ex_pwr_1, 'Color', [1, 1, 1], 'LineStyle', ':', 'LineWidth', 1.6); % white
     sp3 = plot(S, T_sp_ex_pwr_3, 'Color', [1, 1, 1], 'LineStyle', '-.', 'LineWidth', 1.6); % white
+
+    to = plot(S, T_takeoff_field_length, 'Color', [1, 1, 1], 'LineStyle', '-.', 'LineWidth', 1.6); % Bright Red
       
     tmax = plot(S, ones(1, k).*aircraft.propulsion.T_max, 'Color', [1, 1, 0], 'LineStyle', '--', 'LineWidth', 1.85);
     tmil = plot(S, ones(1, k).*aircraft.propulsion.T_military, 'Color', [1, 0.65, 0], 'LineStyle', '--', 'LineWidth', 1.85);
@@ -192,7 +194,7 @@ function [] = plot_T_S_space(aircraft)
     text(S_selected + 0.3, aircraft.propulsion.T_military+6000, label, 'BackgroundColor', 'white', 'EdgeColor', 'black', 'FontSize', 9, 'Color', 'k');
 
     % Add legend
-    leg = legend([lf, sp3, sp1, tmax, tmil, s_pt_max, s_pt_mil], {'Landing field length', 'Sp. Excess Power (1g, SL, Max)',...
+    leg = legend([lf, to, sp3, sp1, tmax, tmil, s_pt_max, s_pt_mil], {'Landing field length', 'Takeoff Field Length','Sp. Excess Power (1g, SL, Max)',...
                                           'Sp. Excess Power (1g, SL, Military)', 'F110-GE-100 Max Thrust', ...
                                           'F110-GE-100 Military Thrust', 'Selected Design Point, Max Thrust' ...
                                           'Selected Design Point, Military Thrust'});

@@ -38,21 +38,21 @@ aircraft.mission.climb.ks = [1.2, 1.2, 1.2,...
 %% e %%
 %%%%%%%
 
-aircraft.mission.climb.e = [aircraft.aerodynamics.e_takeoff_flaps, aircraft.aerodynamics.e_takeoff_flaps, aircraft.aerodynamics.e_takeoff_flaps,...
-                            aircraft.aerodynamics.e_cruise, aircraft.aerodynamics.e_landing_flaps, 0.85*aircraft.aerodynamics.e_landing_flaps];
+aircraft.mission.climb.e = [aircraft.aerodynamics.e.takeoff_flaps, aircraft.aerodynamics.e.takeoff_flaps, aircraft.aerodynamics.e.takeoff_flaps,...
+                            aircraft.aerodynamics.e.cruise, aircraft.aerodynamics.e.landing_flaps, 0.85*aircraft.aerodynamics.e.landing_flaps];
 
 %% MAXIMUM LIFT COEFFICIENT %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-aircraft.mission.climb.CL_max = [aircraft.aerodynamics.CL_takeoff_flaps, aircraft.aerodynamics.CL_takeoff_flaps, aircraft.aerodynamics.CL_takeoff_flaps,...
-                                 aircraft.aerodynamics.CL_cruise, aircraft.aerodynamics.CL_landing_flaps, 0.85*aircraft.aerodynamics.CL_landing_flaps]; % taken from table in Roskam textbook, OEI balked landing climb value is 0.85
+aircraft.mission.climb.CL_max = [aircraft.aerodynamics.CL.takeoff_flaps, aircraft.aerodynamics.CL.takeoff_flaps, aircraft.aerodynamics.CL.takeoff_flaps,...
+                                 aircraft.aerodynamics.CL.cruise, aircraft.aerodynamics.CL.landing_flaps, 0.85*aircraft.aerodynamics.CL.landing_flaps]; % taken from table in Roskam textbook, OEI balked landing climb value is 0.85
                                                                                                                                                         % calculated following method in metabook page 40
 
 %% ZERO LIFT DRAG COEFFICIENT %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-aircraft.mission.climb.CD0 = [aircraft.aerodynamics.CD0_takeoff_flaps_gear, aircraft.aerodynamics.CD0_takeoff_flaps_gear, aircraft.aerodynamics.CD0_takeoff_flaps,...
-                              aircraft.aerodynamics.CD0_clean, aircraft.aerodynamics.CD0_landing_flaps_gear, (aircraft.aerodynamics.CD0_landing_flaps_gear+aircraft.aerodynamics.CD0_takeoff_flaps_gear)/2];
+aircraft.mission.climb.CD0 = [aircraft.aerodynamics.CD0.takeoff_flaps_gear, aircraft.aerodynamics.CD0.takeoff_flaps_gear, aircraft.aerodynamics.CD0.takeoff_flaps,...
+                              aircraft.aerodynamics.CD0.clean, aircraft.aerodynamics.CD0.landing_flaps_gear, (aircraft.aerodynamics.CD0.landing_flaps_gear+aircraft.aerodynamics.CD0.takeoff_flaps_gear)/2];
                               % metabook pg 40: OEI balked landing climb cd0 is mean of landing and takeoff values
 
 

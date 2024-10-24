@@ -15,31 +15,26 @@ function [] = plot_drag_polar(aircraft)
 % Author:                          Vienna
 % Version history revision notes:
 
-    % Lift coefficient range
-    C_L = linspace(-2, 3);  
     
     aero = aircraft.aerodynamics;
     
-    C_D0_clean = aero.CD0_clean; % Clean configuration
-    C_D0_takeoff_gear_up = aero.CD0_takeoff_flaps_gear;   % Takeoff flaps, gear up
-    C_D0_takeoff_gear_down = aero.CD0_takeoff_flaps; % Takeoff flaps, gear down
-    C_D0_landing_gear_up = aero.CD0_landing_flaps;   % Landing flaps, gear up
-    C_D0_landing_gear_down = aero.CD0_landing_flaps_gear; % Landing flaps, gear down
+    C_D0_clean = aero.CD0.clean; % Clean configuration
+    C_D0_takeoff_gear_up = aero.CD0.takeoff_flaps_gear;   % Takeoff flaps, gear up
+    C_D0_takeoff_gear_down = aero.CD0.takeoff_flaps; % Takeoff flaps, gear down
+    C_D0_landing_gear_up = aero.CD0.landing_flaps;   % Landing flaps, gear up
+    C_D0_landing_gear_down = aero.CD0.landing_flaps_gear; % Landing flaps, gear down
     
-    K_takeoff_gear_up   = aero.k_calc(aero.e_takeoff_flaps);  
-    K_takeoff_gear_down = aero.k_calc(aero.e_takeoff_flaps); 
-    K_landing_gear_up   = aero.k_calc(aero.e_landing_flaps);  
-    K_landing_gear_down = aero.k_calc(aero.e_landing_flaps); 
-    K_clean             = aero.k_calc(aero.e_cruise);  
+    K_takeoff_gear_up   = aero.k_calc(aero.e.takeoff_flaps);  
+    K_takeoff_gear_down = aero.k_calc(aero.e.takeoff_flaps); 
+    K_landing_gear_up   = aero.k_calc(aero.e.landing_flaps);  
+    K_landing_gear_down = aero.k_calc(aero.e.landing_flaps); 
+    K_clean             = aero.k_calc(aero.e.cruise);  
     
-    % Clean, cruise
-    C_L_clean = linspace(-aero.CL_cruise, aero.CL_cruise, 100);
+    % Make the empty arrays
+    C_L_clean = linspace(-aero.CL.cruise, aero.CL.cruise, 100);
+    C_L_takeoff = linspace(-aero.CL.takeoff_flaps, aero.CL.takeoff_flaps, 100);
+    C_L_landing = linspace(-aero.CL.landing_flaps, aero.CL.landing_flaps, 100);
     
-    C_L_takeoff = linspace(-aero.CL_takeoff_flaps, aero.CL_takeoff_flaps, 100);
-    
-    C_L_landing = linspace(-aero.CL_landing_flaps, aero.CL_landing_flaps, 100);
-    
-
 
     % Now calculate C_D for each case based on its specific C_L range
     C_D_clean             = C_D0_clean              + K_clean             * C_L_clean.^2;

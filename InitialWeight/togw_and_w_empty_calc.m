@@ -19,8 +19,8 @@ function [togw, w_empty] = togw_and_w_empty_calc(aircraft)
 %                                  v1: 9/10/2024
 
     w_0 = 35000; % set the w0 to our initial guess
-    w_crew = aircraft.weight.crew;
-    w_payload = aircraft.weight.payload;
+    w_crew = aircraft.weight.components.crew;
+    w_payload = aircraft.weight.components.payload;
     ff = aircraft.weight.ff; % calculate the fuel fraction
  
     % Regression constant, assuming jet fighter.

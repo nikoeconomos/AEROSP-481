@@ -24,15 +24,15 @@ function [T_W] = T_W_sustained_turn_09_calc(aircraft, W_S)
     g = 9.8067;
 
     AR = aircraft.geometry.AR;
-    e = aircraft.aerodynamics.e_supersonic;
+    e = aircraft.aerodynamics.e.supersonic;
 
-    turn_mach = aircraft.performance.min_sustained_turn_mach; % mach 1.2
+    turn_mach = aircraft.performance.mach.min_sustained_turn; % mach 1.2
     [~, ~, rho, ~] = standard_atmosphere_calc(10668); %35000ft = 10668m
     turn_velocity = velocity_from_flight_cond(turn_mach, 10668); %35000 ft
 
     n = 1/cos(aircraft.performance.bank_angle_360); %raymer 5.19
 
-    CD0_clean = aircraft.aerodynamics.CD0_clean;
+    CD0_clean = aircraft.aerodynamics.CD0.clean;
 
 %% calculation
     q   = rho*(turn_velocity)^2/2; % Pa

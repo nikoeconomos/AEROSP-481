@@ -36,24 +36,6 @@ aircraft.cost.airframe = NaN;
 
 cost = aircraft.cost;
 
-%% PROPULSION %%
-aircraft.cost.propulsion.fuel_price = 2.14/0.00378541; % $/m3 as of September 13, 2024
-aircraft.cost.propulsion.oil_price = 113.92/0.00378541; % $/m3 as of September 13, 2024
-aircraft.cost.propulsion.fuel_cost = 1.02*aircraft.weight.fuel*aircraft.cost.propulsion.fuel_price/aircraft.weight.fuel_density;
-aircraft.cost.propulsion.oil_cost = 1.02*aircraft.weight.oil*aircraft.cost.propulsion.oil_price/aircraft.weight.oil_density;
-
-% Engine cost
-aircraft.cost.propulsion.engine.base_year = 1993;
-aircraft.cost.propulsion.engine.maintenance_labor_rate = 24.81; % $ as of June 2024
-aircraft.cost.propulsion.engine.maintenance_cost = engine_maint_cost_calc(aircraft);
-
-% engine cost
-aircraft.cost.propulsion.engine.engine_cost = 8000000; % TODO adjust when engine is selected
-
-aircraft.cost.propulsion.total = aircraft.propulsion.num_engines*aircraft.cost.propulsion.engine.engine_cost ...
-                                + aircraft.cost.propulsion.fuel_cost + aircraft.cost.propulsion.oil_cost ...
-                                + aircraft.cost.propulsion.engine.maintenance_cost;
-
 %% Labor %
 
 maintenance_labor_rate = 24.81; % $ as of June 2024
@@ -61,8 +43,8 @@ maintenance_labor_rate = 24.81; % $ as of June 2024
 %% PROPULSION %%
 fuel_price = 2.14/0.00378541; % $/m3 as of September 13, 2024
 oil_price = 113.92/0.00378541; % $/m3 as of September 13, 2024
-fuel_cost = 1.02*aircraft.weight.ff*aircraft.weight.togw*fuel_price/aircraft.weight.fuel_density;
-oil_cost  = 1.02*aircraft.weight.oil*oil_price/aircraft.weight.oil_density;
+fuel_cost = 1.02*aircraft.weight.ff*aircraft.weight.togw*fuel_price/aircraft.weight.density.fuel;
+oil_cost  = 1.02*aircraft.weight.components.oil*oil_price/aircraft.weight.density.oil;
 
 % Engine maintenance
 engine_base_year = 1993;
@@ -96,7 +78,7 @@ cost.crew.total = adjust_cost_inflation_calc(crew_costs, crew_base_year, target_
 
 %% Airframe maintenance %
 
-airframe_weight = aircraft.weight.empty - aircraft.weight.engine;
+airframe_weight = aircraft.weight.empty - aircraft.weight.components.engine; % TODO UPDATE
 
 Cml_af = 1.03*(3+0.067*airframe_weight/1000)*maintenance_labor_rate;
 
@@ -117,13 +99,13 @@ cost.insurance = (IRa*aircraft.cost.airframe/Uannual)*block_time;
 missile_cost_base = 386000;  % USD Pulled RFP
 missile_base_year = 2006;
 missile_cost_2024 = adjust_cost_inflation_calc(missile_cost_base, missile_base_year, target_year); % USD
-cost.missile    = missile_cost_2024*aircraft.payload.num_missiles;
+cost.missile    = missile_cost_2024*aircraft.weight.weapons.num_missiles;
 
 %% Avionics cost 
 
-aircraft.cost.avionics.cost_base = 2202000;  % VERIFY
-aircraft.cost.avionics.base_year = 2006;  
-aircraft.cost.avionics.cost_2024 = adjust_cost_inflation_calc(aircraft.cost.avionics.cost_base, aircraft.cost.avionics.base_year, aircraft.cost.target_year); % USD
+avionics_cost_base = 2202000;  % VERIFY
+avionics_base_year = 2006;  
+cost.avionics = adjust_cost_inflation_calc(avionics_cost_base, avionics_base_year, target_year); % USD
 
 %% Cannon cost
 cannon_cost_base = 250290;  % USD
@@ -133,7 +115,7 @@ cost.cannon = adjust_cost_inflation_calc(cannon_cost_base, cannon_base_year, tar
 %% RTDE and flyaway cost from slides page 34
 
 We = ConvMass(aircraft.weight.empty, 'kg', 'lbm');
-V = ConvVel(velocity_from_flight_cond(aircraft.performance.dash_mach, 10668), 'm/s', 'ft/s');
+V = ConvVel(velocity_from_flight_cond(aircraft.performance.mach.dash, 10668), 'm/s', 'ft/s');
 Q = 1000; %production number
 FTA = 6; % flight test aircraft
 

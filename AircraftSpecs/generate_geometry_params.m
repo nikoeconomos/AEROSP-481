@@ -31,7 +31,7 @@ aircraft.geometry.length_regression_calc = @(W0) 0.389*W0^0.39; % this is a hist
 
 aircraft.geometry.AR = 3.068; %From raymer calc
 
-aircraft.geometry.wing.sweep_LE = deg2rad(40.6); %radians
+aircraft.geometry.wing.sweep_LE = deg2rad(44.9); %radians
 
 aircraft.geometry.wing.S_ref = 24.5;
 
