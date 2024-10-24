@@ -280,6 +280,12 @@ function aircraft = generate_component_weights(aircraft)
 
     aircraft = cg_calc(aircraft);
 
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %% STABILITY CALCULATION %%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    aircraft = stability_calc(aircraft);
+
     %% COST UPDATE %%
     aircraft.cost.avg_flyaway_cost = avg_flyaway_cost_calc(aircraft.weight.togw);
     
