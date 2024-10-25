@@ -19,6 +19,8 @@ function [aircraft] = generate_performance_params()
 %                                  v1.1: 9/15/2024 - Added tentative
 %                                  parameters based on the F100-PW-229.
 
+aircraft.name = 'Libellula';
+
 %% OUR DESIGN POINTS
 
 aircraft.performance.TW_design_military = 0.55; % A SPOT WE MANUALLY CHOOSE FROM THE TW-WS DIAGRAM [N/N]

@@ -16,7 +16,7 @@ function TW_corrected = T_W_climb_calc_2(aircraft, W_S)
 
 CL = aircraft.mission.climb.CL_max(2)/(aircraft.mission.climb.ks(2))^2;
 
-T_W = (aircraft.mission.climb.CD0(2) + ( CL^2/(pi*aircraft.geometry.AR*aircraft.mission.climb.e(2))))/CL + aircraft.mission.climb.G(2);
+T_W = (aircraft.mission.climb.CD0(2) + ( CL^2/(pi*aircraft.geometry.wing.AR*aircraft.mission.climb.e(2))))/CL + aircraft.mission.climb.G(2);
 
 TW_corrected = aircraft.mission.climb.TW_corrections(2) * T_W;
 

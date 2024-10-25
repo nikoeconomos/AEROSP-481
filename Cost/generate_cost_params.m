@@ -140,7 +140,7 @@ RTDE_flyaway_adjusted = adjust_cost_inflation_calc(RDT_E_flyaway, 1999, target_y
 
 %% Flyaway cost
 
-cost.avg_flyaway_cost = avg_flyaway_cost_calc(aircraft.weight.togw);
+[cost.avg_flyaway_cost, cost.learning_curve_costs] = avg_flyaway_cost_calc(aircraft.weight.togw);
 
 %% Update struct
 

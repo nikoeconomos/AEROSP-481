@@ -24,7 +24,7 @@ function [T_W] = T_W_spec_excess_power_calc_general(aircraft, W_S, alt, mach, CD
 
 % Aircraft struct vars
 ff = aircraft.weight.ff;
-AR = aircraft.geometry.AR;
+AR = aircraft.geometry.wing.AR;
 
 % Change units to force vs kg
 g = 9.8067;

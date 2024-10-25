@@ -21,7 +21,7 @@ function T_W = T_W_cruise_calc(aircraft, W_S)
 
     g = 9.8067;
 
-    AR = aircraft.geometry.AR;
+    AR = aircraft.geometry.wing.AR;
     e = aircraft.aerodynamics.e.cruise; % span efficiency
 
     CD0_clean = aircraft.aerodynamics.CD0.clean;

@@ -177,30 +177,17 @@ function [] = plot_T_W_W_S_space(aircraft)
     label = sprintf('(%.0f, %.2f)', aircraft.performance.WS_design, aircraft.performance.TW_design_military);  % Format the label with two decimal places
     text(aircraft.performance.WS_design + 15, aircraft.performance.TW_design_military+0.04, label, 'BackgroundColor', 'white', 'EdgeColor', 'black', 'FontSize', 9, 'Color', 'k');
 
-%{
-% Find the indices where W_S_space is less than or equal to W_S_landing_field_length_arr(1)
-indices_sp1 = find(W_S_space <= W_S_landing_field_length_arr(1));
-
-% Ensure finite values for interpolation
-finite_mask = isfinite(W_S_space) & isfinite(T_W_sp_ex_pwr_arr_1);
-W_S_space_finite = W_S_space(finite_mask);
-T_W_sp_ex_pwr_arr_1_finite = T_W_sp_ex_pwr_arr_1(finite_mask);
-
-% Values for filling area
-x_fill_sp1 = W_S_space(indices_sp1);
-y_fill_sp1 = T_W_sp_ex_pwr_arr_1(indices_sp1);
-
-% Append the vertical line point to close the polygon
-x_intersection = W_S_landing_field_length_arr(1);
-y_intersection = interp1(W_S_space_finite, T_W_sp_ex_pwr_arr_1_finite, x_intersection, 'linear', 'extrap');
-
-% Complete polygon definition
-x_fill = [x_fill_sp1, x_intersection, x_intersection];
-y_fill = [y_fill_sp1, y_intersection, 1.5];
-
-% Create the filled area
-fill(x_fill, y_fill, 'c', 'EdgeColor', 'none', 'FaceAlpha', 0.5);
-%}
+    % Find the indices where x is less than or equal to x_vert
+    indices = find(x <= x_vert);
+    
+    % Add the last point manually if it's not exactly in the array
+    if x_vert > max(x(indices))
+        indices = [indices, find(x > x_vert, 1)];
+    end
+    
+    % x and y values up to vertical line
+    x_fill = [x(indices), x_vert, x_vert];
+    y_fill = [y(indices), y(indices(end)), 0];
 
     % Add legend
     legend([to,lf,cs,m09,it,c1,c2,c3,c4,c5,c6,ceil,sp1,sp2,s_pt], ...

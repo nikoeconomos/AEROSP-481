@@ -160,6 +160,7 @@ function aircraft = cg_calc(aircraft)
 
     % where excursions are calculated. the cg_excursion_dx_arr gives the x axis as a delta x, reference point the initial x
     [cg_excursion_arr, cg_excursion_dx_arr, cg_weight_arr] = cg_excursion_calc(aircraft, ground_loading); 
+    figure();
     hold on;
     plot(cg_excursion_arr(:,1), cg_weight_arr, '-o', 'MarkerFaceColor', 'k')
     xlabel('Delta X of CG [m]');
