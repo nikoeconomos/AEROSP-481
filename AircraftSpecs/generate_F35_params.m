@@ -103,9 +103,9 @@ aircraft.propulsion.T_military = 124550.2; %[N]
 
 %% DESIGN POINTS %%
 
-aircraft.performance.WS_design = (aircraft.weight.togw_actual)/(aircraft.geometry.wing.S_ref);
-aircraft.performance.TW_design = aircraft.propulsion.T_max/(aircraft.weight.togw_actual*9.81);
-aircraft.performance.TW_design_military = aircraft.propulsion.T_military/(aircraft.weight.togw_actual*9.81);
+aircraft.performance.WS_design = (aircraft.weight.mtow_actual)/(aircraft.geometry.wing.S_ref);
+aircraft.performance.TW_design = aircraft.propulsion.T_max/(aircraft.weight.mtow_actual*9.81);
+aircraft.performance.TW_design_military = aircraft.propulsion.T_military/(aircraft.weight.mtow_actual*9.81);
 
 
 end

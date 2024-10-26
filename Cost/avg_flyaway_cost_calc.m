@@ -1,5 +1,5 @@
 % Aerosp 481 Group 3 - Libellula 
-function [avg_flyaway_cost, learning_curve_costs] = avg_flyaway_cost_calc(togw)
+function [avg_flyaway_cost, learning_curve_costs] = avg_flyaway_cost_calc(togw, Q)
 % Description: This function generates the average flyway cost using the
 % roskam method and the learning curve
 % 
@@ -22,8 +22,6 @@ function [avg_flyaway_cost, learning_curve_costs] = avg_flyaway_cost_calc(togw)
 target_year = 2024;
 
 Wto = ConvMass(togw, 'kg', 'lbm');
-
-Q = 1000;
 
 Q_i = 1:1:Q;
 

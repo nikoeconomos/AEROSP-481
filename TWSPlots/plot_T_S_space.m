@@ -1,4 +1,4 @@
-function [] = plot_T_S_space(aircraft)
+TOfunction [] = plot_T_S_space(aircraft)
 % Description: This function generates a plot of T vs S as it
 % corresponds to each curve we are plotting for various constraints of flight.
 % 
@@ -44,7 +44,7 @@ function [] = plot_T_S_space(aircraft)
     for i = 1:length(S_grid)
         for j = 1:length(T_grid)
             TOGW(i, j) = togw_as_func_of_T_S_calc(aircraft, T_grid(i, j), S_grid(i, j));  % Call your function
-            [avg_cost(i, j), ~] = avg_flyaway_cost_calc(TOGW(i,j));
+            [avg_cost(i, j), ~] = avg_flyaway_cost_calc(TOGW(i,j), 1000);
         end
         fprintf('%d/%d\n', i, k)
     end
