@@ -52,7 +52,7 @@ function [togw, ff] = togw_as_func_of_T_S_calc(aircraft, Tin, Sin)
  
         % Calculate fuel fraction for this S and T
         if strcmp(aircraft.name, 'F-35')
-            ff = 0.276;
+            ff = 0.276; % fixing to what it's supposed to be for f35
         else
             ff = ff_total_func_S_calc(aircraft, W_0, Sin);
         end

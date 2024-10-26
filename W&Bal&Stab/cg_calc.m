@@ -163,8 +163,8 @@ function aircraft = cg_calc(aircraft)
     figure();
     hold on;
     plot(cg_excursion_arr(:,1), cg_weight_arr, '-o', 'MarkerFaceColor', 'k')
-    xlabel('Delta X of CG [m]');
-    ylabel('Position of CG Relative to Nose [kg]');
+    xlabel('Position of CG Relative to Nose [m]');
+    ylabel('Aircraft Weight [kg]');
     title('CG Excursion Plot for Loading of Aircraft on the Ground');
     hold off; 
 

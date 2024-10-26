@@ -1,4 +1,4 @@
-TOfunction [] = plot_T_S_space(aircraft)
+function [] = plot_T_S_space(aircraft)
 % Description: This function generates a plot of T vs S as it
 % corresponds to each curve we are plotting for various constraints of flight.
 % 

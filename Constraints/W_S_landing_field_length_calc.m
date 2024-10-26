@@ -39,7 +39,7 @@ kl = .107; %[kg/m^3] - comes from raymer textbook LDG equation
 
 W_S_L = kl*sigma*CL_max*(s_land-s_a); %[kg/m^2]
 
-if aircraft.name, 'F-35'
+if strcmp(aircraft.name, 'F-35')
     ff = 0.278;
 else
     aircraft = generate_PDI_mission(aircraft);
