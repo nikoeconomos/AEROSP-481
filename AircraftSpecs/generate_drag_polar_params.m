@@ -28,7 +28,7 @@ aero = aircraft.aerodynamics;
 % parasite drag coefficient (CD0) for clean configuration
 aero.CD0.clean = 0.0236;
 
-aero.e.cruise = oswaldfactor(aircraft.geometry.AR, aircraft.geometry.wing.sweep_LE,'shevell', aero.CD0.clean, 0, 0.98);
+aero.e.cruise = oswaldfactor(aircraft.geometry.wing.AR, aircraft.geometry.wing.sweep_LE,'shevell', aero.CD0.clean, 0, 0.98);
 aero.CL.cruise = 1.25; % from 06 Preliminary sizing presentation Slide 48
 aero.CD.cruise = aero.CD_parabolic_drag_polar_calc(aero.CD0.clean, aero.CL.cruise, aero.e.cruise);
 
@@ -44,7 +44,7 @@ delta_CD0_takeoff_flaps = 0.010;  % Additional drag due to takeoff flaps, metabo
 aero.CD0.takeoff_flaps = aero.CD0.clean + delta_CD0_takeoff_flaps;
 
 %aero.e_takeoff_flaps = 0.75; % from table 4.2 metabook
-aero.e.takeoff_flaps = oswaldfactor(aircraft.geometry.AR, aircraft.geometry.wing.sweep_LE,'shevell', aero.CD0.takeoff_flaps, 0,  0.98);
+aero.e.takeoff_flaps = oswaldfactor(aircraft.geometry.wing.AR, aircraft.geometry.wing.sweep_LE,'shevell', aero.CD0.takeoff_flaps, 0,  0.98);
 
 aero.CD.takeoff_flaps = aero.CD_parabolic_drag_polar_calc(aero.CD0.takeoff_flaps, aero.CL.takeoff_flaps, aero.e.takeoff_flaps);
 
@@ -70,7 +70,7 @@ delta_CD0_landing_flaps = 0.055;  % Additional drag due to landing flaps, metabo
 aero.CD0.landing_flaps = aero.CD0.clean + delta_CD0_landing_flaps;
 
 %aero.e_landing_flaps = 0.70; % from table 4.2 metabook
-aero.e.landing_flaps = oswaldfactor(aircraft.geometry.AR, aircraft.geometry.wing.sweep_LE,'shevell', aero.CD0.landing_flaps, 0,  0.98);
+aero.e.landing_flaps = oswaldfactor(aircraft.geometry.wing.AR, aircraft.geometry.wing.sweep_LE,'shevell', aero.CD0.landing_flaps, 0,  0.98);
 aero.CD.landing_flaps = aero.CD_parabolic_drag_polar_calc(aero.CD0.landing_flaps, aero.CL.landing_flaps, aero.e.landing_flaps);
 
 aero.LD.max_landing_flaps = aero.LD_max_calc(aero.e.landing_flaps, aero.CD0.landing_flaps);

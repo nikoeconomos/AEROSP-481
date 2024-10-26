@@ -2,7 +2,7 @@ clear
 close all
 clc
 AR = 3.068;
-S_W = 36;
+S_W = 24.5;
 b_W = sqrt(AR*S_W);
 
 lambda = 0.35; % taper ratio
@@ -16,16 +16,20 @@ L_F = 16.3;
 L_HT = 0.5 * L_F;
 L_VT = L_HT + 0.4;
 
+
+% Volume coefficients
 c_VT = 0.07;
 c_HT = 0.4;
-S_VT = c_VT * b_W * S_W / L_VT;
 
-S_one_VT = S_VT/2;
-S_HT = c_HT * c_bar_W * S_W / L_HT;
-S_one_HT = S_HT/2;
+S_VT = c_VT * b_W * S_W / L_VT
+S_one_VT = S_VT/2
 
-gamma_vtail = atand(S_VT/S_HT); % degrees
+S_HT = c_HT * c_bar_W * S_W / L_HT
+S_one_HT = S_HT/2
 
+% gamma_vtail = atand(S_VT/S_HT); % degrees
+
+% OEI Yaw Moment Calculation
 To_thrust = 57.8e3;
 
 yt = 0.8;
@@ -35,29 +39,31 @@ Nt_drag = Nt_crit*0.15;
 Nt_tot = Nt_drag + Nt_crit;
 
 % Vertical Tail Dimensions
-b_VT = sqrt(AR*S_one_VT);
+lambda_VT = 0.35;
+AR_VT = 2;
+
+b_VT = sqrt(AR_VT*S_VT);
 b_VT_one = b_VT/2;
-c_root_VT = 2*S_one_VT / ( (1+lambda) * b_VT);
-c_tip_VT = lambda * c_root_VT;
-c_bar_VT = 2*c_root_VT*((1 + lambda + lambda^2)/(1 + lambda))/3;
+
+c_root_VT = 2*S_VT / ( (1 + lambda_VT) * b_VT)
+c_tip_VT = lambda_VT * c_root_VT
+c_bar_VT = 2*c_root_VT*((1 + lambda_VT + lambda_VT^2)/(1 + lambda_VT))/3;
+
 Y_bar = b_VT * ((1 + 2*lambda) / (1 + lambda)) /6;
 
-% b_VT = sqrt(AR*S_VT);
-% b_VT_one = b_VT/2;
-% 
-% c_root_VT = 2*S_VT / ( (1+lambda) * b_VT);
-% c_tip_VT = lambda * c_root_VT;
-% c_bar_VT = 2*c_root_VT*((1 + lambda + lambda^2)/(1 + lambda))/3;
-% 
-% Y_bar_VT = b_VT * ((1 + 2*lambda) / (1 + lambda)) /6;
-
 % Horizontal Tail Dimensions
-b_HT = sqrt(AR*S_one_HT);
+lambda_HT = 0.5;
+AR_HT = 4;
+
+b_HT = sqrt(AR_HT*S_HT);
 b_HT_one = b_HT/2;
-c_root_HT = 2*S_one_HT / ( (1+lambda) * b_HT);
-c_tip_HT = lambda * c_root_HT;
-c_bar_HT = 2*c_root_HT*((1 + lambda + lambda^2)/(1 + lambda))/3;
-Y_bar_HT = b_HT * ((1 + 2*lambda) / (1 + lambda)) /6;
+
+c_root_HT = 2*S_HT / ( (1+lambda_HT) * b_HT)
+c_tip_HT = lambda_HT * c_root_HT
+c_bar_HT = 2*c_root_HT*((1 + lambda_HT + lambda_HT^2)/(1 + lambda_HT))/3;
+
+Y_bar_HT = b_HT * ((1 + 2*lambda_HT) / (1 + lambda_HT)) /6;
+
 %% Draw Airfoils
 chord_pannels = 26;
 norm_chord = linspace(0,1,chord_pannels);

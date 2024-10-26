@@ -112,6 +112,13 @@ end
 % mean? Can we take out optimize?
 
 % Using equation 2.33 from metabook to account for trapped and reserve fuel
-ff_total_adjusted = 1.06*(1-ff_total);
+if strcmp(aircraft.name, 'Libellula') % if true
+    ff_total_adjusted = 1.06*(1-ff_total);
+else
+    ff_total_adjusted = 0.276; % Value calculated from params
+end
+
+
+    
 end
 

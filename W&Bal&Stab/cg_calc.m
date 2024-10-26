@@ -51,7 +51,7 @@ function aircraft = cg_calc(aircraft)
     w.cg_pos.missile_5 = [8.065, -0.2, 0.627];
     w.cg_pos.missile_6 = [8.065, 0.2, 0.627];
 
-    w.cg_pos.xtra = [7.9029, 0, 0]; % 45% of fuse length (raymer table)
+    w.cg_pos.xtra = [7.9029, 0, 0]; % 45% of fuselage length (raymer table)
 
     w.cg_pos.nose_fuel            = [5.876, -0.084,  0.743];
     w.cg_pos.cannon_fuel          = [7.78,  -0.096,  1.135];
@@ -160,6 +160,7 @@ function aircraft = cg_calc(aircraft)
 
     % where excursions are calculated. the cg_excursion_dx_arr gives the x axis as a delta x, reference point the initial x
     [cg_excursion_arr, cg_excursion_dx_arr, cg_weight_arr] = cg_excursion_calc(aircraft, ground_loading); 
+    figure();
     hold on;
     plot(cg_excursion_arr(:,1), cg_weight_arr, '-o', 'MarkerFaceColor', 'k')
     xlabel('Delta X of CG [m]');

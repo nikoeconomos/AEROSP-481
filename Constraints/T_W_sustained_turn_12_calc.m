@@ -23,7 +23,7 @@ function [T_W] = T_W_sustained_turn_12_calc(aircraft, W_S)
     
     g = 9.8067;
 
-    AR = aircraft.geometry.AR;
+    AR = aircraft.geometry.wing.AR;
     e = aircraft.aerodynamics.e.supersonic;
 
     turn_mach = aircraft.performance.mach.max_sustained_turn; % mach 1.2

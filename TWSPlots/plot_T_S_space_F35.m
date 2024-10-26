@@ -1,4 +1,4 @@
-TOfunction [] = plot_T_S_space(aircraft)
+function [] = plot_T_S_space_F35(aircraft)
 % Description: This function generates a plot of T vs S as it
 % corresponds to each curve we are plotting for various constraints of flight.
 % 
@@ -22,11 +22,11 @@ TOfunction [] = plot_T_S_space(aircraft)
 
     k = 15; % number of points on the plot
 
-    S_min = 15; %TODO update with actual values
-    S_max = 45; % TODO update with actual values
+    S_min = 25; %TODO update with actual values
+    S_max = 60; % TODO update with actual values
 
     T_min = 0; % TODO update with actual values
-    T_max = 200000; % TODO update with actual values
+    T_max = 300000; % TODO update with actual values
     
     S = linspace(S_min, S_max, k); %kg per m^2
     T = linspace(T_min, T_max, k); % N
@@ -152,7 +152,7 @@ TOfunction [] = plot_T_S_space(aircraft)
     ylim([T_min T_max]);
     xlabel('S [m^2]');
     ylabel('T [N]');
-    title('T-S Plot for Libellula''s Custom Interceptor');
+    title('T-S Plot for the F-35');
     
     hold off; 
 
@@ -193,8 +193,8 @@ TOfunction [] = plot_T_S_space(aircraft)
 
     % Add legend
     leg = legend([lf, sp3, sp1, tmax, tmil, s_pt_max, s_pt_mil], {'Landing field length', 'Sp. Excess Power (1g, SL, Max)',...
-                                          'Sp. Excess Power (1g, SL, Military)', 'F110-GE-100 Max Thrust', ...
-                                          'F110-GE-100 Military Thrust', 'Selected Design Point, Max Thrust' ...
+                                          'Sp. Excess Power (1g, SL, Military)', 'P&W F135 Max Thrust', ...
+                                          'P&W F135 Military Thrust', 'Selected Design Point, Max Thrust' ...
                                           'Selected Design Point, Military Thrust'});
     
     set(leg, 'Color', [0.9 0.9 0.9]);  % Set legend background to light gray

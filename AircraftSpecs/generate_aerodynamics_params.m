@@ -27,13 +27,13 @@ aircraft.aerodynamics.Cf = 0.0035; % skin friction coefficient estimate figure 4
 %% Functions %%
 %%%%%%%%%%%%%%%
 
-aircraft.aerodynamics.CD_parabolic_drag_polar_calc = @(CD0, CL, e) CD0 + CL^2/(pi * aircraft.geometry.AR * e); %metabook 4.7
+aircraft.aerodynamics.CD_parabolic_drag_polar_calc = @(CD0, CL, e) CD0 + CL^2/(pi * aircraft.geometry.wing.AR * e); %metabook 4.7
 
 aircraft.aerodynamics.CD0_calc = @(S_wet, S) aircraft.aerodynamics.Cf * (S_wet / S); % metabook 4.8
 
-aircraft.aerodynamics.LD_max_calc = @ (e, CD0) 0.5*sqrt((pi*e*aircraft.geometry.AR)/CD0); % metabook 2.15
+aircraft.aerodynamics.LD_max_calc = @ (e, CD0) 0.5*sqrt((pi*e*aircraft.geometry.wing.AR)/CD0); % metabook 2.15
 
-aircraft.aerodynamics.k_calc = @(e) 1/(pi*aircraft.geometry.AR*e); % standard
+aircraft.aerodynamics.k_calc = @(e) 1/(pi*aircraft.geometry.wing.AR*e); % standard
 
 aircraft.aerodynamics.CL_from_CD0_calc = @(CD0, k) sqrt(CD0 / k); % 4.12.1 algorithm 3
 

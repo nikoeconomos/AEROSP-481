@@ -19,6 +19,11 @@ function [aircraft] = generate_init_weight_params(aircraft)
 % Version history revision notes:
 %                                  v1: 9/14/2024
 
+%%
+
+aircraft.performance.TW_design_military = 0.55; % A SPOT WE MANUALLY CHOOSE FROM THE TW-WS DIAGRAM [N/N]
+aircraft.performance.TW_design = 1.05; % A SPOT WE MANUALLY CHOOSE FROM THE TW-WS DIAGRAM [N/N]
+aircraft.performance.WS_design = 525; % A SPOT WE MANUALLY CHOOSE FROM THE TW-WS DIAGRAM, [N/m^2]
 
 %% CREW WEIGHTS %%
 %%%%%%%%%%%%%%%%%%

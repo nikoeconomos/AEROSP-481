@@ -51,8 +51,12 @@ function [togw, ff] = togw_as_func_of_T_S_calc(aircraft, Tin, Sin)
         W_e_frac_updated = W_e/W_0;
  
         % Calculate fuel fraction for this S and T
-        ff = ff_total_func_S_calc(aircraft, W_0, Sin);
-
+        if strcmp(aircraft.name, 'F-35')
+            ff = 0.276;
+        else
+            ff = ff_total_func_S_calc(aircraft, W_0, Sin);
+        end
+        
         % Update the togw
         W_0_new = (W_crew + W_payload)/(1 - ff - W_e_frac_updated);
 

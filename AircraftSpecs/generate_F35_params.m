@@ -1,5 +1,5 @@
 % Aerosp 481 Group 3 - Libellula 
-function [aircraft] = generate_F35_params()
+function [aircraft] = generate_F35_params(aircraft)
 % Description: This function generates a struct that holds parameters used in
 % sizing the aircraft
 % 
@@ -22,35 +22,33 @@ function [aircraft] = generate_F35_params()
 
 
 
+aircraft.name = 'F-35';
+
 %% WEIGHTS %%
 %%---------%%
 
 % Average weight of crew member and carry on luggage given by the metabook. No checked baggage included in this.
-aircraft.weight.crew_member = 82; % [kg]
-
-% Number of crew members to include onboard [TODO update if remote piloting]
-aircraft.weight.num_crew_members = 1; % [number]
-
-% Total weight of crew members. Crew weight * num of crew members aboard
-aircraft.weight.crew = aircraft.weight.num_crew_members*aircraft.weight.crew_member; % [kg]
+aircraft.weight.components.crew = 82; % [kg] 1 member
 
 % Weight of the payload
-aircraft.weight.payload = 8164.6627; %[kg]
+aircraft.weight.components.payload = 8164.6627; %[kg]
 
 % MTOW
-aircraft.weight.mtow = 29899.902; %[kg]
+aircraft.weight.mtow_actual = 29899.902; %[kg]
 
 % Guess for our estimation purposes, same as actual
 aircraft.weight.guess = 22470.966; % [kg]
 
 % TOGW
-aircraft.weight.togw = 22470.966; % [kg]
+aircraft.weight.togw_actual = 22470.966; % [kg]
 
 % Empty weight
-aircraft.weight.empty = 13290.256; % [kg]
+aircraft.weight.empty_actual = 13290.256; % [kg]
 
 % Fuel weight
-aircraft.weight.fuel = 8278.0608; % [kg]
+aircraft.weight.fuel_actual = 8278.0608; % [kg]
+
+aircraft.weight.ff = aircraft.weight.fuel_actual/aircraft.weight.togw_actual;
 
 
 %% PERFORMANCE %%
@@ -63,81 +61,51 @@ aircraft.performance.range = 2778000; %[m]
 aircraft.performance.range_combat = 1296000; %[m]
 
 % max mach number at altitude
-aircraft.performance.mach_max_alt = 1.6; %[Mach number]
+aircraft.performance.mach.max_alt = 1.6; %[Mach number]
 
 % max mach number at sea level
-aircraft.performance.mach_max_SL = 1.06; %[Mach number]
+aircraft.performance.mach.max_SL = 1.06; %[Mach number]
 
 % Cruise mach
-aircraft.performance.cruise_mach = 0.86; % mach number taken from an average in our historical dataset
-
-aircraft.performance.endurance_mach = 0.85; % mach number taken from an average in our historical dataset
-
-aircraft.performance.dash_mach = 1.6; % from online
-
-% Max sustained turn mach
-aircraft.performance.max_sustained_turn_mach = 1.2; %[Mach]
-
-aircraft.performance.min_sustained_turn_mach = 0.9; %[Mach]
+aircraft.performance.mach.cruise = 0.86; % mach number taken from an average in our historical dataset
+aircraft.performance.mach.endurance = 0.85; % mach number taken from an average in our historical dataset
+aircraft.performance.mach.dash = 1.6; % from online
 
 % g force limit
 aircraft.performance.g_force_upper_limit = 9; % [g's]
 
-aircraft.performance.bank_angle_360 = 60; %[Deg] ESTIMATE FROM ONLINE
-
-aircraft.safety_factor = 1.5;
-
 %% GEOMETRY %%
 %%----------%%
 
-% Aspect ratio
-aircraft.geometry.AR = 2.66; %[Unitless]
-
 % wing reference area
-aircraft.geometry.S_ref = 42.7354; %[m^2]
+aircraft.geometry.wing.S_ref = 42.7354; %[m^2]
+aircraft.geometry.wing.b = 10.668; % [m]
+aircraft.geometry.wing.AR = 2.66;
 
-% wingspan
-aircraft.geometry.b = 10.668; % [m]
 %% AERODYNAMICS %%
 %%--------------%%
 
-% maximum L/D
-aircraft.aerodynamics.LD_max = 10; %[Unitless]
+aircraft.aerodynamics.CL.takeoff_flaps = 1.82;
+aircraft.aerodynamics.CL.landing_flaps = 0.81;
 
-% CL max at takeoff
-aircraft.aerodynamics.CL_max_takeoff = 1.82; %[Unitless]
-
-% CL max at landing
-aircraft.aerodynamics.CL_max_landing = 0.81; %[Unitless]
-
-%Stall Speed 
-aircraft.aerodynamics.W_S = (aircraft.weight.mtow)/(aircraft.geometry.S_ref);
-aircraft.aerodynamics.rho = 1.225; %[kg.m^3]
-
-aircraft.aerodynamics.V_stall = v_stall_calc(aircraft.aerodynamics.W_S,aircraft.aerodynamics.rho,aircraft.aerodynamics.CL_max_takeoff);
-
+aircraft.aerodynamics.LD.max = 10; % next to eq 2.15 in metabook
+aircraft.aerodynamics.LD.dash = 0.93 * aircraft.aerodynamics.LD.max_cruise; 
 
 
 %% PROPULSION %%
 %%------------%%
 
-% number of engines
-aircraft.propulsion.engine_count = 1;
-
-% engine cost
-aircraft.propulsion.engine_cost = aircraft.propulsion.engine_count*15000000; %[$]
-
 % max thrust
-aircraft.propulsion.T_max = aircraft.propulsion.engine_count*191273.53; %[N]
+aircraft.propulsion.T_max = 191273.53; %[N]
 
 % military thrust
-aircraft.propulsion.T_military = aircraft.propulsion.engine_count*124550.2; %[N]
+aircraft.propulsion.T_military = 124550.2; %[N]
 
-aircraft.safety_factor = 1.5;
-%% %% %% %% UTILITY %% %% %% %%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% DESIGN POINTS %%
 
-% miscelaneous constants for fluids/ performance calculations
-aircraft.constants = generate_constants();
+aircraft.performance.WS_design = (aircraft.weight.mtow_actual)/(aircraft.geometry.wing.S_ref);
+aircraft.performance.TW_design = aircraft.propulsion.T_max/(aircraft.weight.mtow_actual*9.81);
+aircraft.performance.TW_design_military = aircraft.propulsion.T_military/(aircraft.weight.mtow_actual*9.81);
+
 
 end

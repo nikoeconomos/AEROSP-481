@@ -49,7 +49,7 @@ function aircraft = generate_component_weights(aircraft)
     %% WING %%
     %%%%%%%%%%
 
-    aircraft.geometry.wing.AR = aircraft.geometry.AR; % not changing in the rest of the code for convience. Note
+    aircraft.geometry.wing.AR = aircraft.geometry.wing.AR; % AR was already set in geometry
 
     % for convenience
     wing = aircraft.geometry.wing;
@@ -197,6 +197,11 @@ function aircraft = generate_component_weights(aircraft)
     
     % intial estimate
     [W_0, ff] = togw_as_func_of_T_S_calc(aircraft, aircraft.propulsion.T_max, aircraft.geometry.wing.S_ref);
+    W_e_init  = W_0*aircraft.weight.W_e_regression_calc(W_0);
+    W_f_init  = ff * W_0;
+    learning_curve_costs = avg_flyaway_cost_calc(W_0, 1000);
+    learning_curve_costs = avg_flyaway_cost_calc(W_0, 1000);
+
 
     tol = 1e-3;
     converged = false;
@@ -280,8 +285,14 @@ function aircraft = generate_component_weights(aircraft)
 
     aircraft = cg_calc(aircraft);
 
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %% STABILITY CALCULATION %%
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+    aircraft = stability_calc(aircraft);
+
     %% COST UPDATE %%
-    aircraft.cost.avg_flyaway_cost = avg_flyaway_cost_calc(aircraft.weight.togw);
+    aircraft.cost.avg_flyaway_cost = avg_flyaway_cost_calc(aircraft.weight.togw, 1000);
     
 
 end
