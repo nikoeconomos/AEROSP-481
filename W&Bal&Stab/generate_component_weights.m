@@ -203,7 +203,9 @@ function aircraft = generate_component_weights(aircraft)
     [W_0, ff] = togw_as_func_of_T_S_calc(aircraft, aircraft.propulsion.T_max, aircraft.geometry.wing.S_ref);
     W_e_init  = W_0*aircraft.weight.W_e_regression_calc(W_0);
     W_f_init  = ff * W_0;
-    learning_curve_costs = avg_flyaway_cost_calc(W_0);
+    [avg_flyaway_cost_250, ~]  = avg_flyaway_cost_calc(W_0, 250)
+    [avg_flyaway_cost_500, ~]  = avg_flyaway_cost_calc(W_0, 500)
+    [avg_flyaway_cost_1000, ~] = avg_flyaway_cost_calc(W_0, 1000)
 
 
     tol = 1e-3;
@@ -295,7 +297,7 @@ function aircraft = generate_component_weights(aircraft)
     aircraft = stability_calc(aircraft);
 
     %% COST UPDATE %%
-    aircraft.cost.avg_flyaway_cost = avg_flyaway_cost_calc(aircraft.weight.togw);
+    aircraft.cost.avg_flyaway_cost = avg_flyaway_cost_calc(aircraft.weight.togw, 1000);
     
 
 end
