@@ -30,10 +30,14 @@ function aircraft = generate_component_weights(aircraft)
     %% FUDGE FACTORS %% 
    
     % (Metabook 7.3.4)
+    % Chose upper end of fudge factors given that the lightest possible
+    % strucutre may also be the most expensive one but it would be
+    % unreasonable not to include modern weight saving materials and
+    % configurations at all
 
-    aircraft.weight.fudge_factor.wing = 0.85;
-    aircraft.weight.fudge_factor.tail = 0.83;
-    aircraft.weight.fudge_factor.fuselage = 0.9;
+    aircraft.weight.fudge_factor.wing = 0.9;
+    aircraft.weight.fudge_factor.tail = 0.88;
+    aircraft.weight.fudge_factor.fuselage = 0.95;
 
     %%%%%%%%%%%%%%
     %% FUSELAGE %%
@@ -252,7 +256,7 @@ function aircraft = generate_component_weights(aircraft)
     f.cannon          = 1.204;
     f.left_wing       = 1.480;
     f.right_wing      = f.left_wing; 
-    f.left_conformal  = 0.575;
+    f.left_conformal  = 0.6783;
     f.right_conformal = f.left_conformal;
     f.engine          = 1.273;
 

@@ -51,7 +51,7 @@ function aircraft = cg_calc(aircraft)
     w.cg_pos.missile_5 = [8.065, -0.2, 0.627];
     w.cg_pos.missile_6 = [8.065, 0.2, 0.627];
 
-    w.cg_pos.xtra = [7.9029, 0, 0]; % 45% of fuse length (raymer table)
+    w.cg_pos.xtra = [7.9029, 0, 0]; % 45% of fuselage length (raymer table)
 
     w.cg_pos.nose_fuel            = [5.876, -0.084,  0.743];
     w.cg_pos.cannon_fuel          = [7.78,  -0.096,  1.135];
