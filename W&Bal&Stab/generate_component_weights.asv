@@ -30,10 +30,14 @@ function aircraft = generate_component_weights(aircraft)
     %% FUDGE FACTORS %% 
    
     % (Metabook 7.3.4)
+    % Chose upper end of fudge factors given that the lightest possible
+    % strucutre may also be the most expensive one but it would be
+    % unreasonable not to include modern weight saving materials and
+    % configurations at all
 
-    aircraft.weight.fudge_factor.wing = 0.85;
-    aircraft.weight.fudge_factor.tail = 0.83;
-    aircraft.weight.fudge_factor.fuselage = 0.9;
+    aircraft.weight.fudge_factor.wing = 0.9;
+    aircraft.weight.fudge_factor.tail = 0.88;
+    aircraft.weight.fudge_factor.fuselage = 0.95;
 
     %%%%%%%%%%%%%%
     %% FUSELAGE %%
@@ -87,25 +91,25 @@ function aircraft = generate_component_weights(aircraft)
     %% H TAIL %%
     %%%%%%%%%%%%
 
-    aircraft.geometry.htail.AR = 5; % TODO: UPDATE
+    aircraft.geometry.htail.AR = 4; % TODO: UPDATE
 
     % for convenience
     htail = aircraft.geometry.htail;
 
     % geometry
-    htail.S_ref = 2*3.2601; %m2 1 triangle from cad * 2
+    htail.S_ref = 2*1.8303; %m2 1 triangle from cad * 2
     htail.S_wet = 2*htail.S_ref; %m2 APPROXIMATION, UPDATE WITH A BETTER ONE
     
     htail.b = sqrt( htail.AR * htail.S_ref);
 
-    htail.c_root = 0.807; % m
+    htail.c_root = 1.2755; % m
     htail.taper_ratio = 0.5;
 
     htail.c_tip = htail.c_root*htail.taper_ratio;
 
     htail.sweep_LE = deg2rad(49.9); % radians
 
-    htail.xRLE = 14.575; % x from the nose tip
+    htail.xRLE = 15.208; % x from the nose tip
 
     %% HTAIL MASS AND CG %%
 
@@ -199,8 +203,9 @@ function aircraft = generate_component_weights(aircraft)
     [W_0, ff] = togw_as_func_of_T_S_calc(aircraft, aircraft.propulsion.T_max, aircraft.geometry.wing.S_ref);
     W_e_init  = W_0*aircraft.weight.W_e_regression_calc(W_0);
     W_f_init  = ff * W_0;
-    learning_curve_costs = avg_flyaway_cost_calc(W_0, 1000);
-    learning_curve_costs = avg_flyaway_cost_calc(W_0, 1000);
+    [avg_flyaway_cost_250, ~]  = avg_flyaway_cost_calc(W_0, 250)
+    [avg_flyaway_cost_500, ~]  = avg_flyaway_cost_calc(W_0, 500)
+    [avg_flyaway_cost_1000, ~] = avg_flyaway_cost_calc(W_0, 1000)
 
 
     tol = 1e-3;
@@ -253,7 +258,7 @@ function aircraft = generate_component_weights(aircraft)
     f.cannon          = 1.204;
     f.left_wing       = 1.480;
     f.right_wing      = f.left_wing; 
-    f.left_conformal  = 0.575;
+    f.left_conformal  = 0.6783;
     f.right_conformal = f.left_conformal;
     f.engine          = 1.273;
 

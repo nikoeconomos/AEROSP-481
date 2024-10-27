@@ -91,25 +91,25 @@ function aircraft = generate_component_weights(aircraft)
     %% H TAIL %%
     %%%%%%%%%%%%
 
-    aircraft.geometry.htail.AR = 5; % TODO: UPDATE
+    aircraft.geometry.htail.AR = 4; % TODO: UPDATE
 
     % for convenience
     htail = aircraft.geometry.htail;
 
     % geometry
-    htail.S_ref = 2*3.2601; %m2 1 triangle from cad * 2
+    htail.S_ref = 2*1.8303; %m2 1 triangle from cad * 2
     htail.S_wet = 2*htail.S_ref; %m2 APPROXIMATION, UPDATE WITH A BETTER ONE
     
     htail.b = sqrt( htail.AR * htail.S_ref);
 
-    htail.c_root = 0.807; % m
+    htail.c_root = 1.2755; % m
     htail.taper_ratio = 0.5;
 
     htail.c_tip = htail.c_root*htail.taper_ratio;
 
     htail.sweep_LE = deg2rad(49.9); % radians
 
-    htail.xRLE = 14.575; % x from the nose tip
+    htail.xRLE = 15.208; % x from the nose tip
 
     %% HTAIL MASS AND CG %%
 
@@ -138,19 +138,19 @@ function aircraft = generate_component_weights(aircraft)
     % for convenience
     vtail = aircraft.geometry.vtail;
 
-    vtail.S_ref = 1.5488*2; %m2, 1 triangle from cad * 2
+    vtail.S_ref = 0.8695*2; %m2, 1 triangle from cad * 2
     vtail.S_wet = 2*vtail.S_ref; %m2 APPROXIMATION, UPDATE WITH A BETTER ONE
 
     vtail.b = sqrt(vtail.AR * vtail.S_ref);
 
-    vtail.c_root = 0.977;
+    vtail.c_root = 1.3815;
     vtail.taper_ratio = 0.35;
 
     vtail.c_tip = vtail.c_root*vtail.taper_ratio;   
 
     vtail.sweep_LE = deg2rad(55); % radians
     
-    vtail.xRLE = htail.xRLE; %m same as htail TODO UPDATE IF NECESSARY
+    vtail.xRLE = 15.191; %m same as htail TODO UPDATE IF NECESSARY
 
     %% VTAIL MASS AND CG %%
 
