@@ -47,6 +47,11 @@ aircraft = generate_drag_polar_params(aircraft);
 aircraft.aerodynamics.LD.max = aircraft.aerodynamics.LD.max_cruise/0.943; % next to eq 2.15 in metabook
 aircraft.aerodynamics.LD.dash = 0.93 * aircraft.aerodynamics.LD.max_cruise; 
 
+%% Efficiencies (not oswald)
+
+aircraft.aerodynamics.eta.wing  = 0.97; % wing efficiency (NOT OSWALD): usually 0.97 from metabook
+aircraft.aerodynamics.eta.htail = 0.8;  % tail efficiency: taking into account downwash from metabook
+
 %% AR wetted (STORES IN GEOMETRY)
 
 aircraft.geometry.AR_wetted = (aircraft.aerodynamics.LD.max/14)^2 ; % from raymer new edition pg 40, for military aircraft, KLD = 14

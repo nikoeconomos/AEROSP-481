@@ -45,9 +45,13 @@ function aircraft = generate_component_weights(aircraft)
 
     aircraft.geometry.fuselage.S_wet = 90.9387; % m2 from CAD
 
+    aircraft.geometry.fuselage.width = 2.1; % max width of fuselage
+    aircraft.geometry.fuselage.length = 17.576; % length of fuselage
+
     aircraft.weight.density.fuselage_area = 23; %kg/m2 metabook p76
 
-    aircraft.weight.components.fuselage = (aircraft.geometry.fuselage.S_wet*aircraft.weight.density.fuselage_area) * aircraft.weight.fudge_factor.fuselage;
+    aircraft.weight.components.fuselage = (aircraft.geometry.fuselage.S_wet*aircraft.weight.density.fuselage_area)...
+                                          *aircraft.weight.fudge_factor.fuselage;
 
     %%%%%%%%%%
     %% WING %%
@@ -68,7 +72,11 @@ function aircraft = generate_component_weights(aircraft)
 
     wing.c_tip = wing.c_root*wing.taper_ratio;
 
-    wing.xRLE = 7.175; %m positino of leading edge of the root chord
+    wing.sweep_LE = aircraft.geometry.wing.sweep_LE; % in radians, set in geometry
+    wing.sweep_QC = atan( tan(wing.sweep_LE) - (4 / wing.AR) * ((0.25 * (1 - wing.taper_ratio)) / (1 + wing.taper_ratio)) ); % formula from aerodynamics slide 24
+
+    wing.xRLE = 7.175; %m positino of leading edge of the root chord, from CAD
+    wing.xR25 = wing.xRLE + 0.25*wing.c_root; % position of quarter chord at root of wing
   
     %% WING MASS AND CG %%
 
@@ -91,7 +99,7 @@ function aircraft = generate_component_weights(aircraft)
     %% H TAIL %%
     %%%%%%%%%%%%
 
-    aircraft.geometry.htail.AR = 4; % TODO: UPDATE
+    aircraft.geometry.htail.AR = 4; % DECIDED
 
     % for convenience
     htail = aircraft.geometry.htail;
@@ -102,14 +110,16 @@ function aircraft = generate_component_weights(aircraft)
     
     htail.b = sqrt( htail.AR * htail.S_ref);
 
-    htail.c_root = 1.2755; % m
+    htail.c_root = 1.2755; % m DECIDED
     htail.taper_ratio = 0.5;
 
     htail.c_tip = htail.c_root*htail.taper_ratio;
 
     htail.sweep_LE = deg2rad(49.9); % radians
+    htail.sweep_QC = atan( tan(htail.sweep_LE) - (4 / htail.AR) * ((0.25 * (1 - htail.taper_ratio)) / (1 + htail.taper_ratio)) ); % formula from aerodynamics slide 24
 
-    htail.xRLE = 15.208; % x from the nose tip
+    htail.xRLE = 15.208; % m positino of leading edge of the root chord, from CAD, from nose tip
+    
 
     %% HTAIL MASS AND CG %%
 
@@ -197,7 +207,7 @@ function aircraft = generate_component_weights(aircraft)
     % for convenience
     w = aircraft.weight;
 
-    %% ALGORITHM %%    
+    %% ALGORITHM 5 %%    
     
     % intial estimate
     [W_0, ff] = togw_as_func_of_T_S_calc(aircraft, aircraft.propulsion.T_max, aircraft.geometry.wing.S_ref);
@@ -288,13 +298,7 @@ function aircraft = generate_component_weights(aircraft)
     %% CG CALCULATION %%
     %%%%%%%%%%%%%%%%%%%%
 
-    aircraft = cg_calc(aircraft);
-
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%
-    %% STABILITY CALCULATION %%
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-    aircraft = stability_calc(aircraft);
+    aircraft = cg_SM_calc(aircraft);
 
     %% COST UPDATE %%
     aircraft.cost.avg_flyaway_cost = avg_flyaway_cost_calc(aircraft.weight.togw, 1000);

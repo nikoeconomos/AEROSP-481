@@ -28,7 +28,7 @@ aircraft = generate_climb_segments(aircraft);
 
 %% GENERATE PRELIMINARY SIZING PLOTS %%
 
-plot_T_W_W_S_space(aircraft)
+%plot_T_W_W_S_space(aircraft)
 drawnow
 
 %plot_T_S_space(aircraft)
