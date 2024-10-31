@@ -92,7 +92,7 @@ airframe_maint = (Cml_af+Cmm_af)*block_time;
 
 Uannual = 1.5*10^3* (3.4546*block_time + 2.994 - (12.289*block_time^2 - 5.6626*block_time + 8.964)^0.5 );
 
-IRa = 0.02; % Hull insurance rate
+IRa = 0.02; %hull insurance rate
 
 cost.insurance = (IRa*aircraft.cost.airframe/Uannual)*block_time;
 
@@ -104,7 +104,7 @@ cost.missile    = missile_cost_2024*aircraft.weight.weapons.num_missiles;
 
 %% Avionics cost 
 
-avionics_cost_base = 2202000;  % 10% of airplane market price (Raymer)
+avionics_cost_base = 2202000;  % VERIFY
 avionics_base_year = 2006;  
 cost.avionics = adjust_cost_inflation_calc(avionics_cost_base, avionics_base_year, target_year); % USD
 
