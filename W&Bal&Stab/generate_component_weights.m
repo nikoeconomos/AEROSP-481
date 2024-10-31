@@ -85,7 +85,13 @@ function aircraft = generate_component_weights(aircraft)
     % weight
     aircraft.weight.components.wing = (wing.S_ref * aircraft.weight.density.wing_area) * aircraft.weight.fudge_factor.wing; % 44 * S
 
-    % MAC and wing
+    W_wing = 0.0051 * (W_dg * Nz)^0.557 * Sw^0.649 * AR^0.5 * (t_c_root)^(-0.4) * (1 + lambda)^0.1 * (cos(Lambda))^(-1) * Scsw^0.1; % metabook 7.11
+    
+    W_wing = 4.22 * S_wing + 1.642e-6 * (n * b^3 * sqrt(W0 * W * Zf) * (1 + 2 * lambda)) / (S_wing * (t_c) * cos(Lambda_E)^2 * (1 + lambda)); % metabook 7.12
+
+    
+
+    %% WING MAC
     wing.MAC = aircraft.weight.func.MAC_calc(wing.c_root, wing.c_tip);
 
     wing.xMAC = aircraft.weight.func.xMAC_calc(wing.xRLE, wing.b, wing.c_root, wing.c_tip, wing.sweep_LE);
