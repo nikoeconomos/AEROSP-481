@@ -27,9 +27,9 @@ Q_i = 1:1:Q;
 
 x = 0.926; %(95% learning curve))
 
-amp1989 = 10^(2.3341 + 1.0586 * log10(Wto));
+amp1989 = 10^(2.3341 + 1.0586 * log10(Wto)); % where is this from is this regresion?
 
-amp2024 = adjust_cost_inflation_calc(amp1989, 1989, target_year);
+amp2024 = adjust_cost_inflation_calc(amp1989, 1989, target_year); % 
 
 learning_curve_costs = amp2024 * (1./Q_i).^(1-x);
 
