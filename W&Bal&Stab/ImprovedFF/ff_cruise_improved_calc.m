@@ -1,4 +1,4 @@
-function segment_fuel_fraction = ff_cruise_improved_calc(range, TSFC, velocity, LD)
+function ff_cruise = ff_cruise_improved_calc(aircraft, range, TSFC, velocity, altitude, e, CD0, W_curr)
 % Description: from slide 45 of lecture 13
 % 
 % INPUTS:
@@ -28,6 +28,31 @@ function segment_fuel_fraction = ff_cruise_improved_calc(range, TSFC, velocity, 
 
 % TODO MAKE ITERATIVE
 g = 9.81;
-segment_fuel_fraction = exp( (-range*TSFC*g)/(velocity*LD));
+
+k = aircraft.aerodynamics.k_calc(e);
+
+n = 100;
+segment_range = range / n;  % Range of each segment
+
+[~, ~, rho, ~] = standard_atmosphere_calc(altitude);
+
+ff_segments = zeros(1,n);
+% Loop over each segment
+for i = 1:n
+    CL = (2 * W_curr * g / (rho * velocity^2 * aircraft.geometry.wing.S_ref)); 
+
+    LD = aircraft.aerodynamics.LD_from_CL_and_CD0_calc(CL, CD0, k);
+    
+    ff_segments(i) = exp((-segment_range * TSFC * g) / (velocity * LD));
+
+    W_curr = ff_segments(i)*W_curr;
+end
+
+ff_cruise = 1;
+for i = 1:length(ff_segments) %start at the second index
+    ff_cruise = ff_cruise*ff_segments(i);
+end
+
+%old_ff = exp( (-range*TSFC*g)/(velocity*aircraft.aerodynamics.LD_cruise_from_CL_and_CD0_calc(aircraft.aerodynamics.CL.cruise, CD0, k)));
 
 end

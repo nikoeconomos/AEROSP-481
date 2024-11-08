@@ -295,9 +295,11 @@ function aircraft = generate_component_weights(aircraft)
     [avg_flyaway_cost_500, ~]  = avg_flyaway_cost_calc(W_0, 500)
     [avg_flyaway_cost_1000, ~] = avg_flyaway_cost_calc(W_0, 1000)
 
-
     tol = 1e-3;
     converged = false;
+
+    aircraft.weight.ff = ff_total_improved_calc(aircraft, W_0);
+
     while converged == false
         
         w.components.fuel = ff    * W_0;
