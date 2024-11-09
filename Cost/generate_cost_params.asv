@@ -58,8 +58,8 @@ engine_maint_cost = aircraft.propulsion.num_engines*(Cml_eng+Cmm_eng)*block_time
 % engine cost
 cost.engine = 5660000; % Based on contract for F-15EX in 2021 (adjusted for inflation)
 
-cost.aircraft = 10^(0.657+(1.4133*log10(aircraft.weight.togw*2.2))); % From Roskam
-cost.airframe = cost.aircraft - cost.engine; %From metabook chapter 3
+cost.aircraft = 10^(0.657+(1.4133*log(aircraft.weight.togw*2.2)));
+acost.airframe = cost.aircraft - cost.engine; %From metabook chapter 3
 
 %% CREW %
 crew_base_year = 1993;
@@ -75,7 +75,7 @@ togw_lb = ConvMass(aircraft.weight.togw, 'kg', 'lbm');
 % Initialize result
 crew_costs = airline_factor * (route_factor * (togw_lb)^0.4 * mission_block_time);
 
-cost.crew = adjust_cost_inflation_calc(crew_costs, crew_base_year, target_year);
+cost.crew.total = adjust_cost_inflation_calc(crew_costs, crew_base_year, target_year);
 
 
 %% Airframe maintenance %
@@ -95,10 +95,10 @@ Uannual = 1.5*10^3* (3.4546*block_time + 2.994 - (12.289*block_time^2 - 5.6626*b
 
 IRa = 0.02; % Hull insurance rate
 
-cost.insurance = (IRa*cost.airframe/Uannual)*block_time;
+cost.insurance = (IRa*aircraft.cost.airframe/Uannual)*block_time;
 
 %% Missile cost
-missile_cost_base = 386000;  % USD Pulled from RFP
+missile_cost_base = 386000;  % USD Pulled RFP
 missile_base_year = 2006;
 missile_cost_2024 = adjust_cost_inflation_calc(missile_cost_base, missile_base_year, target_year); % USD
 cost.missile    = missile_cost_2024*aircraft.weight.weapons.num_missiles;
@@ -118,8 +118,8 @@ cost.cannon = adjust_cost_inflation_calc(cannon_cost_base, cannon_base_year, tar
 
 We = ConvMass(aircraft.weight.empty, 'kg', 'lbm');
 V = ConvVel(velocity_from_flight_cond(aircraft.performance.mach.dash, 10668), 'm/s', 'ft/s');
-Q = 1000; % Production number
-FTA = 6; % Flight test aircraft
+Q = 1000; %production number
+FTA = 6; % flight test aircraft
 
 RE = 86;  % Engineering rate
 RT = 88;  % Tooling rate
@@ -142,7 +142,7 @@ RTDE_flyaway_adjusted = adjust_cost_inflation_calc(RDT_E_flyaway, 1999, target_y
 
 %% Flyaway cost
 
-[cost.avg_flyaway_cost, cost.learning_curve_costs] = avg_flyaway_cost_calc(cost.aircraft, 1000);
+[cost.avg_flyaway_cost, cost.learning_curve_costs] = avg_flyaway_cost_calc(aircraft.weight.togw, 1000);
 
 %% Update struct
 

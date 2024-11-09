@@ -85,3 +85,8 @@ disp('twreal mil')
 TWmil = a.propulsion.T_military/(w0*9.81);
 disp('wsreal')
 WS = w0/a.geometry.wing.S_ref;
+
+% Flyaway costs for aircraft
+disp(aircraft.cost.learning_curve_costs(250))
+disp(aircraft.cost.learning_curve_costs(500))
+disp(aircraft.cost.learning_curve_costs(1000))
