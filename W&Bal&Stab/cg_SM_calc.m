@@ -164,7 +164,7 @@ function aircraft = cg_SM_calc(aircraft)
     hold on;
     plot(cg_excursion_arr(:,1), cg_weight_arr, '-o', 'MarkerFaceColor', 'k')
     xlabel('Delta X of CG [m]');
-    ylabel('Position of CG Relative to Nose [kg]');
+    ylabel('Aircraft Weight [kg]');
     title('CG Excursion Plot for Loading of Aircraft on the Ground');
     hold off; 
 
@@ -186,6 +186,6 @@ function aircraft = cg_SM_calc(aircraft)
     %%%%%%%%%%%%%%%%%%%%
 
     mach = [0.28,0.5,0.85,1.0,1.2]; % Find SM at various Mach numbers
-    [sm_arr,np_arr] = SM_calc(aircraft, cg_excursion_arr, mach);
+    [sm_arr,np_arr] = SM_calc_plot(aircraft, cg_excursion_arr, mach);
  
 end
