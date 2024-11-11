@@ -264,15 +264,13 @@ function aircraft = generate_component_weights(aircraft)
 
     f = w.fuel_vol;
     
-    f.nose            = 1.474; %m3
-    f.cannon          = 1.204;
-    f.left_wing       = 1.480;
+    f.nose            = 1.315; %m3
+    f.cannon          = 3.988;
+    f.left_wing       = 1.089;
     f.right_wing      = f.left_wing; 
-    f.left_conformal  = 0.6783;
-    f.right_conformal = f.left_conformal;
-    f.engine          = 1.273;
+    f.rear            = 0.726;
 
-    f.total_available = sum([f.nose, f.cannon, f.left_wing, f.right_wing, f.left_conformal, f.right_conformal, f.engine]);
+    f.total_available = sum([f.nose, f.cannon, f.left_wing, f.right_wing,f.rear]);
 
     if f.total_available-f.total_used < 0
         error('Not enough fuel available silly!')
@@ -280,11 +278,9 @@ function aircraft = generate_component_weights(aircraft)
 
     f.nose_pct            = f.nose           / f.total_used; % percent
     f.cannon_pct          = f.cannon         / f.total_used;
-    f.engine_pct          = f.engine         / f.total_used;
     f.left_wing_pct       = f.left_wing      / f.total_used;
     f.right_wing_pct      = f.right_wing     / f.total_used;
-    f.left_conformal_pct  = f.left_conformal / f.total_used; 
-    f.right_conformal_pct = f.right_conformal/ f.total_used; 
+    f.rear_pct            = f.rear           / f.total_used;
 
     w.fuel_vol = f;
      
