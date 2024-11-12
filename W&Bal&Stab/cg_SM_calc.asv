@@ -54,11 +54,18 @@ function aircraft = cg_SM_calc(aircraft)
     w.cg_pos.xtra = [7.9029, 0, 0]; % 45% of fuselage length (raymer table)
 
     w.cg_pos.nose_fuel            = [5.8, -0.091,  0.774];
-    w.cg_pos.cannon_fuel          = [9.342,  -0.034,  1.121];
-    w.cg_pos.left_wing_fuel       = [10.505, -2.395, 0.861];
-    w.cg_pos.right_wing_fuel      = [10.505, 2.395,  0.861]; 
-    w.cg_pos.rear_fuel            = []
-
+    w.cg_pos.cannon_fuel          = [9.354,  -0.034,  1.127];
+    w.cg_pos.left_wing_fuel       = [10.233, -2.249, 0.861];
+    w.cg_pos.right_wing_fuel      = [10.233, 2.249,  0.861]; 
+    w.cg_pos.rear_fuel            = [12.747, 0, 1.41];
+    w.cg_pos.ICNIA                = [4.501, 0, 0.649];
+    w.cg_pos.databus              = [4.408, -0.315, 0.672];
+    w.cg_pos.INEWS                = [4.996, 0, 0.744];
+    w.cg_pos.VMS                  = [14.155, -0.748, 1.772];
+    w.cg_pos.IRSTS                = 
+    w.cg_pos.AESA = 
+    w.cg_pos.EES = 
+    w.cg_pos.APU = 
     %w.cg_pos.lg_main = [?,?,?];
     %w.cg_pos.lg_nose = [?,?,?];
  
@@ -90,19 +97,15 @@ function aircraft = cg_SM_calc(aircraft)
 
     fuel_comp_weight = [c.fuel * w.fuel_vol.nose_pct,...
                         c.fuel * w.fuel_vol.cannon_pct,...
-                        c.fuel * w.fuel_vol.engine_pct,...
                         c.fuel * w.fuel_vol.left_wing_pct,...  
                         c.fuel * w.fuel_vol.right_wing_pct,...
-                        c.fuel * w.fuel_vol.left_conformal_pct,... 
-                        c.fuel * w.fuel_vol.right_conformal_pct];
+                        c.fuel * w.fuel_vol.rear_pct];
     
     fuel_cg_pos = [w.cg_pos.nose_fuel;         
-                   w.cg_pos.cannon_fuel;         
-                   w.cg_pos.engine_fuel;         
+                   w.cg_pos.cannon_fuel;                
                    w.cg_pos.left_wing_fuel;      
                    w.cg_pos.right_wing_fuel;     
-                   w.cg_pos.left_conformal_fuel; 
-                   w.cg_pos.right_conformal_fuel;];
+                   w.cg_pos.rear_fuel;];
 
     w.cg_sum.fuel = sum(fuel_comp_weight);
     w.cg_pos_weighted.fuel = fuel_comp_weight * fuel_cg_pos; % NOTE: THIS CODE ASSUMES THAT ALL FUEL TANKS ARE FULL. MUST BE EDITED FOR DIFFERENT MISSIONS

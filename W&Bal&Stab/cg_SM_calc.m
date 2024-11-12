@@ -31,7 +31,7 @@ function aircraft = cg_SM_calc(aircraft)
 
     w.cg_pos = struct();
 
-    w.cg_pos.engine = [14.32, 0, 0.724];
+    w.cg_pos.engine = [14.5, 0, 0.774];
 
     w.cg_pos.vtail  = [aircraft.geometry.vtail.x40MAC, 0, 0];
     w.cg_pos.htail  = [aircraft.geometry.htail.x40MAC, 0, 0];
@@ -53,12 +53,19 @@ function aircraft = cg_SM_calc(aircraft)
 
     w.cg_pos.xtra = [7.9029, 0, 0]; % 45% of fuselage length (raymer table)
 
-    w.cg_pos.nose_fuel            = [5.8, -0.091,  0.774];
+    w.cg_pos.nose_fuel            = [5.946, -0.091,  0.773];
     w.cg_pos.cannon_fuel          = [9.354,  -0.034,  1.127];
-    w.cg_pos.left_wing_fuel       = [10.233, -2.249, 0.861];
-    w.cg_pos.right_wing_fuel      = [10.233, 2.249,  0.861]; 
-    w.cg_pos.rear_fuel            = [12.747, 0, 1.41];
-
+    w.cg_pos.left_wing_fuel       = [10.278, -2.249, 0.834];
+    w.cg_pos.right_wing_fuel      = [10.278, 2.249,  0.834]; 
+    w.cg_pos.rear_fuel            = [12.388, 0, 1.356];
+    w.cg_pos.ICNIA                = [4.551, 0, 0.649];
+    w.cg_pos.databus              = [4.458, -0.315, 0.672];
+    w.cg_pos.INEWS                = [5.046, 0, 0.744];
+    w.cg_pos.VMS                  = [14.155, -0.748, 1.772];
+    w.cg_pos.IRSTS                = [4.586, 0, 1.134];
+    w.cg_pos.AESA                 = [3.871, 0, 0.624];
+    w.cg_pos.EES                  = [13.501, 0.74, 0.754];
+    w.cg_pos.APU                  = [13.082, -0.689, 0.424];
     %w.cg_pos.lg_main = [?,?,?];
     %w.cg_pos.lg_nose = [?,?,?];
  
@@ -70,6 +77,14 @@ function aircraft = cg_SM_calc(aircraft)
                          c.wing,...
                          c.fuselage,...
                          c.xtra,...
+                         c.ICNIA,...
+                         c.databus,...
+                         c.INEWS,...
+                         c.VMS,...
+                         c.IRSTS,...
+                         c.AESA,...
+                         c.EES,...
+                         c.APU,...
                          w.weapons.m61a1.cannon]; % NOTE: ADD LANDING GEAR WHEN SIZED/PLACED
     
     empty_cg_pos = [w.cg_pos.engine; 
@@ -78,6 +93,14 @@ function aircraft = cg_SM_calc(aircraft)
                     w.cg_pos.wing; 
                     w.cg_pos.fuselage;
                     w.cg_pos.xtra;
+                    w.cg_pos.ICNIA;
+                    w.cg_pos.databus;
+                    w.cg_pos.INEWS;
+                    w.cg_pos.VMS;
+                    w.cg_pos.IRSTS;
+                    w.cg_pos.AESA;
+                    w.cg_pos.EES;
+                    w.cg_pos.APU;
                     w.cg_pos.cannon;]; % TODO ADD LANDING GEAR
     
     w.cg_sum.empty = sum(empty_comp_weight);
