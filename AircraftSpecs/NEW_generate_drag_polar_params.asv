@@ -209,7 +209,7 @@ Swet_VS = 3.73; % [m^2]
 c_VS = ; % NEED TO ADD
 CD_misc_VS = 0.0004; % Estimated
 CD_lp_VS = 0.00015; % Estimated
-Q_VS = 1.0; % Assumed 1
+Q_VS = 1.0; % Assumed
 
 CD0_VS_array = zeros(size(Mach_numbers)); 
 
@@ -237,16 +237,17 @@ end
 %% Avionics Bump %%
 
 % Avionics bump parameters
-Swet_AB = 0.0351; % [m^2]
-c_AB = ; % NEED TO ADD
-CD_misc_AB = 0.0002; % Estimated
-CD_lp_AB = 0.00005; % Estimated
-Q_AB = 1.0; % Assumed 1
+Swet_AB = 0.0351; % Wetted area of avionics bump [m^2]
+c_AB = 0.15; % Average chord length of the avionics bump [m] (example, adjust as needed)
+CD_misc_AB = 0.0002; % Assumed miscellaneous drag for avionics bump
+CD_lp_AB = 0.00005; % Assumed leakage and protuberance drag for avionics bump
+Q_AB = 1.0; % Interference factor for avionics bump
 
-CD0_AB_array = zeros(size(Mach_numbers)); 
+% Initialize result arrays
+CD0_AB_array = zeros(size(Mach_numbers)); % To store drag coefficient results
 
+% Loop through each flight condition
 for i = 1:length(Mach_numbers)
-
     % Flight conditions
     M = Mach_numbers(i);
     Re_AB = Re_fuselage_values(i) * (c_AB / l_fuselage); 
