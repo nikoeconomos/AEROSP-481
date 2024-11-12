@@ -15,7 +15,7 @@ function [aircraft] = generate_cost_params(aircraft)
 %                       
 % 
 % See also: None
-% Author:                          Niko and Victoria
+% Author:                          Niko, Victoria, and Joon
 % Version history revision notes:
 %                                  v1: 9/14/2024
 %                                  v2: 10/29/2024
