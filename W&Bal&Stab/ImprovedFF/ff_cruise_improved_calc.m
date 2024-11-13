@@ -1,4 +1,4 @@
-function ff_cruise = ff_cruise_improved_calc(aircraft, range, TSFC, velocity, altitude, e, CD0, W_curr)
+function ff_cruise = ff_cruise_improved_calc(aircraft, range, TSFC, velocity, altitude, e, W_curr)
 % Description: from slide 45 of lecture 13
 % 
 % INPUTS:
@@ -26,10 +26,11 @@ function ff_cruise = ff_cruise_improved_calc(aircraft, range, TSFC, velocity, al
 %                                  v1: 11/3/2024
 
 
-% TODO MAKE ITERATIVE
 g = 9.81;
 
 k = aircraft.aerodynamics.k_calc(e);
+
+CD0 = aircraft.aerodynamics.CD0.clean;
 
 n = 100;
 segment_range = range / n;  % Range of each segment

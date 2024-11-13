@@ -37,6 +37,7 @@ for i = 1:length(aircraft.mission.segments)
 
     if mission.segments(i) == "start"
         
+
         TSFC = mission.TSFC(i);
         time = mission.time(i);
         mission.ff(i) = 1 - TSFC * time * (0.05 * aircraft.propulsion.T_military / W_0); % 5% max thrust
@@ -50,7 +51,14 @@ for i = 1:length(aircraft.mission.segments)
 
     elseif mission.segments(i) == "climb"
         
-        mission.ff(i) = 0.96; % [unitless],0.96 from max, 0.98 is from meta guide FIX UPDATE
+        TSFC_SL        = mission.TSFC(i-1); % at takeoff
+        TSFC_cruise    = mission.TSFC(i+1); % at cruise
+        climb_altitude = mission.alt(i+1); % altitude of the next segment, usually cruise
+
+        W_curr = W_0 * ff_current;
+
+        % mission.ff(i) = 0.96; 
+        mission.ff(i) = ff_climb_improved_calc(aircraft, TSFC_SL, TSFC_cruise, climb_altitude, W_curr);
 
     elseif mission.segments(i) == "cruise" || mission.segments(i) == "escort" % no restrictions on speed or L/D
         
@@ -58,11 +66,11 @@ for i = 1:length(aircraft.mission.segments)
         TSFC = mission.TSFC(i);
         velocity = mission.velocity(i); % find optimal
         altitude = mission.alt(i); % find optimal
-        e = aircraft.aerodynamics.e.cruise;
+        e = aircraft.aerodynamics.e.clean;
 
         W_curr = W_0 * ff_current;
 
-        mission.ff(i) = ff_cruise_improved_calc(aircraft, range, TSFC, velocity, altitude, e, CD0, W_curr);
+        mission.ff(i) = ff_cruise_improved_calc(aircraft, range, TSFC, velocity, altitude, e, W_curr);
 
     elseif mission.segments(i) == "dash" % same as above, with different e
         
@@ -74,7 +82,7 @@ for i = 1:length(aircraft.mission.segments)
 
         W_curr = W_0 * ff_current;
 
-        mission.ff(i) = ff_cruise_improved_calc(aircraft, range, TSFC, velocity, altitude, e, CD0, W_curr);
+        mission.ff(i) = ff_cruise_improved_calc(aircraft, range, TSFC, velocity, altitude, e, W_curr);
 
     elseif mission.segments(i) == "combat" % differs only in LD from cruise, assumed to use max as it's optimized for combat
         
