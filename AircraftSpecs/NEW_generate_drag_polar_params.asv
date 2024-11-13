@@ -107,10 +107,13 @@ end
 
 % Wing parameters
 Swet_wings = 48.514; % [m^2]
-c_wing = ; % NEED TO ADD
 CD_misc_wings = 0.002; % Assumed
 CD_lp_wings = 0.001; % Assumed
 Q_wings = 1; % Assumed 1 for a mid-wing configuration
+loc_max_thickness = 0.386; % [m]
+thickness_to_chord = 0.06; % Average is 6%
+sweep = 37.04; % [degrees] Sweep angle of max thickness line
+c_wing = 4.187; % [m] at root
 
 CD0_wings_array = zeros(size(Mach_numbers)); 
 
@@ -127,9 +130,8 @@ for i = 1:length(Mach_numbers)
     Cf_wings_turbulent = 0.455 / ((log10(Re_wings))^2.58 * (1 + 0.144 * M^2)^0.65);
     Cf_wings_effective = x_laminar_wings * Cf_wings_laminar + (1 - x_laminar_wings) * Cf_wings_turbulent;
 
-    % Form factor
-    f_wings = c_wing / (2 * (Swet_wings / Sref)^(1/2)); 
-    FF_wings = 1 + 2.7 / f_wings + (f_wings / 400);
+    % Form factor 
+    FF_wings = (1 + (0.6 / (loc_max_thickness)) * (thickness_to_chord) + 100 * (thickness_to_chord)^4) * (1.34 * Mach_numbers(i).^(0.18) * cos(sweep)^0.28);
 
     CD0_wings = (Cf_wings_effective * FF_wings * Q_wings * Swet_wings / Sref) + CD_misc_wings + CD_lp_wings;
 
@@ -140,7 +142,7 @@ end
 
 % Needle parameters
 Swet_needle = 0.509; % [m^2]
-l_needle = ; % NEED TO ADD
+l_needle = 1.41; % [m]
 CD_misc_needle = 0.0003; % Estimated
 CD_lp_needle = 0.0001; % Estimated
 Q_needle = 1; % Assumed 1
@@ -173,7 +175,7 @@ end
 
 % Horizontal stabilizer parameters
 Swet_HS = 7.35200; % [m^2]
-c_HS = ; % NEED TO ADD
+c_HS = 1.276; % [m]
 CD_misc_HS = 0.0005; % Estimated
 CD_lp_HS = 0.0002; % Estimated
 Q_HS = 1.0; % Assumed 1
@@ -206,10 +208,10 @@ end
 
 % Vertical stabilizer parameters
 Swet_VS = 3.73; % [m^2]
-c_VS = ; % NEED TO ADD
+c_VS = 1.381; % [m]
 CD_misc_VS = 0.0004; % Estimated
 CD_lp_VS = 0.00015; % Estimated
-Q_VS = 1.0; % Assumed
+Q_VS = 1.08; % For an H-tail configuration
 
 CD0_VS_array = zeros(size(Mach_numbers)); 
 
@@ -236,18 +238,18 @@ end
 
 %% Avionics Bump %%
 
+%{
 % Avionics bump parameters
-Swet_AB = 0.0351; % Wetted area of avionics bump [m^2]
-c_AB = 0.15; % Average chord length of the avionics bump [m] (example, adjust as needed)
-CD_misc_AB = 0.0002; % Assumed miscellaneous drag for avionics bump
-CD_lp_AB = 0.00005; % Assumed leakage and protuberance drag for avionics bump
-Q_AB = 1.0; % Interference factor for avionics bump
+Swet_AB = 0.0351; % [m^2]
+c_AB = ; % NEED TO ADD
+CD_misc_AB = 0.0002; % Estimated
+CD_lp_AB = 0.00005; % Estimated
+Q_AB = 1.0; % Assumed 1
 
-% Initialize result arrays
-CD0_AB_array = zeros(size(Mach_numbers)); % To store drag coefficient results
+CD0_AB_array = zeros(size(Mach_numbers)); 
 
-% Loop through each flight condition
 for i = 1:length(Mach_numbers)
+
     % Flight conditions
     M = Mach_numbers(i);
     Re_AB = Re_fuselage_values(i) * (c_AB / l_fuselage); 
@@ -267,19 +269,69 @@ for i = 1:length(Mach_numbers)
 
     CD0_AB_array(i) = CD0_AB;
 end
+%}
 
 %% Total Parasitic Drag Calc %%
 
-CD0 = (1/Sref) * (CD0_fuselage + CD0_inlets + CD0_wings + CD0_needle + CD0_HS + CD0_VS + CD0_AB);
+CD0 = (1/Sref) * (CD0_fuselage + CD0_inlets + CD0_wings + CD0_needle + CD0_HS + CD0_VS); % + CD0_AB from avionics bump
 CD0_total = CD0;
+
+%% Flap Drag %%
+
+F_flap = 0.0144; % Given value for plain flaps
+Cf = 0.325; % [m]
+C_wing_at_flap = 1.375; % [m] Outboard
+S_flapped = 11.611; % [m^2]
+delta_flap = 40; % From raymer, between 40-45 degrees for max lift
+
+delta_CD0_flap = F_flap * (Cf / C_wing_at_flap) * (S_flapped / Sref) * (delta_flap - 10);
+
+%% Lift Induced Drag %%
+
+CL = 1.25; % Max CL
+aspect_ratio = 3.068;
+e = 0.68; % Estimated
+
+CD_i = CL^2 / pi * aspect_ratio * e;
+
+%% Trim Drag %%
+
+% For horizontal tail
+aspect_ratio_t = 7.984;
+et = 1.78 * (1 - 0.045 * aspect_ratio_t^0.68) - 0.64;
+tail_volume_coeff = 0.135; % Calculated from drawing
+MAC_tail = 0.9921; % [m]
+x = 6.4337; % [m]
+St = (tail_volume_coeff * MAC_tail * Sref) / x;
+CL_wing = 0.6; % NEED TO UPDATE ONCE VALUE IS DONE
+xw = 1.8652; % [m]
+
+pitching_moment_factor = 0.6133;
+width_fus = 2.1; % [m]
+MAC = 3.0446;
+alpha_fus = 10; % Estimated
+CM_fus = ((pitching_moment_factor * width_fus^2 * l_fuselage) / (MAC * Sref)) * alpha_fus;
+x_ac = 2.2218; % [m]
+
+% delta_CM_ac_flap = ;
+
+Cl = 2 * pi * 10 * (pi/180); % Estimated
+c = @(x)4.187-0.628*x;
+span = 8.67; % [m]
+CM_ac = 0.524; % NEEDS TO BE UPDATED
+function1 = @(x)(Cl * c(x) * x_ac);
+function2 = @(x)(CM_ac * c(x).^2);
+int1 = integral(function1, -span/2, span/2);
+int2 = integral(function2, -span/2, span/2);
+CM_ac_w = (1 / MAC_tail * Sref) * (-int1 + int2);
+
+CM_pitch_minus_tail = CM_ac_w + CM_fus; % + delta_CM_ac_flap
+
+CLt = (CL_wing * (xw/MAC_tail) + CM_pitch_minus_tail) * (x / (x-xw)) * (1 / tail_volume_coeff); 
+
+CD_trim = (CLt^2 / pi * et * aspect_ratio_t) * (St / Sref); 
 
 %% Total Drag Coefficent %%
 
-delta_CD_Flaps = ; % NEED TO ADD
-CD_i = ; % NEED TO ADD
-CD_trim = ; % NEED TO ADD
-
-CD_total = CD0_total + delta_CD_flaps + CD_i + CD_trim;
-
-
-% Need to take these variables and integrate it with the plots
+CD_total = CD0_total + delta_CD0_flap + CD_i + CD_trim;
+disp(CD_total) % Ideally should be less than 1
