@@ -44,7 +44,7 @@ function [sm_arr,np_arr] = SM_calc_plot(aircraft, cg_excursion_arr,mach)
     % Fit a polynomial to the data
     p = polyfit(x, y, 2); % Second-degree polynomial
     
-    K_f = polyval(p, aircraft.geometry.wing.xR25/aircraft.geometry.fuselage.length);
+    K_f = polyval(p, aircraft.geometry.wing.xR25/aircraft.geometry.fuselage.length)
 
 
     %% More values
