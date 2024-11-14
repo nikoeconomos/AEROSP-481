@@ -242,10 +242,24 @@ F_flap = 0.0144; % Given value for plain flaps
 Cf = 0.325; % [m]
 C_wing_at_flap = 1.375; % [m] Outboard
 S_flapped = 11.611; % [m^2]
-delta_flap = 40; % From raymer, between 40-45 degrees for max lift
 
-delta_CD0_flap = F_flap * (Cf / C_wing_at_flap) * (S_flapped / Sref) * (delta_flap - 10);
-disp(['The delta flap drag (delta_CD_flap) is ', num2str(delta_CD0_flap)])
+delta_flap_takeoff = 15; % From raymer, between 40-45 degrees for max lift
+
+delta_CD0_flap_takeoff = F_flap * (Cf / C_wing_at_flap) * (S_flapped / Sref) * (delta_flap_takeoff - 10);
+disp(['The delta flap drag for takeoff (delta_CD0_flap_takeoff) is ', num2str(delta_CD0_flap_takeoff)])
+
+delta_flap_landing = 40; % From raymer, between 40-45 degrees for max lift
+
+delta_CD0_flap_landing = F_flap * (Cf / C_wing_at_flap) * (S_flapped / Sref) * (delta_flap_landing - 10);
+disp(['The delta flap drag for landing (delta_CD0_flap_landing) is ', num2str(delta_CD0_flap_landing)])
+
+% updating for ease, make the rest of the code match for Takeoff vs Landing in the future:
+delta_CD0_flap = delta_CD0_flap_landing;
+
+%% LG drag
+
+delta_CD0_gear = 0.015; % metabook table 4.2
+
 
 %% Lift Induced Drag %%
 
@@ -298,3 +312,33 @@ disp(['The total trim drag (CD_trim) is ', num2str(CD_trim)])
 
 CD_total = CD0_total + delta_CD0_flap + CD_i + CD_trim;
 disp(['The total drag coefficent (CD_total) is ', num2str(CD_total)])
+
+%% Set Aircraft Struct
+
+aero = aircraft.aerodynamics;
+
+aero.CD0.clean = CD0_total;
+aero.e.clean   = oswaldfactor(aircraft.geometry.wing.AR, aircraft.geometry.wing.sweep_LE,'shevell', aero.CD0.clean, 0, 0.98);
+
+%aero.CD0.cruise = CD0_total + CD_trim; % UN COMMENT WHEN CD TRIM IS CORRECT
+aero.CD0.cruise = CD0_total;
+
+aero.CD0.takeoff_flaps      = CD0_total + delta_CD0_flap_takeoff;
+aero.CD0.takeoff_flaps_gear = CD0_total + delta_CD0_flap_takeoff + delta_CD0_gear;
+
+aero.e.takeoff_flaps   = oswaldfactor(aircraft.geometry.wing.AR, aircraft.geometry.wing.sweep_LE,'shevell', aero.CD0.takeoff_flaps, 0, 0.98);
+
+aero.CD0.landing_flaps      = CD0_total + delta_CD0_flap_landing;
+aero.CD0.landing_flaps_gear = CD0_total + delta_CD0_flap_landing + delta_CD0_gear;
+
+aero.e.landing_flaps   = oswaldfactor(aircraft.geometry.wing.AR, aircraft.geometry.wing.sweep_LE,'shevell', aero.CD0.landing_flaps, 0, 0.98);
+
+% the following are from the F35. Set our own from juan's airfoil
+aero.CL.clean         = 0.6;
+aero.CL.takeoff_flaps = 1.4;
+aero.CL.landing_flaps = 1.9;
+
+% reset aero struct
+aircraft.aerodynamics = aero;
+
+plot_drag_polar(aircraft);

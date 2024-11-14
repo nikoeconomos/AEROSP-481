@@ -44,8 +44,8 @@ aircraft.aerodynamics.LD_from_CL_and_CD0_calc = @ (CL, CD0, k) 0.94*CL/(CD0 + k 
 %%%%%%%%%%%%%%%%
 
 aircraft = generate_drag_polar_params(aircraft);
-aircraft.aerodynamics.LD.max = aircraft.aerodynamics.LD.max_cruise/0.943; % next to eq 2.15 in metabook
-aircraft.aerodynamics.LD.dash = 0.93 * aircraft.aerodynamics.LD.max_cruise; 
+aircraft.aerodynamics.LD.max = aircraft.aerodynamics.LD.max_clean/0.943; % next to eq 2.15 in metabook
+aircraft.aerodynamics.LD.dash = 0.93 * aircraft.aerodynamics.LD.max_clean; 
 
 %% AR wetted (STORES IN GEOMETRY)
 

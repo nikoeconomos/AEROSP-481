@@ -242,10 +242,21 @@ F_flap = 0.0144; % Given value for plain flaps
 Cf = 0.325; % [m]
 C_wing_at_flap = 1.375; % [m] Outboard
 S_flapped = 11.611; % [m^2]
-delta_flap = 40; % From raymer, between 40-45 degrees for max lift
 
-delta_CD0_flap = F_flap * (Cf / C_wing_at_flap) * (S_flapped / Sref) * (delta_flap - 10);
-disp(['The delta flap drag (delta_CD_flap) is ', num2str(delta_CD0_flap)])
+delta_flap_takeoff = 15; % From raymer, between 40-45 degrees for max lift
+
+delta_CD0_flap_takeoff = F_flap * (Cf / C_wing_at_flap) * (S_flapped / Sref) * (delta_flap_takeoff - 10);
+disp(['The delta flap drag for takeoff (delta_CD0_flap_takeoff) is ', num2str(delta_CD0_flap_takeoff)])
+
+delta_flap_landing = 40; % From raymer, between 40-45 degrees for max lift
+
+delta_CD0_flap_landing = F_flap * (Cf / C_wing_at_flap) * (S_flapped / Sref) * (delta_flap_landing - 10);
+disp(['The delta flap drag for landing (delta_CD0_flap_landing) is ', num2str(delta_CD0_flap_landing)])
+
+%% LG drag
+
+delta_CD0_gear = 0.015; % metabook table 4.2
+
 
 %% Lift Induced Drag %%
 
@@ -260,10 +271,10 @@ disp(['The total lift induced drag (CD_i) is ', num2str(CD_i)])
 
 % For horizontal tail
 aspect_ratio_t = 7.984;
-et = 1.78 * (1 - 0.045 * aspect_ratio_t^0.68) - 0.64;
+et = 1.78 * (1 - (0.045 * aspect_ratio_t^0.68)) - 0.64;
 x = 6.4337; % [m]
 MAC_tail = 0.9921; % [m]
-S_tail = ; % NEED TO ADD
+S_tail = 3.667 * 2; % [m^2]
 tail_volume_coeff = (x * S_tail) / (MAC_tail * Sref); 
 CL_wing = 0.6; % NEED TO UPDATE ONCE VALUE IS DONE
 xw = 1.8652; % [m]
@@ -291,10 +302,25 @@ CM_pitch_minus_tail = CM_ac_w + CM_fus; % + delta_CM_ac_flap
 
 CLt = (CL_wing * (xw/MAC_tail) + CM_pitch_minus_tail) * (x / (x-xw)) * (1 / tail_volume_coeff); 
 
-CD_trim = (CLt^2 / pi * et * aspect_ratio_t) * (St / Sref); 
+CD_trim = (CLt^2 / pi * et * aspect_ratio_t) * (S_tail / Sref); 
 disp(['The total trim drag (CD_trim) is ', num2str(CD_trim)])
 
 %% Total Drag Coefficent %%
 
 CD_total = CD0_total + delta_CD0_flap + CD_i + CD_trim;
-disp(['The total drag coefficent (CD_trim) is ', num2str(CD_trim)])
+disp(['The total drag coefficent (CD_total) is ', num2str(CD_total)])
+
+%% Set Aircraft Struct
+
+aircraft.aerodynamics.CD0.clean = CD0_total;
+
+aircraft.aerodynamics.CD0.takeoff_flaps      = CD0_total + delta_CD0_flap_takeoff;
+aircraft.aerodynamics.CD0.takeoff_flaps_gear = CD0_total + delta_CD0_flap_takeoff + delta_CD0_gear;
+
+aircraft.aerodynamics.CD0.landing_flaps      = CD0_total + delta_CD0_flap_landing;
+aircraft.aerodynamics.CD0.landing_flaps_gear = CCD0_total + delta_CD0_flap_landing + delta_CD0_gear;
+
+% the following are from the F35. Set our own
+aircraft.aerodynamics.CL.clean         = 0.6;
+aircraft.aerodynamics.CL.takeoff_flaps = 1.4;
+aircraft.aerodynamics.CL.landing_flaps = 1.9;
