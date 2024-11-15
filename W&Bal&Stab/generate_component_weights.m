@@ -389,6 +389,7 @@ function aircraft = generate_component_weights(aircraft)
     %%%%%%%%%%%%%%%%%%%
 
     aircraft.weight = w;
+    plot_weight_pie_chart(aircraft);
 
     %%%%%%%%%%%%%%%%%%%%
     %% CG CALCULATION %%

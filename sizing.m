@@ -44,7 +44,6 @@ aircraft = generate_cost_params(aircraft);
 %% PRINT RESULTS %%
 
 disp("weight")
-plot_weight_pie_chart(aircraft);
 aircraft.weight
 
 disp("performance")

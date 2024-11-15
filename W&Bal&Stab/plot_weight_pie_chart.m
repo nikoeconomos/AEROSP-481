@@ -16,6 +16,8 @@ function [] = plot_weight_pie_chart(aircraft)
 % Version history revision notes: 9/24/24
 %    
 
+%% All pieces %%
+
 % Define the cost components and their corresponding weights
 comp_names = {'Fuel', 'Payload', 'Engine', 'Fuselage', 'Wing', 'Empennage', ...
               'LG', 'Xtra', 'GFE'};
@@ -68,6 +70,85 @@ end
 
 % Add a title
 title(['Aircraft Component Weight Breakdown. TOGW: ', num2str(round(aircraft.weight.togw)), ' kg']);
+
+%% OEW, FUEL, PAYLOAD
+
+% Define the main weight categories
+fuel_weight = aircraft.weight.components.fuel + aircraft.weight.components.oil;
+payload_weight = aircraft.weight.components.payload;
+oew_weight = sum(comp_weights) - (fuel_weight + payload_weight); % OEW is everything except fuel and payload
+
+% Define names and weights for the simplified breakdown
+main_categories = {'Fuel', 'Payload', 'OEW'};
+main_weights = [fuel_weight, payload_weight, oew_weight];
+
+% Define colors: red for Fuel, orange for Payload, and darker pale blue for OEW
+main_colors = [0.784, 0.275, 0.275;       % Red for Fuel
+               0.902, 0.549, 0.275;       % Orange for Payload
+               0.30,  0.50,  1];            % Darker pale blue for OEW
+
+% Create the pie chart
+figure;
+h_main = pie(main_weights);
+
+% Apply colors to each pie slice
+for k = 1:2:length(h_main) % h contains patches and text labels in alternating positions
+    slice_index = (k + 1) / 2; % slice index
+    h_main(k).FaceColor = main_colors(slice_index, :); % Set the face color
+end
+
+% Add labels with component names and weights
+for i = 2:2:length(h_main)
+    slice_idx = i / 2;
+    h_main(i).String = sprintf('%s: %.1f kg (%.1f%%)', main_categories{slice_idx}, ...
+                               main_weights(slice_idx), ...
+                               100 * main_weights(slice_idx) / sum(main_weights));
+end
+
+% Add a title
+title(['Fuel, Payload, and OEW Breakdown. TOGW: ', num2str(round(aircraft.weight.togw)), ' kg']);
+
+
+%% OEW BREAKDOWN 
+
+% Define OEW component names and weights
+oew_names = {'Engine', 'Fuselage', 'Wing', 'Empennage', 'LG', 'Xtra', 'GFE'};
+oew_weights = [aircraft.weight.components.engine, ...
+               aircraft.weight.components.fuselage, aircraft.weight.components.wing, ...
+               aircraft.weight.components.htail + aircraft.weight.components.vtail, ...
+               aircraft.weight.components.lg, aircraft.weight.components.xtra, ...
+               aircraft.weight.components.gfe_total];
+
+% Define distinct shades of blue for each OEW component
+oew_colors = [0.2, 0.4, 0.8;  % Dark blue
+              0.3, 0.5, 0.9;  % Medium dark blue
+              0.4, 0.6, 0.9;  % Medium blue
+              0.5, 0.7, 0.9;  % Lighter medium blue
+              0.6, 0.8, 1.0;  % Pale blue
+              0.3, 0.7, 0.9;  % Muted teal blue
+              0.2, 0.5, 0.7]; % Grayish blue
+
+% Create the pie chart
+figure;
+h_oew = pie(oew_weights);
+
+% Apply colors to each pie slice
+for k = 1:2:length(h_oew) % h contains patches and text labels in alternating positions
+    slice_index = (k + 1) / 2; % slice index
+    h_oew(k).FaceColor = oew_colors(slice_index, :); % Set the face color
+end
+
+% Add labels with component names and weights
+for i = 2:2:length(h_oew)
+    slice_idx = i / 2;
+    h_oew(i).String = sprintf('%s: %.1f kg (%.1f%%)', oew_names{slice_idx}, ...
+                              oew_weights(slice_idx), ...
+                              100 * oew_weights(slice_idx) / sum(oew_weights));
+end
+
+% Add a title
+title('OEW Component Breakdown');
+
 
 
 end
