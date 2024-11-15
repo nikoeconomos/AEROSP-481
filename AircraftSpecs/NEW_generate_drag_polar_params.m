@@ -24,7 +24,7 @@ function [aircraft] = NEW_generate_drag_polar_params(aircraft)
 % drag
 
 % For all aircraft aspects - Given in table in drive under utilities
-Sref = 24.5; % [m^2]
+Sref = aircraft.geometry.wing.S_ref; % [m^2]
 Mach_numbers = [0.282, 0.565, 0.847, 0.918, 0.988, 1.059, 1.129, 1.271, 1.412, 1.482, 1.553, 1.595, 1.694];
 altitudes = [0, 6000, 10600, 10600, 10600, 10600, 10600, 10600, 10600, 10600, 10600, 10600, 10600];
 kinematic_viscosities = [0.00001461, 0.00002416, 0.00003706, 0.00003706, 0.00003706, 0.00003706, 0.00003706, 0.00003706, 0.00003706, 0.00003706, 0.00003706, 0.00003706, 0.00003706];
