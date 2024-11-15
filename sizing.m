@@ -14,7 +14,7 @@ aircraft = generate_init_weight_params(aircraft);
 aircraft = generate_geometry_params(aircraft);
 
 aircraft = generate_aerodynamics_params(aircraft);
-plot_drag_polar(aircraft);
+%plot_drag_polar(aircraft);
 %drawnow
 
 aircraft = generate_init_weight_params(aircraft); % run again for better estimate
