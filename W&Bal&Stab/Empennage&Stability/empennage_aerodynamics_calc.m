@@ -1,6 +1,25 @@
-clear
-close all
-clc
+function [aircraft] = empennage_aerodynamics_calc(aircraft)
+% Description:
+% Generates parameters that refine sizing and aerodynamics for the
+% empennage
+%
+% INPUTS:
+% --------------------------------------------
+%    aircraft
+%
+% OUTPUTS:
+% --------------------------------------------
+%    
+%    aircraft
+%
+% 
+% Author:                          Juan
+% Version history revision notes:
+%                                  v2: 11/15/2024
+
+% TODO MAKE THIS AGREE WITH GENERATE EMPENNAGE PARAMS, MAKE GENERATE PARAMS
+% FOR SIZING AND MAKE THIS ONE FOR AERODYNAMIC CALCULATIONS
+
 AR = 3.068;
 S_W = 24.5;
 b_W = sqrt(AR*S_W);
@@ -79,7 +98,7 @@ CL_a_w_to = 2*pi*AR / (2 + sqrt( (AR/0.97)^2 * (1 + tan(sweep)^2 - M_to^2) + 4))
 CL_a_w_c = 2*pi*AR / (2 + sqrt( (AR/0.97)^2 * (1 + tan(sweep)^2 - M_c^2) + 4));
 CL_a_w_s = 2*pi*AR / (2 + sqrt( (AR/0.97)^2 * (1 + tan(sweep)^2 - M_s^2) + 4));
 
-% Down
+% Downwash correction for regression H tail CL alpha
 dw_corr_to = 2*CL_a_w_to/(pi*AR);
 dw_corr_c = 2*CL_a_w_c/(pi*AR);
 dw_corr_s = 2*CL_a_w_s/(pi*AR);
@@ -88,8 +107,11 @@ dw_corr_s = 2*CL_a_w_s/(pi*AR);
 x = [0 1 1.5 1.7 2 2.5 2.9]; % AOA until stall
 y = [0  0.10357  0.15514  0.1757  0.20667  0.27675  0.31947]; % Lift Coefficient
 
+%% PDR plots
+
 % Linear regression
-p_takeoff = polyfit(x, y, 1) % Fit a line (1st order polynomial)
+p_takeoff = polyfit(x, y, 1); % Fit a line (1st order polynomial)
+p_takeoff_dw = p_takeoff*dw_corr_to
 yCalc1 = polyval(p_takeoff, x); % Calculate fitted values
 
 % Plot
@@ -108,7 +130,8 @@ x = [0 0.3 0.7 1 1.25 1.37 1.5]; % AOA until stall
 y = [0 0.03609 0.08422  0.12034 0.15047 0.16497 0.18069]; % Lift Coefficient
 
 % Linear regression
-p_cruise = polyfit(x, y, 1) % Fit a line (1st order polynomial)
+p_cruise = polyfit(x, y, 1); % Fit a line (1st order polynomial)
+p_cruise_dw = p_cruise*dw_corr_c
 yCalc2 = polyval(p_cruise, x); % Calculate fitted values
 
 % Plot
@@ -128,7 +151,7 @@ y = [0.1 0.15 0.25 0.31 0.52 0.92 1.1]; % Lift Coefficient
 
 % Linear regression
 p_supersonic = polyfit(x, y, 1);% Fit a line (1st order polynomial)
-p_supersonic_dw = p_supersonic
+p_supersonic_dw = p_supersonic*dw_corr_s
 yCalc3 = polyval(p_supersonic, x); % Calculate fitted values
 
 % Plot
@@ -230,3 +253,5 @@ biconvex_mfoil(26,2) = biconvex_mfoil(25,2);
 hexagonal_mfoil = [norm_chord_export, hexagonal_mfoil];
 hexagonal_mfoil(27,:) = [];
 hexagonal_mfoil(26,2) = hexagonal_mfoil(25,2);
+
+end

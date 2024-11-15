@@ -1,4 +1,4 @@
-function [sm_arr,np_arr] = SM_calc_plot(aircraft, cg_excursion_arr,mach)
+function [sm_arr,np_arr] = SM_calc_plot(aircraft, cg_excursion_arr, mach)
 % Description: Using values obtained from cg_excursion_calc.m to find
 % changes in static margin
 % 
@@ -44,7 +44,7 @@ function [sm_arr,np_arr] = SM_calc_plot(aircraft, cg_excursion_arr,mach)
     % Fit a polynomial to the data
     p = polyfit(x, y, 2); % Second-degree polynomial
     
-    K_f = polyval(p, aircraft.geometry.wing.xR25/aircraft.geometry.fuselage.length);
+    K_f = polyval(p, aircraft.geometry.wing.xR25/aircraft.geometry.fuselage.length)
 
 
     %% More values
@@ -61,20 +61,20 @@ function [sm_arr,np_arr] = SM_calc_plot(aircraft, cg_excursion_arr,mach)
     l_h = aircraft.geometry.htail.xMAC - cg_excursion_arr(:,1); % Distance between CG and tail MAC
 
     C_M_fus_CL = K_f * w_f^2 * L_f ./ (S_w * MAC * C_L_alpha_w);
-    x25rootc = aircraft.geometry.wing.xRLE+0.25*aircraft.geometry.wing.c_root;
-    x50rootc = aircraft.geometry.wing.xRLE+0.5*aircraft.geometry.wing.c_root;
-    %if mach > 1
-    %    xcg = cg_excursion_arr(:,1)-x25rootc;
-    %else
-    %    xcg = cg_excursion_arr(:,1)-x50rootc;
-    %end
-    xcg = cg_excursion_arr(:,1);
-    sm_arr = -((./MAC - C_L_alpha_h.*S_h.*l_h./(C_L_alpha_w.*S_w.*MAC) + C_M_fus_CL); %metabook 8.23
-    np_arr = sm_arr*MAC + xcg;
+
+    if mach > 1
+        xcg = cg_excursion_arr(:,1)-x50MAC;
+    else
+        xcg = cg_excursion_arr(:,1)-x25MAC;
+    end
+    sm_arr = -(xcg./MAC - C_L_alpha_h.*S_h.*l_h./(C_L_alpha_w.*S_w.*MAC) + C_M_fus_CL); %metabook 8.23
+    
+    np_arr = sm_arr*MAC + cg_excursion_arr(:,1);
     
     np_mach_arr = np_arr(1,:);
     
     %% PLOT %%
+    figure;
     plot(mach,np_mach_arr,'-o', 'MarkerFaceColor', 'k');
     title('Neutral Point location at varying Mach numbers');
     xline(1,'--');

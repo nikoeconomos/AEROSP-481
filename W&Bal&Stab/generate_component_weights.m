@@ -45,7 +45,7 @@ function aircraft = generate_component_weights(aircraft)
 
     aircraft.geometry.fuselage.S_wet = 90.9387; % m2 from CAD
 
-    aircraft.geometry.fuselage.width = 2.1; % max width of fuselage
+    aircraft.geometry.fuselage.width = 2.1; % max width of fuselage from CAD
     aircraft.geometry.fuselage.length = 17.576; % length of fuselage from CAD
 
     aircraft.weight.density.fuselage_area = 23; %kg/m2 metabook p76
@@ -256,9 +256,9 @@ function aircraft = generate_component_weights(aircraft)
     [W_0, ff] = togw_as_func_of_T_S_calc(aircraft, aircraft.propulsion.T_max, aircraft.geometry.wing.S_ref);
     W_e_init  = W_0*aircraft.weight.W_e_regression_calc(W_0);
     W_f_init  = ff * W_0;
-    [avg_flyaway_cost_250, ~]  = avg_flyaway_cost_calc(W_0, 250)
-    [avg_flyaway_cost_500, ~]  = avg_flyaway_cost_calc(W_0, 500)
-    [avg_flyaway_cost_1000, ~] = avg_flyaway_cost_calc(W_0, 1000)
+    [avg_flyaway_cost_250, ~]  = avg_flyaway_cost_calc(W_0, 250);
+    [avg_flyaway_cost_500, ~]  = avg_flyaway_cost_calc(W_0, 500);
+    [avg_flyaway_cost_1000, ~] = avg_flyaway_cost_calc(W_0, 1000);
 
     tol = 1e-3;
     converged = false;
@@ -348,6 +348,7 @@ function aircraft = generate_component_weights(aircraft)
     %%%%%%%%%%%%%%
     %% MISC GFE %%
     %%%%%%%%%%%%%%
+
     w.components.ICNIA = ConvMass(100,'lbm','kg');
     w.components.databus = ConvMass(10,'lbm','kg');
     w.components.INEWS = w.components.ICNIA;
@@ -356,6 +357,7 @@ function aircraft = generate_component_weights(aircraft)
     w.components.AESA = ConvMass(450,'lbm','kg');
     w.components.EES = ConvMass(220,'lbm','kg');
     w.components.APU = ConvMass(100,'lbm','kg');
+
     %%%%%%%%%%%%%%%%%%%
     %% UPDATE STRUCT %%
     %%%%%%%%%%%%%%%%%%%
@@ -364,12 +366,18 @@ function aircraft = generate_component_weights(aircraft)
     plot_weight_pie_chart(aircraft);
 
     %%%%%%%%%%%%%%%%%%%%
-    %% CG CALCULATION %%
+    %% CG AND SM CALCULATION %%
     %%%%%%%%%%%%%%%%%%%%
 
-    aircraft = cg_SM_calc(aircraft);
+    aircraft = cg_calc(aircraft);
+    
+    mach = [0.28,0.5,0.85,1.0,1.2]; % Find SM at various Mach numbers
+    [sm_arr,np_arr] = SM_calc_plot(aircraft, cg_excursion_arr, mach);
 
+    %%%%%%%%%%%%%%%%%
     %% COST UPDATE %%
+    %%%%%%%%%%%%%%%%%
+
     aircraft.cost.avg_flyaway_cost = avg_flyaway_cost_calc(aircraft.weight.togw, 1000);
     
 
