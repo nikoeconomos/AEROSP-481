@@ -28,7 +28,7 @@ aircraft = generate_climb_segments(aircraft);
 
 %% GENERATE PRELIMINARY SIZINCAG PLOTS %%
 
-plot_T_W_W_S_space(aircraft)
+%plot_T_W_W_S_space(aircraft)
 drawnow
 
 plot_T_S_space(aircraft)
@@ -44,7 +44,6 @@ aircraft = generate_cost_params(aircraft);
 %% PRINT RESULTS %%
 
 disp("weight")
-plot_weight_bar_chart(aircraft);
 aircraft.weight
 
 disp("performance")

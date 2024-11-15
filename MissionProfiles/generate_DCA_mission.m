@@ -114,7 +114,7 @@ time_combat1    = time_from_range_flight_cond(mission.range(7),  mission.mach(7)
 time_combat2    = time_from_range_flight_cond(mission.range(8),  mission.mach(8),  mission.alt(8));
 time_cruise_in  = time_from_range_flight_cond(mission.range(10), mission.mach(10), mission.alt(10));
 
-mission.time    = [ 900,                  60,          ...
+mission.time    = [ 900,                  60,          ... % 15 minutes for startup
                     600,                  time_cruise_out, ... %600 seconds comes from online for climb
                     mission.endurance(5), time_dash, ...
                     time_combat1,         time_combat2, ...
@@ -128,11 +128,11 @@ mission.time_total = sum(mission.time(~isnan(mission.time)));
 
 % pulled from figure 2.3 UPDATE 
 
-TSFC_idle         = ConvTSFC(0.90, 'Imp', 'SI'); 
-TSFC_takeoff      = ConvTSFC(0.80, 'Imp', 'SI');  % ESTIMATED FROM ONLINE
-TSFC_cruise       = ConvTSFC(0.65, 'Imp', 'SI');  % [kg/N*s] First number from left to right is TSFC in lbm/hr*lbf, next number is conversion factor to 1/s
+TSFC_idle         = ConvTSFC(0.20, 'Imp', 'SI');  % estimated from slides 13 page 42
+TSFC_takeoff      = ConvTSFC(0.64, 'Imp', 'SI');  % from wikipedia value on TSFC
+TSFC_cruise       = ConvTSFC(0.80, 'Imp', 'SI');  % Estimate from Raymer table 3.3 page 36
 TSFC_loiter       = ConvTSFC(0.50, 'Imp', 'SI');  % 
-TSFC_dash         = ConvTSFC(1.70, 'Imp', 'SI');  % 
+TSFC_dash         = ConvTSFC(1.90, 'Imp', 'SI');  % from wikipedia on TSFC
 TSFC_combat1      = ConvTSFC(1.20, 'Imp', 'SI');  % 
 TSFC_combat2      = ConvTSFC(1.00, 'Imp', 'SI');  % 
 TSFC_reserve      = ConvTSFC(0.70, 'Imp', 'SI');  % 

@@ -28,8 +28,10 @@ aircraft.performance.TW_design = 1.05; % A SPOT WE MANUALLY CHOOSE FROM THE TW-W
 aircraft.performance.WS_design = 525; % A SPOT WE MANUALLY CHOOSE FROM THE TW-WS DIAGRAM, [N/m^2]
 
 %% loads
-aircraft.performance.load_factor.upper_limit = 7; % [g's] with 50% fuel
-aircraft.performance.load_factor.lower_limit = -3; % [g's]  with 50% fuel
+aircraft.performance.load_factor.limit_upper_limit = 7; % [g's] with 50% fuel
+aircraft.performance.load_factor.limit_lower_limit = -3; % [g's]  with 50% fuel
+aircraft.performance.load_factor.ultimate_upper_limit = 7*1.5; % [g's] with 50% fuel
+aircraft.performance.load_factor.ultimate_lower_limit = -3*1.5; % [g's]  with 50% fuel
 aircraft.performance.dynamic_pressure_load = 102128.48; %[Pa], 2133 psf in rfp
 
 %% altitude

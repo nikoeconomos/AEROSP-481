@@ -67,62 +67,58 @@ Y_bar_HT = b_HT * ((1 + 2*lambda_HT) / (1 + lambda_HT)) /6;
 %% Horizontal Stabilizer Lift Properties %%
 
 % Takeoff Chordwise Mach = 0.18
-x = [0 1 1.5 1.7 2 2.5 2.9]; % AOA until stall
-y = [0  0.10357  0.15514  0.1757  0.20667  0.27675  0.31947]; % Lift Coefficient
 
-% Linear regression
-p_takeoff = polyfit(x, y, 1) % Fit a line (1st order polynomial)
-yCalc1 = polyval(p_takeoff, x); % Calculate fitted values
+x = [0 1 1.5 1.7 2 2.5 2.9]; % AOA until staalll
+y = [0  0.10357  0.15514  0.1757  0.20667  0.27675  0.31947]; % Lift  Coefficient
+format long
+b_takeoff = x\y
 
-% Plot
+yCalc1 = b_takeoff*x;
+
 figure()
-scatter(x, y)
+scatter(x,y)
 hold on
-plot(x, yCalc1, 'LineWidth', 1.5)
+plot(x,yCalc1)
 xlabel('Angle of Attack (degrees)')
 ylabel('Lift Coefficient')
 title('Horizontal Stabilizer C_L Alpha at M = 0.18')
 grid on
-hold off
 
 % Takeoff Chordwise Mach = 0.548
-x = [0 0.3 0.7 1 1.25 1.37 1.5]; % AOA until stall
-y = [0 0.03609 0.08422  0.12034 0.15047 0.16497 0.18069]; % Lift Coefficient
 
-% Linear regression
-p_cruise = polyfit(x, y, 1) % Fit a line (1st order polynomial)
-yCalc2 = polyval(p_cruise, x); % Calculate fitted values
+x = ; %Population of states
+y = ; %Accidents per state
+format long
+b_cruise = x\y
 
-% Plot
+yCalc1 = b_cruise*x;
+
 figure()
-scatter(x, y)
+scatter(x,y)
 hold on
-plot(x, yCalc2, 'LineWidth', 1.5)
+plot(x,yCalc1)
 xlabel('Angle of Attack (degrees)')
 ylabel('Lift Coefficient')
 title('Horizontal Stabilizer C_L Alpha at M = 0.548')
 grid on
-hold off
 
 % Takeoff Chordwise Mach = 1
-x = [0 1 2 3 5 8 11]; % AOA until stall
-y = [0.1 0.15 0.25 0.31 0.52 0.92 1.1]; % Lift Coefficient
 
-% Linear regression
-p_supersonic = polyfit(x, y, 1) % Fit a line (1st order polynomial)
-yCalc3 = polyval(p_supersonic, x); % Calculate fitted values
+x = ; %Population of states
+y = hwydata(:,4); %Accidents per state
+format long
+b_supersonic = x\y
 
-% Plot
+yCalc1 = b_supersonic*x;
+
 figure()
-scatter(x, y)
+scatter(x,y)
 hold on
-plot(x, yCalc3, 'LineWidth', 1.5)
+plot(x,yCalc1)
 xlabel('Angle of Attack (degrees)')
 ylabel('Lift Coefficient')
 title('Horizontal Stabilizer C_L Alpha at M = 1')
 grid on
-hold off
-
 
 %% Draw Airfoils
 chord_pannels = 26;
