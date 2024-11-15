@@ -44,7 +44,7 @@ for i = 1:n
 
     LD = aircraft.aerodynamics.LD_from_CL_and_CD0_calc(CL, CD0, k);
     
-    ff_segments(i) = exp((-segment_range * TSFC * g) / (velocity * LD));
+    ff_segments(i) = exp((-segment_range * (TSFC * g) ) / (velocity * LD));
 
     W_curr = ff_segments(i)*W_curr;
 end

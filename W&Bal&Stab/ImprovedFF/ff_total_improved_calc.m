@@ -91,8 +91,10 @@ for i = 1:length(aircraft.mission.segments)
     elseif mission.segments(i) == "loiter" || mission.segments(i) == "reserve" %  no difference between them
         endurance = mission.endurance(i);
         TSFC = mission.TSFC(i);
+        e   = aircraft.aerodynamics.e.clean;
+        CD0 = aircraft.aerodynamics.CD0.clean; % UPDATE FOR TRIM?
 
-        LD_max = aircraft.aerodynamics.LD.max_clean; % Use LD max for loiter
+        LD_max = aircraft.aerodynamics.LD_max_calc(e, CD0); % Use LD max for loiter
 
         mission.ff(i) = ff_loiter_calc(endurance,TSFC,LD_max); 
 

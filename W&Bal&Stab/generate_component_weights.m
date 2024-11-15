@@ -302,6 +302,8 @@ function aircraft = generate_component_weights(aircraft)
 
     while converged == false
         
+        w.ff = ff_total_improved_calc(aircraft, W_0);
+        
         w.components.fuel = ff    * W_0;
         w.components.lg   = 0.043 * W_0;
         w.components.xtra = 0.17  * W_0 - w.components.gfe_total;

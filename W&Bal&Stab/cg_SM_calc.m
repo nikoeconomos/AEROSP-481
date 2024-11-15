@@ -186,6 +186,6 @@ function aircraft = cg_SM_calc(aircraft)
     %%%%%%%%%%%%%%%%%%%%
 
     mach = [0.28,0.5,0.85,1.0,1.2]; % Find SM at various Mach numbers
-    [sm_arr,np_arr] = SM_calc(aircraft, cg_excursion_arr, mach);
+    [sm_arr,np_arr] = SM_calc_plot(aircraft, cg_excursion_arr, mach);
  
 end
