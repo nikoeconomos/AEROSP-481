@@ -68,6 +68,7 @@ function [sm_arr,np_arr] = SM_calc_plot(aircraft, cg_excursion_arr,mach)
         xcg = cg_excursion_arr(:,1)-x25MAC;
     end
     sm_arr = -(xcg./MAC - C_L_alpha_h.*S_h.*l_h./(C_L_alpha_w.*S_w.*MAC) + C_M_fus_CL); %metabook 8.23
+    
     np_arr = sm_arr*MAC + cg_excursion_arr(:,1);
     
     np_mach_arr = np_arr(1,:);

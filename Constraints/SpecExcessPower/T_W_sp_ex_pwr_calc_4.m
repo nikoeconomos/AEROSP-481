@@ -21,7 +21,7 @@ function [T_W] = T_W_sp_ex_pwr_calc_4(aircraft, W_S)
 alt = ConvLength(15000,'ft','m');
 mach = 0.9;
 CD0 = aircraft.aerodynamics.CD0.clean;
-e = aircraft.aerodynamics.e.cruise;
+e = aircraft.aerodynamics.e.clean;
 n = 1;
 Ps = ConvLength(400,'ft','m');
 
