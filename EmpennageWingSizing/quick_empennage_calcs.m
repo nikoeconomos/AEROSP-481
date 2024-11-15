@@ -1,6 +1,9 @@
 clear
 close all
 clc
+
+
+
 AR = 3.068;
 S_W = 24.5;
 b_W = sqrt(AR*S_W);
@@ -87,6 +90,8 @@ dw_corr_s = 2*CL_a_w_s/(pi*AR);
 % Takeoff Chordwise Mach = 0.18
 x = [0 1 1.5 1.7 2 2.5 2.9]; % AOA until stall
 y = [0  0.10357  0.15514  0.1757  0.20667  0.27675  0.31947]; % Lift Coefficient
+
+%% PDR plots
 
 % Linear regression
 p_takeoff = polyfit(x, y, 1); % Fit a line (1st order polynomial)

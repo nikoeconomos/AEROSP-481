@@ -46,7 +46,7 @@ function aircraft = generate_component_weights(aircraft)
     aircraft.geometry.fuselage.S_wet = 90.9387; % m2 from CAD
 
     aircraft.geometry.fuselage.width = 2.1; % max width of fuselage
-    aircraft.geometry.fuselage.length = 17.576; % length of fuselage from CAD
+    aircraft.geometry.fuselage.length = 17.576; % length of fuselage
 
     aircraft.weight.density.fuselage_area = 23; %kg/m2 metabook p76
 
@@ -95,19 +95,14 @@ function aircraft = generate_component_weights(aircraft)
     % re update
     aircraft.geometry.wing = wing;
    
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%%%
     %% GENERATE EMPENNAGE PARAMETERS %%
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-    aircraft = generate_empennage_params(aircraft);
-
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%
-    %% EMPENNAGE MASS AND CG %%
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+    %%%%%%%%%%%%%%%%%%%%%%%
     %% HTAIL MASS AND CG %%
+    %%%%%%%%%%%%%%%%%%%%%%%
 
-    htail = aircraft.geometry.htail;
+    htail = 
 
     % density
     aircraft.weight.density.htail_area = 20; % kg/m2
@@ -125,9 +120,30 @@ function aircraft = generate_component_weights(aircraft)
     % re update
     aircraft.geometry.htail = htail;
 
-    %% VTAIL MASS AND CG %%
+    %%%%%%%%%%%%
+    %% V TAIL %%
+    %%%%%%%%%%%%
 
+    aircraft.geometry.vtail.AR = 2; % TODO: UPDATE
+
+    % for convenience
     vtail = aircraft.geometry.vtail;
+
+    vtail.S_ref = 0.8695*2; %m2, 1 triangle from cad * 2
+    vtail.S_wet = 2*vtail.S_ref; %m2 APPROXIMATION, UPDATE WITH A BETTER ONE
+
+    vtail.b = sqrt(vtail.AR * vtail.S_ref);
+
+    vtail.c_root = 1.3815;
+    vtail.taper_ratio = 0.35;
+
+    vtail.c_tip = vtail.c_root*vtail.taper_ratio;   
+
+    vtail.sweep_LE = deg2rad(55); % radians
+    
+    vtail.xRLE = 15.191; %m same as htail TODO UPDATE IF NECESSARY
+
+    %% VTAIL MASS AND CG %%
 
     % density
     aircraft.weight.density.vtail_area = 26; %kg/m2
