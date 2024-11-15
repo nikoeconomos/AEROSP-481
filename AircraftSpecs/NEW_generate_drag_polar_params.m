@@ -103,7 +103,7 @@ Swet_wings = 48.514; % [m^2]
 Q_wings = 1; % Assumed 1 for a mid-wing configuration
 loc_max_thickness = 0.386; % [m]
 thickness_to_chord = 0.06; % Average is 6%
-sweep = 37.04; % [degrees] Sweep angle of max thickness line
+sweep = 37.04*pi/180; % [rads] Sweep angle of max thickness line
 c_wing = 4.187; % [m] at root
 
 CD0_wings_array = zeros(size(Mach_numbers)); 
@@ -262,12 +262,12 @@ delta_CD0_gear = 0.015; % metabook table 4.2
 
 
 %% Lift Induced Drag %%
-
-CL = 1.25; % Max CL
+width_fus = 2.1; % [m]
+CL = 0.6; % Most realistic CL
 aspect_ratio = 3.068;
-e = 0.68; % Estimated
+e = oswaldfactor(aircraft.geometry.wing.AR, aircraft.geometry.wing.sweep_LE,'shevell', CD0_total, 2.1/11.449, 0.98);
 
-CD_i = CL^2 / pi * aspect_ratio * e;
+CD_i = CL^2 / (pi * aspect_ratio * e);
 disp(['The total lift induced drag (CD_i) is ', num2str(CD_i)])
 
 %% Trim Drag %%
@@ -280,12 +280,11 @@ MAC_tail = 0.9921; % [m]
 S_tail = 3.667 * 2; % [m^2]
 tail_volume_coeff = (x * S_tail) / (MAC_tail * Sref); 
 CL_wing = 0.6; % NEED TO UPDATE ONCE VALUE IS DONE
-xw = 1.8652; % [m]
+xw = abs(10.1852-11.032); % [m]
 
 pitching_moment_factor = 0.6133;
-width_fus = 2.1; % [m]
 MAC = 3.0446;
-alpha_fus = 10; % [degrees] Estimated
+alpha_fus = 10*pi/180; % [rads] Estimated
 CM_fus = ((pitching_moment_factor * width_fus^2 * l_fuselage) / (MAC * Sref)) * alpha_fus;
 x_ac = 2.2218; % [m]
 
@@ -299,13 +298,12 @@ function1 = @(x)(Cl * c(x) * x_ac);
 function2 = @(x)(CM_ac * c(x).^2);
 int1 = integral(function1, -span/2, span/2);
 int2 = integral(function2, -span/2, span/2);
-CM_ac_w = (1 / MAC_tail * Sref) * (-int1 + int2);
+CM_ac_w = (1 / (MAC_tail * Sref)) * (-int1 + int2);
 
 CM_pitch_minus_tail = CM_ac_w + CM_fus; % + delta_CM_ac_flap
-
 CLt = (CL_wing * (xw/MAC_tail) + CM_pitch_minus_tail) * (x / (x-xw)) * (1 / tail_volume_coeff); 
 
-CD_trim = (CLt^2 / pi * et * aspect_ratio_t) * (S_tail / Sref); 
+CD_trim = (CLt^2 / (pi * et * aspect_ratio_t)) * (S_tail / Sref);
 disp(['The total trim drag (CD_trim) is ', num2str(CD_trim)])
 
 %% Total Drag Coefficent %%
@@ -319,9 +317,8 @@ aero = aircraft.aerodynamics;
 
 aero.CD0.clean = CD0_total;
 aero.e.clean   = oswaldfactor(aircraft.geometry.wing.AR, aircraft.geometry.wing.sweep_LE,'shevell', aero.CD0.clean, 0, 0.98);
-
-%aero.CD0.cruise = CD0_total + CD_trim; % UN COMMENT WHEN CD TRIM IS CORRECT
-aero.CD0.cruise = CD0_total;
+aero.e.cruise = aero.e.clean;
+aero.CD0.cruise = CD0_total + CD_trim;
 
 aero.CD0.takeoff_flaps      = CD0_total + delta_CD0_flap_takeoff;
 aero.CD0.takeoff_flaps_gear = CD0_total + delta_CD0_flap_takeoff + delta_CD0_gear;
@@ -332,12 +329,10 @@ aero.CD0.landing_flaps      = CD0_total + delta_CD0_flap_landing;
 aero.CD0.landing_flaps_gear = CD0_total + delta_CD0_flap_landing + delta_CD0_gear;
 
 aero.e.landing_flaps   = oswaldfactor(aircraft.geometry.wing.AR, aircraft.geometry.wing.sweep_LE,'shevell', aero.CD0.landing_flaps, 0, 0.98);
-
 % the following are from the F35. Set our own from juan's airfoil
-aero.CL.clean         = 0.6;
-aero.CL.takeoff_flaps = 1.4;
-aero.CL.landing_flaps = 1.9;
-
+aero.CL.clean, aero.CL.cruise = 0.6;
+aero.CL.takeoff_flaps         = 1.4;
+aero.CL.landing_flaps         = 1.9;
 % reset aero struct
 aircraft.aerodynamics = aero;
 
