@@ -91,12 +91,12 @@ airframe_maint = (Cml_af+Cmm_af)*block_time;
 
 Uannual = 1.5*10^3* (3.4546*block_time + 2.994 - (12.289*block_time^2 - 5.6626*block_time + 8.964)^0.5 );
 
-IRa = 0.02; %hull insurance rate
+IRa = 0.02; %hull insurance rate 
 
 cost.insurance = (IRa*aircraft.cost.airframe/Uannual)*block_time;
 
 %% Missile cost
-missile_cost_base = 386000;  % USD Pulled RFP
+missile_cost_base = 386000;  % USD Pulled RFP year
 missile_base_year = 2006;
 missile_cost_2024 = adjust_cost_inflation_calc(missile_cost_base, missile_base_year, target_year); % USD
 cost.missile    = missile_cost_2024*aircraft.weight.weapons.num_missiles;
@@ -138,7 +138,7 @@ RDT_E_flyaway = HE * RE + HT * RT + HM * RM + HQ * RQ + CD + CF + CM + cost.engi
 RTDE_flyaway_adjusted = adjust_cost_inflation_calc(RDT_E_flyaway, 1999, target_year); % slides page 34
 
 
-%% Flyaway cost
+%% Flyaway cost with simple Roskam method
 
 [cost.avg_flyaway_cost, cost.learning_curve_costs] = avg_flyaway_cost_calc(aircraft.weight.togw, 1000);
 

@@ -287,7 +287,7 @@ function aircraft = generate_component_weights(aircraft)
 
     %% ALGORITHM 5 %%    
     
-    % intial estimate
+    % intial estimate FOR THE REPORT, VALUES NOT USED
     [W_0, ff] = togw_as_func_of_T_S_calc(aircraft, aircraft.propulsion.T_max, aircraft.geometry.wing.S_ref);
     W_e_init  = W_0*aircraft.weight.W_e_regression_calc(W_0);
     W_f_init  = ff * W_0;

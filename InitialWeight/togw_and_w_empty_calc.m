@@ -22,11 +22,9 @@ function [togw, w_empty] = togw_and_w_empty_calc(aircraft)
     w_crew = aircraft.weight.components.crew;
     w_payload = aircraft.weight.components.payload;
     ff = aircraft.weight.ff; % calculate the fuel fraction
- 
-    % Regression constant, assuming jet fighter.
-    % Pulled from Raymer table 3.1, assuming conventional metallic structure will be used
-    A = 2.11; % unitless parameters, metric
-    C = -0.13; % unitless, metric
+
+    A = 2.11;
+    C = -0.13;
 
     epsilon = 10e-6; % error for convergence
     delta = 2*epsilon; % the amount the we are off from converging
@@ -36,7 +34,7 @@ function [togw, w_empty] = togw_and_w_empty_calc(aircraft)
     iterations = 0;
     while delta > epsilon
         iterations = iterations + 1;
-        empty_weight_fraction = (A * w_0^C); % w_e/w_0
+        empty_weight_fraction = A*(w_0^C);
 
         w_0_new = (w_crew + w_payload)/(1 - ff - empty_weight_fraction);
         

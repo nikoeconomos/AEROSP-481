@@ -67,7 +67,7 @@ aircraft.mission.climb.weight = [aircraft.weight.togw, aircraft.weight.togw, air
 %% ACTIVE ENGINES %%
 %%%%%%%%%%%%%%%%%%%%
 aircraft.mission.climb.engines_active = [1, 1, 1,...
-                                         1, 2, 1]; % from FAR 25 requirements in metabook. Our plane will only have 1 engine TODO UPDATE
+                                         1, 1, 1]; % from FAR 25 requirements in metabook. Our plane will only have 1 engine TODO UPDATE
 
 %% THRUST CORRECTIONS %%
 %%%%%%%%%%%%%%%%%%%%%%%% 
