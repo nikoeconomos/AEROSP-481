@@ -21,7 +21,8 @@ function aircraft = generate_component_weights(aircraft)
 
     %% FORMULAS AND CALCULATIONS %%
 
-    aircraft.weight.func.MAC_calc = @(c_root, c_tip) 2/3*(c_root + c_tip - (c_root*c_tip)/(c_root + c_tip));
+    aircraft.weight.func.MAC_calc   = @(c_root, c_tip) 2/3*(c_root + c_tip - (c_root*c_tip)/(c_root + c_tip));
+    aircraft.weight.func.y_MAC_calc = @(taper_ratio, b) b * ( (1 + 2*taper_ratio) / (1 + taper_ratio))/6;
 
     aircraft.weight.func.xMAC_calc = @(xRLE, b, c_root, c_tip, sweep_LE) xRLE + b/6 * (c_root + 2*c_tip)/(c_root + c_tip) + tan(sweep_LE);
 
@@ -53,9 +54,9 @@ function aircraft = generate_component_weights(aircraft)
     aircraft.weight.components.fuselage = (aircraft.geometry.fuselage.S_wet*aircraft.weight.density.fuselage_area)...
                                           *aircraft.weight.fudge_factor.fuselage;
 
-    %%%%%%%%%%
-    %% WING %%
-    %%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%
+    %% WING GEOMETRY %%
+    %%%%%%%%%%%%%%%%%%%
 
     aircraft.geometry.wing.AR = aircraft.geometry.wing.AR; % AR was already set in geometry
 
@@ -64,25 +65,35 @@ function aircraft = generate_component_weights(aircraft)
 
     wing.S_ref = aircraft.geometry.wing.S_ref; %m2, updated in geometry
 
-    wing.S_wet = wing.S_ref*2; %m2 APPROXIMATION, UPDATE WITH A BETTER ONE
+    wing.S_wet = wing.S_ref*2; %m2 TODO APPROXIMATION, UPDATE WITH A BETTER ONE
     wing.b = sqrt(wing.AR*wing.S_ref);
 
-    wing.c_root = 4.187;
+    wing.c_root = 2*wing.S_ref / ( (1+wing.taper_ratio) * wing.b); % TODO where does this come from?
     wing.taper_ratio = 0.35;
-
     wing.c_tip = wing.c_root*wing.taper_ratio;
 
-    wing.t_c_root = 0.06; % 6% tc ratio, from our design airfoil
+    wing.t_c_root = 0.06; % 6% tc ratio, from our design airfoil TODO UPDATE
 
     wing.S_cs = 3.39*2; % from CAD
 
-    wing.sweep_LE = aircraft.geometry.wing.sweep_LE; % in radians, set in geometry
+    wing.sweep_LE = aircraft.geometry.wing.sweep_LE; % in radians, set in generate_geometry
     wing.sweep_QC = atan( tan(wing.sweep_LE) - (4 / wing.AR) * ((0.25 * (1 - wing.taper_ratio)) / (1 + wing.taper_ratio)) ); % formula from aerodynamics slide 24
 
     wing.xRLE = 7.175; %m positino of leading edge of the root chord, from CAD
     wing.xR25 = wing.xRLE + 0.25*wing.c_root; % position of quarter chord at root of wing
+
+    wing.MAC   = aircraft.weight.func.MAC_calc  (wing.c_root, wing.c_tip);
+    wing.y_MAC = aircraft.weight.func.y_MAC_calc(wing.taper_ratio, wing.b);
+
+    wing.xMAC   = aircraft.weight.func.xMAC_calc(wing.xRLE, wing.b, wing.c_root, wing.c_tip, wing.sweep_LE);
+    wing.x40MAC = aircraft.weight.func.x40MAC_calc(wing.xMAC, wing.MAC);
+    
+    % re update aircraft struct
+    aircraft.geometry.wing = wing;
   
+    %%%%%%%%%%%%%%%
     %% WING MASS %%
+    %%%%%%%%%%%%%%%
 
     % AREA DENSITY ALREADY DEFINED IN GEOMETRY
 
@@ -134,17 +145,7 @@ function aircraft = generate_component_weights(aircraft)
                                                                          * aircraft.weight.fudge_factor.wing, ...
                                                                          'lbm', 'kg');
 
-
-
-    %% WING MAC
-    wing.MAC = aircraft.weight.func.MAC_calc(wing.c_root, wing.c_tip);
-
-    wing.xMAC = aircraft.weight.func.xMAC_calc(wing.xRLE, wing.b, wing.c_root, wing.c_tip, wing.sweep_LE);
-
-    wing.x40MAC = aircraft.weight.func.x40MAC_calc(wing.xMAC, wing.MAC);
     
-    % re update
-    aircraft.geometry.wing = wing;
    
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %% GENERATE EMPENNAGE PARAMETERS %%
@@ -166,12 +167,7 @@ function aircraft = generate_component_weights(aircraft)
     % weight calc
     aircraft.weight.components.htail = (htail.S_ref*aircraft.weight.density.htail_area) * aircraft.weight.fudge_factor.tail;
 
-    % MAC and CG = at 0.4MAC
-    htail.MAC  = aircraft.weight.func.MAC_calc(htail.c_root, htail.c_tip);
-
-    htail.xMAC = aircraft.weight.func.xMAC_calc(htail.xRLE, htail.b, htail.c_root, htail.c_tip, htail.sweep_LE);
-
-    htail.x40MAC = aircraft.weight.func.x40MAC_calc(htail.xMAC, htail.MAC);
+    
     
     % re update
     aircraft.geometry.htail = htail;
@@ -185,13 +181,6 @@ function aircraft = generate_component_weights(aircraft)
     
     % weight calc
     aircraft.weight.components.vtail = (vtail.S_ref*aircraft.weight.density.vtail_area) * aircraft.weight.fudge_factor.tail;
-
-    % MAC and CG = at 0.4MAC
-    vtail.MAC = aircraft.weight.func.MAC_calc(vtail.c_root, vtail.c_tip);
-
-    vtail.xMAC = aircraft.weight.func.xMAC_calc(vtail.xRLE, vtail.b, vtail.c_root, vtail.c_tip, vtail.sweep_LE);
-
-    vtail.x40MAC = aircraft.weight.func.x40MAC_calc(vtail.xMAC, vtail.MAC);
 
     % re update struct
     aircraft.geometry.vtail = vtail;
@@ -369,7 +358,7 @@ function aircraft = generate_component_weights(aircraft)
     %% CG AND SM CALCULATION %%
     %%%%%%%%%%%%%%%%%%%%
 
-    aircraft = cg_calc(aircraft);
+    [aircraft, cg_excursion_arr] = cg_calc_plot(aircraft);
     
     mach = [0.28,0.5,0.85,1.0,1.2]; % Find SM at various Mach numbers
     [sm_arr,np_arr] = SM_calc_plot(aircraft, cg_excursion_arr, mach);

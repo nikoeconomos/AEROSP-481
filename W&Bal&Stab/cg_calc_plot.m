@@ -1,4 +1,4 @@
-function aircraft = cg_calc_plot(aircraft)
+function [aircraft, cg_excursion_arr] = cg_calc_plot(aircraft)
 % Description: This function generates the cg and cg excursion plots for
 % our aircraft.
 % 

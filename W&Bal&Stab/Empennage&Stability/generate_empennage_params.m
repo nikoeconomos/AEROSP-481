@@ -28,12 +28,7 @@ function [aircraft] = generate_empennage_params(aircraft)
 
     htail.lever_arm = 0.5 * aircraft.geometry.fuselage.length; % TODO: originally L_F, CONFIRM this is fuselage; lever arm distance between CoM and MAC of horizontal stabilizer 
     
-    htail.c_root = 1.2755; % m DECIDED
-    htail.taper_ratio = 0.5;
-
-    htail.c_tip = htail.c_root*htail.taper_ratio;
-
-    htail.volume_coefficient = 0.4;  % Raymer decision
+    htail.volume_coefficient = 0.4;  % Raymer decision TODO CONFIRM
 
     htail.sweep_LE = deg2rad(49.9); % radians 
     htail.sweep_QC = atan( tan(htail.sweep_LE) - (4 / htail.AR) * ((0.25 * (1 - htail.taper_ratio)) / (1 + htail.taper_ratio)) ); % formula from aerodynamics slide 24
@@ -43,35 +38,55 @@ function [aircraft] = generate_empennage_params(aircraft)
 
     htail.b = sqrt( htail.AR * htail.S_ref);
 
-    htail.xRLE = 15.208; % m position of leading edge of the root chord, from CAD, from nose tip
+    htail.taper_ratio = 0.5;
+
+    htail.c_root = 2*htail.S_ref / ( (1+htail.taper_ratio) * htail.b); % m TODO CONFIRM WHERE CAME FROM
+    htail.c_tip  = htail.c_root*htail.taper_ratio;
+
+    htail.xRLE = 15.208; % m position of leading edge of the root chord, from CAD, from nose tip TODO UPDATE
+
+    % MAC and CG = at 0.4MAC
+    htail.MAC  = aircraft.weight.func.MAC_calc(htail.c_root, htail.c_tip);
+    htail.y_MAC = aircraft.weight.func.y_MAC_calc(htail.taper_ratio, htail.b);
+
+    htail.xMAC = aircraft.weight.func.xMAC_calc(htail.xRLE, htail.b, htail.c_root, htail.c_tip, htail.sweep_LE);
+
+    htail.x40MAC = aircraft.weight.func.x40MAC_calc(htail.xMAC, htail.MAC);
 
 
     %%%%%%%%%%%%
     %% V TAIL %%
     %%%%%%%%%%%%
 
-    aircraft.geometry.vtail.AR = 2; % TODO: UPDATE / STATE WHERE IT WAS GOTTEN FROM
+    aircraft.geometry.vtail.AR = 2; % TODO: UPDATE / STATE WHERE IT WAS GOTTEN FROM ( this is a bit high based on the raymer table, range 0.6-1.4 for fighers stability slide 109
 
     % for convenience
     vtail = aircraft.geometry.vtail;
 
     vtail.lever_arm = htail.lever_arm + 0.4; % TODO UPDATE / STATE WHERE IT WAS GOTTEN FROM
 
-    vtail.c_root = 1.3815;
-    vtail.taper_ratio = 0.35;
-
-    vtail.c_tip = vtail.c_root*vtail.taper_ratio;   
-
-    vtail.volume_coefficient = 0.07; % Raymer decision 
+    vtail.volume_coefficient = 0.07; % Raymer decision TODO CONFIRM
 
     vtail.S_ref = vtail.volume_coefficient * aircraft.geometry.wing.b * aircraft.geometry.wing.S_ref / vtail.lever_arm; % TODO CONFIRM AND STATE LOCATION OF EQUATION
     vtail.S_wet = 2*vtail.S_ref; %m2 APPROXIMATION, UPDATE WITH A BETTER ONE
 
     vtail.b = sqrt(vtail.AR * vtail.S_ref);
 
+    vtail.taper_ratio = 0.35;
+
+    vtail.c_root = 2*vtail.S_ref / ( (1 + vtail.taper_ratio) * vtail.b); %previously equal to 1.3815 % TODO where did this come from?
+    vtail.c_tip  = vtail.c_root*vtail.taper_ratio;  
+
     vtail.sweep_LE = deg2rad(55); % radians
     
-    vtail.xRLE = 15.191; %m same as htail TODO UPDATE IF NECESSARY  
+    vtail.xRLE = 15.191; %m position of leading edge of the root chord, from CAD, from nose tip TODO UPDATE IF NECESSARY 
+
+    % MAC and CG = at 0.4MAC
+    vtail.MAC   = aircraft.weight.func.MAC_calc  (vtail.c_root, vtail.c_tip);
+    vtail.y_MAC = aircraft.weight.func.y_MAC_calc(vtail.taper_ratio, vtail.b);
+
+    vtail.xMAC   = aircraft.weight.func.xMAC_calc(vtail.xRLE, vtail.b, vtail.c_root, vtail.c_tip, vtail.sweep_LE);
+    vtail.x40MAC = aircraft.weight.func.x40MAC_calc(vtail.xMAC, vtail.MAC);
 
     %% update
 
