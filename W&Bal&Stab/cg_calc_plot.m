@@ -198,5 +198,5 @@ function aircraft = cg_calc_plot(aircraft)
     ylabel('Aircraft Weight [kg]');
     title(['CG Excursion Plot for Full Mission:', newline(), 'loading, dropping all payload, using all fuel']);
     hold off; 
- 
+    aircraft.weight.CG = cg_excursion_arr;
 end

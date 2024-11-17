@@ -369,10 +369,10 @@ function aircraft = generate_component_weights(aircraft)
     %% CG AND SM CALCULATION %%
     %%%%%%%%%%%%%%%%%%%%
 
-    aircraft = cg_calc(aircraft);
+    aircraft = cg_calc_plot(aircraft);
     
     mach = [0.28,0.5,0.85,1.0,1.2]; % Find SM at various Mach numbers
-    [sm_arr,np_arr] = SM_calc_plot(aircraft, cg_excursion_arr, mach);
+    [sm_arr,np_arr] = SM_calc_plot(aircraft, aircraft.weight.CG, mach);
 
     %%%%%%%%%%%%%%%%%
     %% COST UPDATE %%
