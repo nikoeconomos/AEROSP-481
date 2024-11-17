@@ -24,8 +24,10 @@ function [aircraft] = generate_target_CL_values(aircraft)
 %% Net Thrust
 
 % Define rolling frictional resistance (using equation from NASA D-1376 technical note)
-W_to = aircraft.weight.togw * 0.9985; % Where togw coefficient is equal to idle fuel fraction
+W_to = aircraft.weight.togw * 0.9985 * g; % Where togw coefficient is equal to idle fuel fraction
+m_to = aircraft.weight.togw * 0.9985;
 g = aircraft.geometry;
+grav = 9.81;
 
 % Place landing gear characteristics into landing gear sub-field within
 % aircraft.geometry
@@ -48,7 +50,7 @@ T_net = T - FF;
 
 perf = aircraft.performance;
 
-perf.to_acc = T_net / W_to
+perf.to_acc = T_net / m_to
 
 aircraft.mission.tofl = 2438.4; % [m]
 tofl = aircraft.mission.tofl;
