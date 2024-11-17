@@ -309,11 +309,11 @@ function aircraft = generate_component_weights(aircraft)
 
     f = w.fuel_vol;
     
-    f.nose            = 0.969; %m3
-    f.cannon          = 3.521;
+    f.nose            = 0.90; %m3
+    f.cannon          = 3.608;
     f.left_wing       = 0.976;
     f.right_wing      = f.left_wing; 
-    f.rear            = 1.758;
+    f.rear            = 1.735;
 
     f.total_available = sum([f.nose, f.cannon, f.left_wing, f.right_wing,f.rear]);
 

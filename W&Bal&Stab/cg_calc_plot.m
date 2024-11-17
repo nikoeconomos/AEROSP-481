@@ -53,11 +53,11 @@ function aircraft = cg_calc_plot(aircraft)
 
     w.cg_pos.xtra = [7.9029, 0, 0]; % 45% of fuselage length (raymer table)
 
-    w.cg_pos.nose_fuel            = [5.926, -0.091,  0.773];
-    w.cg_pos.cannon_fuel          = [9.252,  -0.038,  1.093];
+    w.cg_pos.nose_fuel            = [5.951, -0.091,  0.773];
+    w.cg_pos.cannon_fuel          = [9.112,  -0.035,  1.027];
     w.cg_pos.left_wing_fuel       = [10.278, -2.249, 0.834];
     w.cg_pos.right_wing_fuel      = [10.278, 2.249,  0.834]; 
-    w.cg_pos.rear_fuel            = [12.086, 0, 1.14];
+    w.cg_pos.rear_fuel            = [12.02, 0, 1.113];
     w.cg_pos.ICNIA                = [4.551, 0, 0.649];
     w.cg_pos.databus              = [4.408, -0.315, 0.672];
     w.cg_pos.INEWS                = [5.046, 0, 0.744];
