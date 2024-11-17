@@ -61,10 +61,17 @@ TOC = IOC + DOC;
 
 %% Plotting %%
 
-data = [IOC DOC COC FOC TOC];
-Components = categorical(["IOC", "DOC", "COC", "FOC", "TOC"]);
+figure;
+data = [IOC DOC TOC];
+Components = categorical(["IOC", "DOC", "TOC"]);
 piechart(data, Components)
 title("Cost Breakdown")
+
+figure;
+DOC_data = [FOC COC];
+DOC_labels = categorical(["FOC", "COC"]);
+piechart(DOC_data, DOC_labels)
+title("DOC Breakdown")
 
 %% Displaying Costs %%
 
