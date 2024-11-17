@@ -156,5 +156,4 @@ hexagonal_mfoil(26,2) = hexagonal_mfoil(25,2);
 
 af_dat = readmatrix('Opt_wing_1.dat');
 
-flap_loc_x = ; % % chord
-slat_loc_x = ; % % chrod
+flap_loc_x =
