@@ -75,12 +75,12 @@ function aircraft = generate_component_weights(aircraft)
 
     wing.t_c_root = 0.06; % 6% tc ratio, from our design airfoil TODO UPDATE
 
-    wing.S_cs = 3.39*2; % from CAD
+    wing.S_cs = 3.39*2; % from CAD TODO UPDATE
 
     wing.sweep_LE = aircraft.geometry.wing.sweep_LE; % in radians, set in generate_geometry
     wing.sweep_QC = atan( tan(wing.sweep_LE) - (4 / wing.AR) * ((0.25 * (1 - wing.taper_ratio)) / (1 + wing.taper_ratio)) ); % formula from aerodynamics slide 24
 
-    wing.xRLE = 7.175; %m positino of leading edge of the root chord, from CAD
+    wing.xRLE = 7.175; %m positino of leading edge of the root chord, from CAD TODO UPDATE
     wing.xR25 = wing.xRLE + 0.25*wing.c_root; % position of quarter chord at root of wing
 
     wing.MAC   = aircraft.weight.func.MAC_calc  (wing.c_root, wing.c_tip);
@@ -240,9 +240,6 @@ function aircraft = generate_component_weights(aircraft)
     [W_0, ff] = togw_as_func_of_T_S_calc(aircraft, aircraft.propulsion.T_max, aircraft.geometry.wing.S_ref);
     W_e_init  = W_0*aircraft.weight.W_e_regression_calc(W_0);
     W_f_init  = ff * W_0;
-    [avg_flyaway_cost_250, ~]  = avg_flyaway_cost_calc(W_0, 250);
-    [avg_flyaway_cost_500, ~]  = avg_flyaway_cost_calc(W_0, 500);
-    [avg_flyaway_cost_1000, ~] = avg_flyaway_cost_calc(W_0, 1000);
 
     tol = 1e-3;
     converged = false;
@@ -309,11 +306,11 @@ function aircraft = generate_component_weights(aircraft)
 
     f = w.fuel_vol;
     
-    f.nose            = 0.969; %m3
-    f.cannon          = 3.521;
+    f.nose            = 0.90; %m3
+    f.cannon          = 3.608;
     f.left_wing       = 0.976;
     f.right_wing      = f.left_wing; 
-    f.rear            = 1.758;
+    f.rear            = 1.735;
 
     f.total_available = sum([f.nose, f.cannon, f.left_wing, f.right_wing,f.rear]);
 
@@ -353,10 +350,12 @@ function aircraft = generate_component_weights(aircraft)
     %% CG AND SM CALCULATION %%
     %%%%%%%%%%%%%%%%%%%%
 
-    aircraft = cg_calc_plot(aircraft);
+    aircraft = cg_calc_plot(aircraft); % TODO UPDATE MISSION PROFILE IF MISSILES CHANGE
     
-    mach = [0.28,0.5,0.85,1.0,1.2]; % Find SM at various Mach numbers
-    aircrat = SM_calc_plot(aircraft, mach);
+    mach = [0.28, 0.5, 0.85, 1.0, 1.2]; % Find SM at various Mach numbers TODO why can't 1.4 and 1.6 work
+    aircraft = SM_calc_plot(aircraft, mach); % sets the np and sm arrays for a full mission profile.
+
+    %aircraft = empennage_aerodynamics_calc(aircraft);
 
     %%%%%%%%%%%%%%%%%
     %% COST UPDATE %%

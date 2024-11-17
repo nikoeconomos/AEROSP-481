@@ -65,22 +65,23 @@ function aircraft = generate_component_weights(aircraft)
 
     wing.S_ref = aircraft.geometry.wing.S_ref; %m2, updated in geometry
 
-    wing.S_wet = wing.S_ref*2; %m2 TODO APPROXIMATION, UPDATE WITH A BETTER ONE
+    %wing.S_wet = wing.S_ref*2; %m2 TODO APPROXIMATION, UPDATE WITH A BETTER ONE
+    wing.S_wet = 24.716*2;
     wing.b = sqrt(wing.AR*wing.S_ref);
 
     wing.taper_ratio = 0.35;
 
-    wing.c_root = 2*wing.S_ref / ( (1+wing.taper_ratio) * wing.b); % TODO where does this come from?
+    wing.c_root = 2*wing.S_ref / ( (1+wing.taper_ratio) * wing.b); % TODO where does this come from? - CAD ACCURATE
     wing.c_tip = wing.c_root*wing.taper_ratio;
 
     wing.t_c_root = 0.06; % 6% tc ratio, from our design airfoil TODO UPDATE
 
-    wing.S_cs = 3.39*2; % from CAD TODO UPDATE
+    wing.S_ctrl_surf = 3.39*2; % from CAD
 
     wing.sweep_LE = aircraft.geometry.wing.sweep_LE; % in radians, set in generate_geometry
     wing.sweep_QC = atan( tan(wing.sweep_LE) - (4 / wing.AR) * ((0.25 * (1 - wing.taper_ratio)) / (1 + wing.taper_ratio)) ); % formula from aerodynamics slide 24
 
-    wing.xRLE = 7.175; %m positino of leading edge of the root chord, from CAD TODO UPDATE
+    wing.xRLE = 7.175; %m positino of leading edge of the root chord, from CAD
     wing.xR25 = wing.xRLE + 0.25*wing.c_root; % position of quarter chord at root of wing
 
     wing.MAC   = aircraft.weight.func.MAC_calc  (wing.c_root, wing.c_tip);
@@ -106,7 +107,7 @@ function aircraft = generate_component_weights(aircraft)
     aircraft.weight.func.wing_weight_raymer = @(W_0) ConvMass( 0.0051 * ( ConvMass(W_0, 'kg', 'lbm') * N_z)^0.557 ...
                                                                     * ConvArea(wing.S_ref, 'm2', 'ft2')^0.649 * wing.AR^0.5 ... 
                                                                     * (wing.t_c_root)^(-0.4) * (1 + wing.taper_ratio)^0.1 * (cos(wing.sweep_QC))^(-1) ...
-                                                                    * ConvArea(wing.S_cs, 'm2', 'ft2')^0.1, ...
+                                                                    * ConvArea(wing.S_ctrl_surf, 'm2', 'ft2')^0.1, ...
                                                                     'lbm', 'kg'); % metabook 7.11  
     
     % KROO METABOOK 7.12, general?
