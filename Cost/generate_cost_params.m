@@ -29,7 +29,6 @@ block_time = block_time_calc(aircraft); % for DCA
 
 CEF_calc = @(byear, tyear) (5.17053 + 0.104981 *(tyear-2006))/(5.17053 + 0.104981*(byear - 2006)); %From metabook chapter 3
 
-
 %% Individual Components %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 

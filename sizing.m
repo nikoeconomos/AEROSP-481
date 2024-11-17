@@ -40,6 +40,7 @@ aircraft = generate_component_weights(aircraft);
 aircraft = generate_aerodynamics_params(aircraft);
 
 aircraft = generate_cost_params(aircraft);
+aircraft = plot_cost_pie_chart(aircraft);
 
 %% PRINT RESULTS %%
 
