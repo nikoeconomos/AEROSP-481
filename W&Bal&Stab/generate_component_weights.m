@@ -358,6 +358,8 @@ function aircraft = generate_component_weights(aircraft)
     mach = [0.28, 0.5, 0.85, 1.0, 1.2]; % Find SM at various Mach numbers TODO why can't 1.4 and 1.6 work
     aircraft = SM_calc_plot(aircraft, mach); % sets the np and sm arrays for a full mission profile.
 
+    aircraft = empennage_aerodynamics_calc(aircraft)
+
     %%%%%%%%%%%%%%%%%
     %% COST UPDATE %%
     %%%%%%%%%%%%%%%%%
