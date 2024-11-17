@@ -43,10 +43,10 @@ rho = 1.225; % Sea level density
 %% Fuselage %%
 
 % Aircraft parameters
-l_fuselage = 15.59; % [m]
-Swet_fuselage = 81.3657; % [m^2]
+l_fuselage     = 15.59; % [m]
+Swet_fuselage  = 81.3657; % [m^2]
 A_max_fuselage = pi * (l_fuselage / 4)^2; % Estimated cross-sectional area
-Q_fuselage = 1; % Interference factor, given on slide 16 of lecture 14
+Q_fuselage     = 1; % Interference factor, given on slide 16 of lecture 14
 
 CD0_fuselage_array = zeros(size(Mach_numbers));
 
