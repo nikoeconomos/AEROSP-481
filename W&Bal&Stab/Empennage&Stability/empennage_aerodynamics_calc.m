@@ -19,6 +19,8 @@ function [aircraft] = empennage_aerodynamics_calc(aircraft)
 
 % TODO VERIFY the values and formulas
 
+wing = aircraft.geometry.wing;
+
 %% OEI Yaw Moment Calculation 
 
 % TODO what is this? TODO put it into the aircraft stability struct with
@@ -43,11 +45,9 @@ M_supersonic = 1;
 
 
 % Wing CL alpha calculations
-CL_a_w_to = 2*pi*wing.AR / (2 + sqrt( (wing.AR/0.97)^2 * (1 + tan(wing.sweep_LE)^2 - M_takeoff^2) + 4)); % TODO CONFIRM sweep is for leading edge, not QC or whatever
-CL_a_w_c  = 2*pi*wing.AR / (2 + sqrt( (wing.AR/0.97)^2 * (1 + tan(wing.sweep_LE)^2 - M_c^2) + 4));
-CL_a_w_s  = 2*pi*wing.AR / (2 + sqrt( (wing.AR/0.97)^2 * (1 + tan(wing.sweep_LE)^2 - M_supersonic^2) + 4));
-
-
+CL_a_w_to = 2*pi*wing.AR / (2 + sqrt( (wing.AR/0.97)^2 * (1 + tan(wing.sweep_QC)^2 - M_takeoff^2) + 4)); % TODO CONFIRM sweep is for leading edge, not QC or whatever
+CL_a_w_c  = 2*pi*wing.AR / (2 + sqrt( (wing.AR/0.97)^2 * (1 + tan(wing.sweep_QC)^2 - M_c^2) + 4));
+CL_a_w_s  = 2*pi*wing.AR / (2 + sqrt( (wing.AR/0.97)^2 * (1 + tan(wing.sweep_QC)^2 - M_supersonic^2) + 4));
 
 % Downwash correction for regression H tail CL alpha
 dw_corr_to = 2*CL_a_w_to / (pi*wing.AR);
@@ -62,7 +62,7 @@ dw_corr_s  = 2*CL_a_w_s  / (pi*wing.AR);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Takeoff Chordwise Mach = 0.18
 aoa = [0 1 1.5 1.7 2 2.5 2.9]; % AOA until stall TODO WHERE did these come from?
-c_L = [0  0.10357  0.15514  0.1757  0.20667  0.27675  0.31947]; % Lift CoefficientTODO WHERE did these come from?
+c_L = [0  0.10357  0.15514  0.1757  0.20667  0.27675  0.31947]; % Lift Coefficient TODO WHERE did these come from?
 
 % Linear regression
 p_takeoff    = polyfit(aoa, c_L, 1); % Fit a line (1st order polynomial)

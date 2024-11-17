@@ -17,9 +17,9 @@ function [aircraft] = empennage_aerodynamics_calc(aircraft)
 % Version history revision notes:
 %                                  v2: 11/15/2024
 
-% TODO VERIFY the values and formulas.
+% TODO VERIFY the values and formulas
 
-% gamma_vtail = atand(S_VT/S_HT); % degrees
+wing = aircraft.weigh
 
 %% OEI Yaw Moment Calculation 
 
@@ -39,23 +39,15 @@ Nt_tot  = Nt_drag + Nt_crit;
 %TODO put it into the aircraft stability struct with more clear names
 
 % CL alpha calculation Mach numbers
-M_takeoff    = 0.18;
-M_c          = 0.548; % is this cruise or climb?
+M_takeoff    = aircraft.performance.mach.takeoff;
+M_c          = aircraft.performance.mach.climb; % is this cruise or climb? if it's climb, we need to update this to our best climb speed TODO where did this come from?
 M_supersonic = 1;
-
-aircraft.stability.CL_a_wing.takeoff    = CL_a_w_to;
-aircraft.stability.CL_a_wing.c          = CL_a_w_c; % todo update name
-aircraft.stability.CL_a_wing.supersonic = CL_a_w_s;
 
 
 % Wing CL alpha calculations
-CL_a_w_to = 2*pi*wing.AR / (2 + sqrt( (wing.AR/0.97)^2 * (1 + tan(wing.sweep_LE)^2 - M_takeoff^2) + 4)); % TODO CONFIRM sweep is for leading edge, not QC or whatever
-CL_a_w_c  = 2*pi*wing.AR / (2 + sqrt( (wing.AR/0.97)^2 * (1 + tan(wing.sweep_LE)^2 - M_c^2) + 4));
-CL_a_w_s  = 2*pi*wing.AR / (2 + sqrt( (wing.AR/0.97)^2 * (1 + tan(wing.sweep_LE)^2 - M_supersonic^2) + 4));
-
-aircraft.stability.CL_a_wing.takeoff    = CL_a_w_to;
-aircraft.stability.CL_a_wing.c          = CL_a_w_c; % todo update name
-aircraft.stability.CL_a_wing.supersonic = CL_a_w_s;
+CL_a_w_to = 2*pi*wing.AR / (2 + sqrt( (wing.AR/0.97)^2 * (1 + tan(wing.sweep_QC)^2 - M_takeoff^2) + 4)); % TODO CONFIRM sweep is for leading edge, not QC or whatever
+CL_a_w_c  = 2*pi*wing.AR / (2 + sqrt( (wing.AR/0.97)^2 * (1 + tan(wing.sweep_QC)^2 - M_c^2) + 4));
+CL_a_w_s  = 2*pi*wing.AR / (2 + sqrt( (wing.AR/0.97)^2 * (1 + tan(wing.sweep_QC)^2 - M_supersonic^2) + 4));
 
 % Downwash correction for regression H tail CL alpha
 dw_corr_to = 2*CL_a_w_to / (pi*wing.AR);

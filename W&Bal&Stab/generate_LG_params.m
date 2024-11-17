@@ -30,10 +30,10 @@ function aircraft = generate_LG_params(aircraft)
 
     B  = main_LGx-nose_LGx; %m; distance between landing gears
 
-    Nf = fwd_CGx-nose_LGx;
-    Na = rear_CGx-nose_LGx;
-    Mf = main_LGx-fwd_CGx;
-    Ma = main_LGx-rear_CGx;
+    Nf = fwd_CGx  - nose_LGx;
+    Na = rear_CGx - nose_LGx;
+    Mf = main_LGx - fwd_CGx;
+    Ma = main_LGx - rear_CGx;
 
     H = 1.52; %m; height of the CG relative to ground
 
