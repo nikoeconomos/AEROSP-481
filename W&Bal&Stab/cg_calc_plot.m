@@ -31,7 +31,7 @@ function aircraft = cg_calc_plot(aircraft)
 
     w.cg_pos = struct();
 
-    w.cg_pos.engine = [14.5, 0, 0.774];
+    w.cg_pos.engine = [14.128, 0, 0.774];
 
     w.cg_pos.vtail  = [aircraft.geometry.vtail.x40MAC, 0, 0];
     w.cg_pos.htail  = [aircraft.geometry.htail.x40MAC, 0, 0];
@@ -53,13 +53,13 @@ function aircraft = cg_calc_plot(aircraft)
 
     w.cg_pos.xtra = [7.9029, 0, 0]; % 45% of fuselage length (raymer table)
 
-    w.cg_pos.nose_fuel            = [5.946, -0.091,  0.773];
-    w.cg_pos.cannon_fuel          = [9.354,  -0.034,  1.127];
+    w.cg_pos.nose_fuel            = [5.926, -0.091,  0.773];
+    w.cg_pos.cannon_fuel          = [9.252,  -0.038,  1.093];
     w.cg_pos.left_wing_fuel       = [10.278, -2.249, 0.834];
     w.cg_pos.right_wing_fuel      = [10.278, 2.249,  0.834]; 
-    w.cg_pos.rear_fuel            = [12.388, 0, 1.356];
+    w.cg_pos.rear_fuel            = [12.086, 0, 1.14];
     w.cg_pos.ICNIA                = [4.551, 0, 0.649];
-    w.cg_pos.databus              = [4.458, -0.315, 0.672];
+    w.cg_pos.databus              = [4.408, -0.315, 0.672];
     w.cg_pos.INEWS                = [5.046, 0, 0.744];
     w.cg_pos.VMS                  = [14.155, -0.748, 1.772];
     w.cg_pos.IRSTS                = [4.586, 0, 1.134];
