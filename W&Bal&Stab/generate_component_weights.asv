@@ -353,10 +353,10 @@ function aircraft = generate_component_weights(aircraft)
     %% CG AND SM CALCULATION %%
     %%%%%%%%%%%%%%%%%%%%
 
-    aircraft = cg_calc_plot(aircraft); % TODO UPDATE MISSION PROFILE IF MISSILES CHANGE
+    aircraft = cg_calc_plot(aircraft);
     
-    mach = [0.28, 0.5, 0.85, 1.0, 1.2]; % Find SM at various Mach numbers TODO why can't 1.4 and 1.6 work
-    aircraft = SM_calc_plot(aircraft, mach); % sets the np and sm arrays for a full mission profile.
+    mach = [0.28,0.5,0.85,1.0,1.2]; % Find SM at various Mach numbers
+    aircrat = SM_calc_plot(aircraft, mach);
 
     %%%%%%%%%%%%%%%%%
     %% COST UPDATE %%

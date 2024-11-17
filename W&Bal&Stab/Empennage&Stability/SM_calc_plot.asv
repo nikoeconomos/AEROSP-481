@@ -36,8 +36,7 @@ function aircraft = SM_calc_plot(aircraft, mach)
     aircraft.stability.C_L_alpha.wing = C_L_alpha_w;
 
     C_L_alpha_h_0 = 2*pi*AR_h ./ (2+sqrt( (AR_h/eta_h)^2 * (1+tan(Lambda_h)^2 - mach.^2) +4)); % 8.19
-    de_da         = 2*C_L_alpha_w / (pi*AR_w);
-    C_L_alpha_h   = C_L_alpha_h_0.*(1 - de_da).*eta_h; % 8.21
+    C_L_alpha_h   = C_L_alpha_h_0.*(1 - 2*C_L_alpha_w / (pi*AR_w) ).*eta_h; % 8.21
     aircraft.stability.C_L_alpha.htail = C_L_alpha_h;
     
 
@@ -69,12 +68,12 @@ function aircraft = SM_calc_plot(aircraft, mach)
     C_M_fus_CL = K_f * w_f^2 * L_f ./ (S_w * MAC * C_L_alpha_w);
 
     if mach > 1
-        x_cg_dist_from_ac = cg_excursion_arr(:,1)-x50MAC;
+        xcg = cg_excursion_arr(:,1)-x50MAC;
     else
-        x_cg_dist_from_ac = cg_excursion_arr(:,1)-x25MAC;
+        xcg = cg_excursion_arr(:,1)-x25MAC;
     end
 
-    sm_arr = -( x_cg_dist_from_ac./MAC - (C_L_alpha_h .*S_h .*l_h) ./ (C_L_alpha_w .* S_w .*MAC) + C_M_fus_CL); %metabook 8.23
+    sm_arr = -(xcg./MAC - C_L_alpha_h.*S_h.*l_h./(C_L_alpha_w.*S_w.*MAC) + C_M_fus_CL); %metabook 8.23
     aircraft.stability.static_margin_arr = sm_arr;
     
     np_arr = sm_arr*MAC + cg_excursion_arr(:,1);

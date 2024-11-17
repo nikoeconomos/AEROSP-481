@@ -29,9 +29,6 @@ function [aircraft] = generate_empennage_params(aircraft)
     htail.lever_arm = 0.5 * aircraft.geometry.fuselage.length; % TODO: originally L_F, CONFIRM this is fuselage; lever arm distance between CoM and MAC of horizontal stabilizer 
     
     htail.volume_coefficient = 0.4;  % Raymer decision TODO CONFIRM
-
-    htail.sweep_LE = deg2rad(49.9); % radians 
-    htail.sweep_QC = atan( tan(htail.sweep_LE) - (4 / htail.AR) * ((0.25 * (1 - htail.taper_ratio)) / (1 + htail.taper_ratio)) ); % formula from aerodynamics slide 24
     
     htail.S_ref = htail.volume_coefficient * aircraft.geometry.wing.MAC * aircraft.geometry.wing.S_ref  / htail.lever_arm; % TODO CONFIRM WHETHER THIS IS 1 section or both
     htail.S_wet = 2*htail.S_ref; %m2 APPROXIMATION, UPDATE WITH A BETTER ONE
@@ -42,6 +39,9 @@ function [aircraft] = generate_empennage_params(aircraft)
 
     htail.c_root = 2*htail.S_ref / ( (1+htail.taper_ratio) * htail.b); % m TODO CONFIRM WHERE CAME FROM
     htail.c_tip  = htail.c_root*htail.taper_ratio;
+
+    htail.sweep_LE = deg2rad(49.9); % radians 
+    htail.sweep_QC = atan( tan(htail.sweep_LE) - (4 / htail.AR) * ((0.25 * (1 - htail.taper_ratio)) / (1 + htail.taper_ratio)) ); % formula from aerodynamics slide 24
 
     htail.xRLE = 15.208; % m position of leading edge of the root chord, from CAD, from nose tip TODO UPDATE
 
@@ -78,6 +78,8 @@ function [aircraft] = generate_empennage_params(aircraft)
     vtail.c_tip  = vtail.c_root*vtail.taper_ratio;  
 
     vtail.sweep_LE = deg2rad(55); % radians
+
+    % vtail.gamma = atan(S_VT/S_HT); % deleted, the V style tail angle?
     
     vtail.xRLE = 15.191; %m position of leading edge of the root chord, from CAD, from nose tip TODO UPDATE IF NECESSARY 
 

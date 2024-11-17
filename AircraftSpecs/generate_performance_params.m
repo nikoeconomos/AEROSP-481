@@ -38,10 +38,13 @@ aircraft.performance.dynamic_pressure_load = 102128.48; %[Pa], 2133 psf in rfp
 aircraft.performance.cruise_alt = 10668; % [m]
 
 %% mach numbers
-aircraft.performance.mach.cruise = 0.85; % TODO UPDATE --> estimate from online
-aircraft.performance.mach.dash = 1.6; % from rfp
-aircraft.performance.mach.max_alt = 1.6; %[Mach number], at 35000 feet
+aircraft.performance.mach.cruise    = 0.85; % TODO UPDATE --> estimate from online
+aircraft.performance.mach.dash      = 1.6; % from rfp
+aircraft.performance.mach.max_alt   = 1.6; %[Mach number], at 35000 feet
 aircraft.performance.mach.endurance = 0.4; % estimate from online
+
+aircraft.performance.mach.takeoff = 0.18; % TODO UPDATE
+aircraft.performance.mach.climb   = 0.548; % TODO UPDATE 
 
 %% SUSTAINED TURN
 aircraft.performance.mach.max_sustained_turn = 1.2; %[Mach] from RFP
