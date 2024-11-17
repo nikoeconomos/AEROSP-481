@@ -55,6 +55,7 @@ aircraft.geometry.AR_wetted = (aircraft.aerodynamics.LD.max/14)^2 ; % from rayme
 
 aircraft.environment.rho_SL_15C = 1.225; %[kg.m^3]  % 15 degrees celsius, sea level
 aircraft.environment.rho_SL_30C = 1.1644; % [kg/m^3] % 45 degrees celsius, sea level. Calculated from an online calc
+aircraft.environment.rho_4000ft_30C = 1.013054; % kg/m3
 
 aircraft.performance.max_alt = 15240; %[m], got this from f35 guess (50,000 feet). Needs to be updated with our actual max altitude. TOD UPDATE
 

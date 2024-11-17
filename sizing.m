@@ -38,7 +38,8 @@ drawnow
 
 aircraft = generate_component_weights(aircraft);
 aircraft = generate_aerodynamics_params(aircraft);
-aircraft = generate_target_CL_values(aircraft);
+
+aircraft = generate_REFINED_drag_polar_params(aircraft);
 
 aircraft = generate_cost_params(aircraft);
 

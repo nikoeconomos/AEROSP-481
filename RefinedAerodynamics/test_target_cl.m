@@ -3,7 +3,8 @@ close all
 clc
 
 %% Constants
-rho_min = 0.937907; % Density caluclated for hot 40 C day at denver aiport altitude of 1656 m
+
+rho_min = aircraft.environment.rho_4000ft_30C; % Density caluclated for hot 40 C day at denver aiport altitude of 1656 m
 S_ref = 24.5; % [m^2]
 togw = 1.700844196235701e+04;
 T_mil = 76300;

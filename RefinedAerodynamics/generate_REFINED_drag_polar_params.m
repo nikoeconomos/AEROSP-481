@@ -1,5 +1,5 @@
 % Aerosp 481 Group 3 - Libellula 
-function [aircraft] = NEW_generate_drag_polar_params(aircraft)
+function [aircraft] = generate_REFINED_drag_polar_params(aircraft)
 % Description: This function generates a struct that holds parameters used in
 % calculating the drag polar of the aerodynamics system of the aircraft based
 % on an optimized airfoil.
@@ -23,13 +23,21 @@ function [aircraft] = NEW_generate_drag_polar_params(aircraft)
 % Need to calculate drag at each component, then add together for total
 % drag
 
+aircraft = generate_target_CL_values(aircraft);
+
+wing = aircraft.geometry.wing;
+
 % For all aircraft aspects - Given in table in drive under utilities
-Sref = 24.5; % [m^2]
-Mach_numbers = [0.282, 0.565, 0.847, 0.918, 0.988, 1.059, 1.129, 1.271, 1.412, 1.482, 1.553, 1.595, 1.694];
-altitudes = [0, 6000, 10600, 10600, 10600, 10600, 10600, 10600, 10600, 10600, 10600, 10600, 10600];
+S_ref_w = wing.S_ref; % [m^2]
+
+Mach_numbers = [0.282, 0.565, 0.847, 0.918, 0.988, 1.059, 1.129, 1.271, 1.412, 1.482, 1.553, 1.595, 1.6];
+altitudes    = [0, 6000, 10600, 10600, 10600, 10600, 10600, 10600, 10600, 10600, 10600, 10600, 10600];
+
 kinematic_viscosities = [0.00001461, 0.00002416, 0.00003706, 0.00003706, 0.00003706, 0.00003706, 0.00003706, 0.00003706, 0.00003706, 0.00003706, 0.00003706, 0.00003706, 0.00003706];
 speed_of_sound = [340.3, 316.5, 297.4, 297.4, 297.4, 297.4, 297.4, 297.4, 297.4, 297.4, 297.4, 297.4, 297.4];
+
 Re_fuselage_values = [72630000, 81690000, 75060000, 81320000, 87570000, 93830000, 100090000, 112600000, 125110000, 131360000, 137620000, 141370000, 150130000];
+
 rho = 1.225; % Sea level density
 
 %% Fuselage %%
@@ -60,7 +68,7 @@ for i = 1:length(Mach_numbers)
     f = l_fuselage / sqrt(4 * pi * A_max_fuselage);
     FF_fuselage = 0.9 + (5 / (f^1.5)) + (f / 400);
 
-    CD0_fuselage = ((Cf_fuselage_effective * FF_fuselage * Q_fuselage * Swet_fuselage) / Sref);
+    CD0_fuselage = ((Cf_fuselage_effective * FF_fuselage * Q_fuselage * Swet_fuselage) / S_ref_w);
     
     CD0_fuselage_array(i) = CD0_fuselage;
 end
@@ -91,7 +99,7 @@ for i = 1:length(Mach_numbers)
     f_inlets = l_inlets / sqrt(4 * pi * (Swet_inlets / (4 * pi))); 
     FF_inlets = 1 + 1.5 / (f_inlets^1.5) + (f_inlets / 400);
 
-    CD0_inlets = ((Cf_inlets_effective * FF_inlets * Q_inlets * Swet_inlets) / Sref);
+    CD0_inlets = ((Cf_inlets_effective * FF_inlets * Q_inlets * Swet_inlets) / S_ref_w);
 
     CD0_inlets_array(i) = CD0_inlets;
 end
@@ -124,7 +132,7 @@ for i = 1:length(Mach_numbers)
     % Form factor 
     FF_wings = (1 + (0.6 / (loc_max_thickness)) * (thickness_to_chord) + 100 * (thickness_to_chord)^4) * (1.34 * Mach_numbers(i).^(0.18) * cos(sweep)^0.28);
 
-    CD0_wings = ((Cf_wings_effective * FF_wings * Q_wings * Swet_wings) / Sref);
+    CD0_wings = ((Cf_wings_effective * FF_wings * Q_wings * Swet_wings) / S_ref_w);
 
     CD0_wings_array(i) = CD0_wings;
 end
@@ -155,7 +163,7 @@ for i = 1:length(Mach_numbers)
     f_needle = l_needle / sqrt(4 * pi * (Swet_needle / (4 * pi))); 
     FF_needle = 1 + 0.35 / (f_needle^1.5); % Simplified form factor for a slender nose
 
-    CD0_needle = ((Cf_needle_effective * FF_needle * Q_needle * Swet_needle) / Sref);
+    CD0_needle = ((Cf_needle_effective * FF_needle * Q_needle * Swet_needle) / S_ref_w);
 
     CD0_needle_array(i) = CD0_needle;
 end
@@ -183,10 +191,10 @@ for i = 1:length(Mach_numbers)
     Cf_HS_effective = x_laminar_HS * Cf_HS_laminar + (1 - x_laminar_HS) * Cf_HS_turbulent;
 
     % Form factor
-    f_HS = c_HS / (2 * (Swet_HS / Sref)^(1/2)); 
+    f_HS = c_HS / (2 * (Swet_HS / S_ref_w)^(1/2)); 
     FF_HS = 1 + 2.7 / f_HS + (f_HS / 400);
 
-    CD0_HS = ((Cf_HS_effective * FF_HS * Q_HS * Swet_HS) / Sref);
+    CD0_HS = ((Cf_HS_effective * FF_HS * Q_HS * Swet_HS) / S_ref_w);
 
     CD0_HS_array(i) = CD0_HS;
 end
@@ -213,10 +221,10 @@ for i = 1:length(Mach_numbers)
     Cf_VS_effective = x_laminar_VS * Cf_VS_laminar + (1 - x_laminar_VS) * Cf_VS_turbulent;
 
     % Form factor
-    f_VS = c_VS / (2 * (Swet_VS / Sref)^(1/2));
+    f_VS = c_VS / (2 * (Swet_VS / S_ref_w)^(1/2));
     FF_VS = 1 + 2.7 / f_VS + (f_VS / 400); 
 
-    CD0_VS = ((Cf_VS_effective * FF_VS * Q_VS * Swet_VS) / Sref);
+    CD0_VS = ((Cf_VS_effective * FF_VS * Q_VS * Swet_VS) / S_ref_w);
 
     CD0_VS_array(i) = CD0_VS;
 end
@@ -232,7 +240,7 @@ CD_lp = 0.02; % Estimated from table in slides
 %% Total Parasitic Drag Calc %%
 
 total_components_CD0 = CD0_fuselage + CD0_inlets + CD0_wings + CD0_needle + CD0_HS + CD0_VS; 
-CD0 = (1/Sref) * (total_components_CD0) + CD_misc + CD_lp; 
+CD0 = (1/S_ref_w) * (total_components_CD0) + CD_misc + CD_lp; 
 CD0_total = CD0;
 disp(['The total parasitic drag (CD) is ', num2str(CD0)]) % Used to ensure CD0 looks reasonable
 
@@ -244,7 +252,7 @@ C_wing_at_flap = 1.375; % [m] Outboard
 S_flapped = 11.611; % [m^2]
 delta_flap = 40; % From raymer, between 40-45 degrees for max lift
 
-delta_CD0_flap = F_flap * (Cf / C_wing_at_flap) * (S_flapped / Sref) * (delta_flap - 10);
+delta_CD0_flap = F_flap * (Cf / C_wing_at_flap) * (S_flapped / S_ref_w) * (delta_flap - 10);
 disp(['The delta flap drag (delta_CD_flap) is ', num2str(delta_CD0_flap)])
 
 %% Lift Induced Drag %%
@@ -264,7 +272,7 @@ et = 1.78 * (1 - (0.045 * aspect_ratio_t^0.68)) - 0.64;
 x = 6.4337; % [m]
 MAC_tail = 0.9921; % [m]
 S_tail = 3.667 * 2; % [m^2]
-tail_volume_coeff = (x * S_tail) / (MAC_tail * Sref); 
+tail_volume_coeff = (x * S_tail) / (MAC_tail * S_ref_w); 
 CL_wing = 0.6; % NEED TO UPDATE ONCE VALUE IS DONE
 xw = 1.8652; % [m]
 
@@ -272,7 +280,7 @@ pitching_moment_factor = 0.6133;
 width_fus = 2.1; % [m]
 MAC = 3.0446;
 alpha_fus = 10; % [degrees] Estimated
-CM_fus = ((pitching_moment_factor * width_fus^2 * l_fuselage) / (MAC * Sref)) * alpha_fus;
+CM_fus = ((pitching_moment_factor * width_fus^2 * l_fuselage) / (MAC * S_ref_w)) * alpha_fus;
 x_ac = 2.2218; % [m]
 
 % delta_CM_ac_flap = ;
@@ -285,13 +293,13 @@ function1 = @(x)(Cl * c(x) * x_ac);
 function2 = @(x)(CM_ac * c(x).^2);
 int1 = integral(function1, -span/2, span/2);
 int2 = integral(function2, -span/2, span/2);
-CM_ac_w = (1 / MAC_tail * Sref) * (-int1 + int2);
+CM_ac_w = (1 / MAC_tail * S_ref_w) * (-int1 + int2);
 
 CM_pitch_minus_tail = CM_ac_w + CM_fus; % + delta_CM_ac_flap
 
 CLt = (CL_wing * (xw/MAC_tail) + CM_pitch_minus_tail) * (x / (x-xw)) * (1 / tail_volume_coeff); 
 
-CD_trim = (CLt^2 / pi * et * aspect_ratio_t) * (S_tail / Sref); 
+CD_trim = (CLt^2 / pi * et * aspect_ratio_t) * (S_tail / S_ref_w); 
 disp(['The total trim drag (CD_trim) is ', num2str(CD_trim)])
 
 %% Total Drag Coefficent %%
