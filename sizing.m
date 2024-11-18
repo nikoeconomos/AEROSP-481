@@ -33,37 +33,35 @@ drawnow
 
 plot_T_S_space(aircraft)
 %plot_T_S_space_F35(aircraft)
-%[togw, ff] = togw_as_func_of_T_S_calc(aircraft, aircraft.propulsion.T_max, aircraft.geometry.wing.S_ref)
+[togw, ff] = togw_as_func_of_T_S_calc(aircraft, aircraft.propulsion.T_max, aircraft.geometry.wing.S_ref)
 drawnow
 
-aircraft = generate_component_weights(aircraft);
-aircraft = generate_aerodynamics_params(aircraft);
+%aircraft = generate_component_weights(aircraft);
+%aircraft = generate_aerodynamics_params(aircraft);
 
-aircraft = generate_REFINED_drag_polar_params(aircraft);
-
-aircraft = generate_cost_params(aircraft);
+%aircraft = generate_cost_params(aircraft);
 
 %% PRINT RESULTS %%
 
 disp("weight")
-plot_weight_bar_chart(aircraft);
-aircraft.weight
+%plot_weight_bar_chart(aircraft);
+aircraft.weight;
 
 disp("performance")
-aircraft.performance
+aircraft.performance;
 
 disp("geometry")
-aircraft.geometry
+aircraft.geometry;
 
 disp("cost")
-aircraft.cost
+%aircraft.cost
 %plot_cost_bar_chart(aircraft);
 
 disp("propulsion")
-aircraft.propulsion
+aircraft.propulsion;
 
 disp("aerodynamics")
-aircraft.aerodynamics
+aircraft.aerodynamics;
 
 disp(newline)
 
@@ -71,19 +69,19 @@ disp("Sizing complete.")
 
 %% For testing %%
 
-a = aircraft
+a = aircraft;
 
-w0 = a.weight.togw;
+w0 = a.weight.togw
 
-tw_des = a.performance.TW_design
+tw_des = a.performance.TW_design;
 
-tw_mil_des = a.performance.TW_design_military
+tw_mil_des = a.performance.TW_design_military;
 
-ws_des = a.performance.WS_design
+ws_des = a.performance.WS_design;
 
 disp('twreal')
-TWmax = a.propulsion.T_max/(w0*9.81)
+TWmax = a.propulsion.T_max/(w0*9.81);
 disp('twreal mil')
-TWmil = a.propulsion.T_military/(w0*9.81)
+TWmil = a.propulsion.T_military/(w0*9.81);
 disp('wsreal')
-WS = w0/a.geometry.wing.S_ref
+WS = w0/a.geometry.wing.S_ref;
