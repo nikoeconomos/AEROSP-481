@@ -43,6 +43,8 @@ aircraft = generate_REFINED_drag_polar_params(aircraft);
 
 aircraft = generate_cost_params(aircraft);
 
+aircraft = plot_CL_design_space(aircraft);
+
 %% PRINT RESULTS %%
 
 disp("weight")
@@ -87,3 +89,5 @@ disp('twreal mil')
 TWmil = a.propulsion.T_military/(w0*9.81)
 disp('wsreal')
 WS = w0/a.geometry.wing.S_ref
+
+a = plot_CL_design_space(a);
