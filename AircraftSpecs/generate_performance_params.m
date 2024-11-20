@@ -53,6 +53,7 @@ g = 9.8067;
 
 aircraft.performance.max_instantaneous_turn_rate = deg2rad(18); %rad/s
 aircraft.performance.corner_speed = 155.556; % m/s, 550 km/hr in raymer page 138
+aircraft.performance.corner_speed_TAS = 302.376; % knots 
 
 aircraft.performance.n_inst = sqrt( ((aircraft.performance.max_instantaneous_turn_rate*aircraft.performance.corner_speed)/g)^2+1); %raymer 5.19
 
