@@ -22,9 +22,11 @@ function [aircraft] = plot_CL_design_space(aircraft)
 % Define constant multiples for objective function
 W = 1.8 * aircraft.weight.togw / (0.93 * 93.6^2);
 W_sec = 2 * aircraft.weight.togw / (0.93 * 93.6^2);
-k = 0.81 * cosd(0);
-h = 0.27 * cos(aircraft.geometry.wing.sweep_LE); % argument in radians
-Sref_fixed = aircraft.geometry.wing.S_ref;
+
+k = 0.81 * cosd(0); % flap
+h = 0.27 * cos(aircraft.geometry.wing.sweep_LE); % argument in radians % slat
+
+Sref_fixed = 35%aircraft.geometry.wing.S_ref;
 
 % Define ranges for changing lifting surface parameters
 Sflapped = linspace(0,21.176,50);
@@ -34,13 +36,13 @@ Sslatted = linspace(0,21.176,50);
 
 [Sf,Ss] = meshgrid(Sflapped,Sslatted);
 
-% At wing AOA = 0 degrees
-CL_req_cruise = 0.6305 * 0.9 + (k.*Sf + h.*Ss) / Sref_fixed;
+% At aircraft AOA = 0 degrees, wing inccidence = 2 degrees
+CL_attainable_cruise = 0.6305 * 0.9 + (k.*Sf + h.*Ss) / Sref_fixed;
 
 figure()
-surfl(Sf,Ss,CL_req_cruise)
+surfl(Sf,Ss,CL_attainable_cruise)
 hold on
-contour3(Sf,Ss,CL_req_cruise,[1.2,1.37,1.6,1.9],'y',LineWidth=1.5)
+contour3(Sf,Ss,CL_attainable_cruise,[1.2,1.37,1.6,1.9],'y',LineWidth=1.5)
 hold off
 
 title('Obtainable CL with Constant Sref & Changing Lifting Surface Areas - Cruise')
@@ -49,10 +51,12 @@ ylabel('L.E. Flapped Area')
 zlabel('Lift Coefficient')
 
 % At wing AOA = 6 degrees
-CL_req_land = 0.89973 * 0.9 + (k.*Sf + h.*Ss) / Sref_fixed;
+%CL_attainable_land = 0.89973 * 0.9 + k.*Sf / Sref_fixed + h.*Ss / Sref_fixed;
+
+CL_attainable_land = 0.89973 * 0.9 + k.*10 / 24.5 + h.*2.06 / 24.5;
 
 figure()
-surfl(Sf,Ss,CL_req_land)
+surfl(Sf,Ss,CL_attainable_land)
 hold on
 contour3(Sf,Ss,CL_req_land,[1.2,1.37,1.6,1.9],'y',LineWidth=1.5)
 hold off
