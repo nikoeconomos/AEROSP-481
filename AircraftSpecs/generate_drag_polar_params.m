@@ -37,7 +37,7 @@ aero.LD.cruise = aero.CL.cruise/aero.CD.cruise;
 
 %% ----------- Takeoff Configuration 2 (Flaps Deployed, gear up ) -----------
 
-aero.CL.takeoff_flaps = 1.4; % from 06 Preliminary sizing presentation Slide 48
+aero.CL.takeoff_flaps = 1.17; % from 06 Preliminary sizing presentation Slide 48
 
 % calculate new parasitic drag
 delta_CD0_takeoff_flaps = 0.010;  % Additional drag due to takeoff flaps, metabook table 4.2
@@ -63,7 +63,7 @@ aero.LD.takeoff_flaps_gear = aero.CL.takeoff_flaps/aero.CD.takeoff_flaps_gear;
 
 %% ----------- Landing Configuration 1 (Flaps, gear up) -----------
 
-aero.CL.landing_flaps = 2; % from 06 Preliminary sizing presentation Slide 48
+aero.CL.landing_flaps = 1.6; % from 06 Preliminary sizing presentation Slide 48
 
 % calculate new parasitic drag
 delta_CD0_landing_flaps = 0.055;  % Additional drag due to landing flaps, metabook table 4.2

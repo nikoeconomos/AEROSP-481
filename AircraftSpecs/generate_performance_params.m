@@ -24,8 +24,8 @@ aircraft.name = 'Libellula';
 %% OUR DESIGN POINTS
 
 aircraft.performance.TW_design_military = 0.55; % A SPOT WE MANUALLY CHOOSE FROM THE TW-WS DIAGRAM [N/N]
-aircraft.performance.TW_design = 1.05; % A SPOT WE MANUALLY CHOOSE FROM THE TW-WS DIAGRAM [N/N]
-aircraft.performance.WS_design = 525; % A SPOT WE MANUALLY CHOOSE FROM THE TW-WS DIAGRAM, [N/m^2]
+aircraft.performance.TW_design = 1.1; % A SPOT WE MANUALLY CHOOSE FROM THE TW-WS DIAGRAM [N/N]
+aircraft.performance.WS_design = 450; % A SPOT WE MANUALLY CHOOSE FROM THE TW-WS DIAGRAM, [N/m^2]
 
 %% loads
 aircraft.performance.load_factor.upper_limit = 7; % [g's] with 50% fuel
