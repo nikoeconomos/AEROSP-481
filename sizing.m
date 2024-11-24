@@ -45,6 +45,8 @@ aircraft = generate_cost_params(aircraft);
  
 aircraft = generate_REFINED_drag_polar_params(aircraft);
 
+aircraft = generate_target_CL_values(aircraft);
+
 aircraft = plot_CL_design_space(aircraft);
 
 %% PRINT RESULTS %%
