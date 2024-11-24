@@ -80,6 +80,9 @@ function aircraft = generate_component_weights(aircraft)
 
     wing.sweep_LE = aircraft.geometry.wing.sweep_LE; % in radians, set in generate_geometry
     wing.sweep_QC = atan( tan(wing.sweep_LE) - (4 / wing.AR) * ((0.25 * (1 - wing.taper_ratio)) / (1 + wing.taper_ratio)) ); % formula from aerodynamics slide 24
+    wing.sweep_HC = atan( tan(wing.sweep_LE) - (4 / wing.AR) * ((0.50 * (1 - wing.taper_ratio)) / (1 + wing.taper_ratio)) );
+    wing.sweep_TE = atan( tan(wing.sweep_LE) - (4 / wing.AR) * ((1.00 * (1 - wing.taper_ratio)) / (1 + wing.taper_ratio)) );
+
 
     wing.xRLE = 7.175; %m positino of leading edge of the root chord, from CAD
     wing.xR25 = wing.xRLE + 0.25*wing.c_root; % position of quarter chord at root of wing

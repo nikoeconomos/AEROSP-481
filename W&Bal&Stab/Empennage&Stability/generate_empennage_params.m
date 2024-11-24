@@ -42,6 +42,8 @@ function [aircraft] = generate_empennage_params(aircraft)
 
     htail.sweep_LE = deg2rad(49.9); % radians 
     htail.sweep_QC = atan( tan(htail.sweep_LE) - (4 / htail.AR) * ((0.25 * (1 - htail.taper_ratio)) / (1 + htail.taper_ratio)) ); % formula from aerodynamics slide 24
+    htail.sweep_HC = atan( tan(htail.sweep_LE) - (4 / htail.AR) * ((0.50 * (1 - htail.taper_ratio)) / (1 + htail.taper_ratio)) );
+    htail.sweep_TE = atan( tan(htail.sweep_LE) - (4 / htail.AR) * ((1.00 * (1 - htail.taper_ratio)) / (1 + htail.taper_ratio)) );
 
     htail.xRLE = 15.208; % m position of leading edge of the root chord, from CAD, from nose tip TODO UPDATE
 
@@ -78,6 +80,9 @@ function [aircraft] = generate_empennage_params(aircraft)
     vtail.c_tip  = vtail.c_root*vtail.taper_ratio;  
 
     vtail.sweep_LE = deg2rad(55); % radians
+    vtail.sweep_QC = atan( tan(vtail.sweep_LE) - (4 / vtail.AR) * ((0.25 * (1 - vtail.taper_ratio)) / (1 + vtail.taper_ratio)) ); % formula from aerodynamics slide 24
+    vtail.sweep_HC = atan( tan(vtail.sweep_LE) - (4 / vtail.AR) * ((0.50 * (1 - vtail.taper_ratio)) / (1 + vtail.taper_ratio)) );
+    vtail.sweep_TE = atan( tan(vtail.sweep_LE) - (4 / vtail.AR) * ((1.00 * (1 - vtail.taper_ratio)) / (1 + vtail.taper_ratio)) );
 
     % vtail.gamma = atan(S_VT/S_HT); % deleted, the V style tail angle?
     
