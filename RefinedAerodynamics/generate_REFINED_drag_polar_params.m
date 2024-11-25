@@ -109,9 +109,9 @@ CD0_inlets = ((Cf_inlet * FF_inlet * Q_inlet * S_wet_inlet) / S_ref_w) * 2; % Tw
 
 % Wing parameters
 S_wet_wing = aircraft.geometry.wing.S_wet; % [m^2]
-Q_wings = 1; % Assumed 1 for a mid-wing configuration
-loc_max_thickness = 0.386; % [m]
-thickness_to_chord = 0.06; % Average is 6%
+Q_wings    = 1; % Assumed 1 for a mid-wing configuration
+loc_max_thickness  = aircraft.geometry.wing.chordwise_loc_max_thickness; % [unitless]
+t_c = aircraft.geometry.wing.chordwise_loc_max_thickness; % Average is 6%
 sweep = 37.04; % [degrees] Sweep angle of max thickness line
 c_wing = 4.187; % [m] at root
 
