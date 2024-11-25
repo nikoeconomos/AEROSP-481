@@ -18,15 +18,15 @@ function [aircraft] = generate_CL_params(aircraft)
 
 %% Define constant parameters
 
-sectional_clean_Cl = 0.525866; % From simulation at AOA = 2, takeoff, landing
+sectional_clean_Cl = 0.5248542; % From simulation at AOA = 2, takeoff, landing
 
 % From simulation at AOA = 6
-sectional_slat_TO_Cl = ;
+sectional_slat_TO_Cl = 0.88913;
 sectional_flap_TO_Cl = ;
 
 % From simulation at AOA = 10
 sectional_slat_L_Cl = 1.460362;
-sectional_flap_L_Cl = ;
+sectional_flap_L_Cl = 1.729245;
 
 del_Cl_TO_slat = abs(sectional_clean_Cl - sectional_slat_TO_Cl);
 del_Cl_TO_flap = abs(sectional_clean_Cl - sectional_flap_TO_Cl);
@@ -50,7 +50,9 @@ flapped_ratio = S_flapped / Sref;
 
 %% Calculate change in wing CL
 
-base_wing_CL = 0.9 * sectional_clean_Cl;
+aircraft.aerodynamics.CL.clean_wing_low_speed = 0.9 * sectional_clean_Cl;
+
+base_CL_w = aircraft.aerodynamics.CL.clean_wing_low_speed;
 
 % Take Off
 
@@ -64,6 +66,6 @@ aircraft.aerodynamics.CL.takeoff_flaps_slats = base_wing_CL + del_CL_wing_TO_sla
 del_CL_wing_L_slat = 0.9 * del_Cl_L_slat * slatted_ratio * cos(sweep_slat_hinge);
 del_CL_wing_L_flap = 0.9 * del_Cl_L_slat * flapped_ratio * cos(sweep_flap_hinge);
 
-aircraft.aerodynamics.CL.landing_flaps_slats = base_wing_CL + del_CL_wing_L_slat + del_CL_wing_L_flap;
+aircraft.aerodynamics.CL.landing_flaps_slats = base_CL_W + del_CL_wing_L_slat + del_CL_wing_L_flap;
 
 end
