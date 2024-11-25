@@ -28,7 +28,7 @@ function [] = plot_drag_polar(aircraft)
     K_takeoff_gear_down = aero.k_calc(aero.e.takeoff_flaps); 
     K_landing_gear_up   = aero.k_calc(aero.e.landing_flaps);  
     K_landing_gear_down = aero.k_calc(aero.e.landing_flaps); 
-    K_clean             = aero.k_calc(aero.e.cruise);  
+    K_clean             = aero.k_calc(aero.e.clean);  
     
     % Make the empty arrays
     C_L_clean = linspace(-aero.CL.cruise, aero.CL.cruise, 100);
