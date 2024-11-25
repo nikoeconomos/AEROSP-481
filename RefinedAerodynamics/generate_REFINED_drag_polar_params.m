@@ -114,10 +114,12 @@ Q_wings    = 1; % Assumed 1 for a mid-wing configuration
 loc_max_thickness  = aircraft.geometry.wing.chordwise_loc_max_thickness; % [unitless]
 t_c                = aircraft.geometry.wing.t_c_root; % Average is 6%
 
-sweep       = aircraft.geometry.wing.sweep_HC; % [degrees] Sweep angle of max thickness line
-c_root_wing = aircraft.geometry.wing.c_root; % [m] at root
+sweep_HC_wing = aircraft.geometry.wing.sweep_HC; % [degrees] Sweep angle of max thickness line
+MAC_wing      = aircraft.geometry.wing.c_root; % [m] at root
 
-CD0_wings_array = zeros(size(Mach_numbers)); 
+Re_wing = Re_fuselage * (c_wing / l_fuselage);
+
+Cf_wing = Cf_turbulent_calc(Re_wing);
 
 for i = 1:length(Mach_numbers)
 
