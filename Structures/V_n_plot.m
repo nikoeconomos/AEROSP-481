@@ -24,8 +24,8 @@ function [aircraft] = V_n_plot(aircraft)
 
 TAS_to_EAS = @(V_tas, rho) V_tas * sqrt(rho / rho_SL); % TAS to EAS conversion
 
-W_S = aircraft.performance.WS_design; % Wing loading (N/m^2)
-CL_max = 0.8091; % might change 
+W_S = 0.52 * aircraft.performance.WS_design; % Wing loading (N/m^2)
+CL_max = 0.6305; % might change 
 C_L_alpha = 3.0562; % parameter on different branch 
 g = 9.81; % (m/s^2)
 c = 3.044; % Mean chord (m) took from old CAD
@@ -38,6 +38,7 @@ U_e_VD = 7.62; % Gust velocity at VD (25 ft/s in m/s)
 
 [~, ~, rho_VC, a_VC] = standard_atmosphere_calc(aircraft.performance.cruise_alt); 
 [~, ~, rho_VMO, a_VMO] = standard_atmosphere_calc(aircraft.performance.cruise_alt); 
+disp(rho_VC)
 
 % Cruise conditions
 VC_TAS = aircraft.performance.mach.cruise * a_VC; % Cruise TAS 
@@ -55,7 +56,7 @@ VD_EAS = 1.25 * VMO_EAS; % Dive speed EAS
 disp(VD_EAS)
 
 % Stall speed (VS)
-VS_EAS = sqrt((2 * W_S) / (rho_SL * CL_max)); % Stall speed in EAS 
+VS_EAS = sqrt((2 * W_S) / (rho_VC * CL_max)); % Stall speed in EAS 
 disp(VS_EAS)
 
 % Maneuvering speed (VA)
@@ -81,37 +82,38 @@ K_g = (0.88 * mu) / (5.3 + mu);
 V = linspace(0, VD_EAS, 700); % EAS range
 
 % Positive and negative maneuver load factors
-n_maneuver_positive = min(n_limit, (rho_SL * V.^2 * CL_max) / (2 * W_S));
-n_maneuver_negative = max(n_negative, -(rho_SL * V.^2 * CL_max) / (2 * W_S));
+n_maneuver_positive = min(n_limit, (rho_SL * (V* 0.51444).^2 * CL_max) / (2 * W_S));
+n_maneuver_negative = max(n_negative, -(rho_SL * (V*0.51444).^2 * CL_max) / (2 * W_S));
 
 % Gust load factors
-n_gust_pos_VC = 1 + ((K_g * C_L_alpha * U_e_VC * V) / (2 * W_S));
-n_gust_neg_VC = 1 - ((K_g * C_L_alpha * U_e_VC * V) / (2 * W_S));
+n_gust_pos_VC = 1 + ((K_g * C_L_alpha * U_e_VC * (V*0.51444)) / (2 * W_S));
+n_gust_neg_VC = 1 - ((K_g * C_L_alpha * U_e_VC * (V*0.51444)) / (2 * W_S));
 
-n_gust_pos_VD = 1 + ((K_g * C_L_alpha * U_e_VD * V) / (2 * W_S));
-n_gust_neg_VD = 1 - ((K_g * C_L_alpha * U_e_VD * V) / (2 * W_S));
+n_gust_pos_VD = 1 + ((K_g * C_L_alpha * U_e_VD * (V*0.51444)) / (2 * W_S));
+n_gust_neg_VD = 1 - ((K_g * C_L_alpha * U_e_VD * (V*0.51444)) / (2 * W_S));
 
-n_gust_pos_VB = 1 + ((K_g * C_L_alpha * U_e_VB * V) / (2 * W_S));
-n_gust_neg_VB = 1 - ((K_g * C_L_alpha * U_e_VB * V) / (2 * W_S));
+n_gust_pos_VB = 1 + ((K_g * C_L_alpha * U_e_VB * (V*0.51444)) / (2 * W_S));
+n_gust_neg_VB = 1 - ((K_g * C_L_alpha * U_e_VB * (V*0.51444)) / (2 * W_S));
 
 % Calculate the n-value of the 50 ft/s gust line at V_C
-n_gust_at_VC = 1 + ((K_g * C_L_alpha * U_e_VC * (VC_EAS)) / (2 * W_S));
-n_neg_gust_at_VC = 1 - ((K_g * C_L_alpha * U_e_VC * (VC_EAS)) / (2 * W_S));
+n_gust_at_VC = 1 + ((K_g * C_L_alpha * U_e_VC * (VC_EAS*0.514444)) / (2 * W_S));
+n_neg_gust_at_VC = 1 - ((K_g * C_L_alpha * U_e_VC * (VC_EAS*0.514444)) / (2 * W_S));
 
 % Calculate the n-value of the 25 ft/s gust line at V_D
-n_gust_at_VD = 1 + ((K_g * C_L_alpha * U_e_VD * VD_EAS) / (2 * W_S));
-n_neg_gust_at_VD = 1 - ((K_g * C_L_alpha * U_e_VD * VD_EAS) / (2 * W_S));
+n_gust_at_VD = 1 + ((K_g * C_L_alpha * U_e_VD * (VD_EAS*0.514444)) / (2 * W_S));
+n_neg_gust_at_VD = 1 - ((K_g * C_L_alpha * U_e_VD * (VD_EAS*0.514444)) / (2 * W_S));
 
-n_neg_gust_at_VB = 1 - ((K_g * C_L_alpha * U_e_VB * V) / (2 * W_S));
+n_neg_gust_at_VB = 1 - ((K_g * C_L_alpha * U_e_VB * (V*0.514444)) / (2 * W_S));
 
 % Combined envelope (intersection of gust and maneuver lines)
 n_combined_pos = n_maneuver_positive;
 n_combined_neg = max(n_negative, n_neg_gust_at_VB);
-n_manuever_pos_at_VS = (1 + ((K_g * C_L_alpha * U_e_VB * VS_EAS) / (2 * W_S)));
+n_manuever_pos_at_VS = (1 + ((K_g * C_L_alpha * U_e_VB * (VS_EAS*0.514444)) / (2 * W_S)));
 n_manuever_neg_at_VS = -(rho_SL * VS_EAS.^2 * CL_max) / (2 * W_S);
-n_gust_pos_at_VD = 1 + ((K_g * C_L_alpha * U_e_VD * VD_EAS) / (2 * W_S));
-n_gust_neg_at_VD = 1 - ((K_g * C_L_alpha * U_e_VD * VD_EAS) / (2 * W_S));
-n_neg_gust_at_VB = 1 - ((K_g * C_L_alpha * U_e_VB * VB_EAS) / (2 * W_S));
+n_gust_pos_at_VD = 1 + ((K_g * C_L_alpha * U_e_VD * (VD_EAS*0.514444)) / (2 * W_S));
+n_gust_neg_at_VD = 1 - ((K_g * C_L_alpha * U_e_VD * (VD_EAS*0.514444)) / (2 * W_S));
+n_pos_gust_at_VB = 1 + ((K_g * C_L_alpha * U_e_VB * (VB_EAS*0.514444)) / (2 * W_S));
+n_neg_gust_at_VB = 1 - ((K_g * C_L_alpha * U_e_VB * (VB_EAS*0.514444)) / (2 * W_S));
 
 % Plot the V-n diagram
 figure;
@@ -138,12 +140,12 @@ plot([VD_EAS VD_EAS], [n_gust_pos_at_VD n_gust_neg_at_VD],'k-', 'LineWidth', 2, 
 % Critical speeds
 plot(VA_EAS, n_limit, 'ko', 'MarkerFaceColor', 'k', 'DisplayName', 'Corner Speed');
 plot(VS_EAS, 1, 'mo', 'MarkerFaceColor', 'm', 'DisplayName', 'Stall Speed (VS)');
-plot(VB_EAS, n_limit, 'go', 'MarkerFaceColor', 'g', 'DisplayName', 'Gust Design Speed');
+plot(VB_EAS, n_pos_gust_at_VB, 'go', 'MarkerFaceColor', 'g', 'DisplayName', 'Gust Design Speed');
 
 % Annotations
 text(VA_EAS, n_limit + 0.5, 'V_A', 'HorizontalAlignment', 'center', 'FontSize', 10);
 text(VS_EAS, 1.1, 'V_S', 'HorizontalAlignment', 'center', 'FontSize', 10);
-text(VB_EAS, n_limit + 0.5, 'V_B', 'HorizontalAlignment', 'center', 'FontSize', 10);
+text(VB_EAS, 3.5 + 0.5, 'V_B', 'HorizontalAlignment', 'center', 'FontSize', 10);
 
 % Mark the point where the gust line intersects V_C
 plot(VC_EAS, n_gust_at_VC, 'ro', 'MarkerFaceColor', 'r', 'DisplayName', 'Design Speed (pos lim)');
@@ -162,7 +164,7 @@ plot([VC_EAS VD_EAS], [n_neg_gust_at_VC n_neg_gust_at_VD], 'k-', 'LineWidth', 2,
 text(VB_EAS, n_neg_gust_at_VB - 0.5, 'V_B', 'HorizontalAlignment', 'center', 'FontSize', 10);
 plot(VB_EAS, n_neg_gust_at_VB, 'go', 'MarkerFaceColor', 'g','DisplayName', 'Do Not Exceed Speed (neg lim)');
 
-plot ([VB_EAS VC_EAS], [n_limit n_gust_at_VC],  'k-', 'LineWidth', 2, 'DisplayName', 'Limit Combined Envelope');
+plot ([VB_EAS VC_EAS], [n_pos_gust_at_VB n_gust_at_VC],  'k-', 'LineWidth', 2, 'DisplayName', 'Limit Combined Envelope');
 plot ([VB_EAS VC_EAS], [n_negative n_neg_gust_at_VC],  'k-', 'LineWidth', 2, 'DisplayName', 'Limit Combined Envelope');
 
 % Labels, grid, and legend

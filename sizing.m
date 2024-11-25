@@ -36,6 +36,9 @@ aircraft = generate_climb_segments(aircraft);
 % %[togw, ff] = togw_as_func_of_T_S_calc(aircraft, aircraft.propulsion.T_max, aircraft.geometry.wing.S_ref)
 % drawnow
 V_n_plot(aircraft)
+dp_calc(aircraft)
+max_inst_tr_calc(aircraft)
+tr_lf_calc(aircraft)
 % 
 % aircraft = generate_component_weights(aircraft);
 % aircraft = generate_aerodynamics_params(aircraft);
