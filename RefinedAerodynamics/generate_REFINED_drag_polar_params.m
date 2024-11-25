@@ -42,91 +42,73 @@ ht_airfoil_mach = freesteam_mach*cos(aircraft.geometry.wing.sweep_LE);
 
 alt_cruise = aircraft.performance.cruise_alt;
 alt_climb  = 6000;
-altitudes  = [0, alt_climb, alt_cruise, alt_cruise, alt_cruise, alt_cruise, alt_cruise, alt_cruise, alt_cruise, alt_cruise, alt_cruise, alt_cruise, alt_cruise];
-
-
-v_SL     = 0.00001461;
-v_6000   = 0.00002416;
-v_cruise = 0.00003706;
-kinematic_viscosities = [v_SL, v_6000, v_cruise, v_cruise, v_cruise, v_cruise, v_cruise, v_cruise, v_cruise, v_cruise, v_cruise, v_cruise, v_cruise];
+altitude   = [0, alt_climb, alt_cruise, alt_cruise, alt_cruise, alt_cruise, alt_cruise, alt_cruise, alt_cruise, alt_cruise, alt_cruise, alt_cruise, alt_cruise];
 
 [~, ~, rho_SL, a_SL]         = standard_atmosphere_calc(0);
 [~, ~, rho_climb, a_climb]   = standard_atmosphere_calc(alt_climb);
 [~, ~, rho_cruise, a_cruise] = standard_atmosphere_calc(alt_cruise);
-rho            = [rho_SL, rho_climb, rho_cruise, rho_cruise, rho_cruise, rho_cruise, rho_cruise, rho_cruise, rho_cruise, rho_cruise, rho_cruise, rho_cruise, rho_cruise]
-speed_of_sound = [a_SL, a_climb, a_cruise, a_cruise, a_cruise, a_cruise, a_cruise, a_cruise, a_cruise, a_cruise, a_cruise, a_cruise, a_cruise];
+rho            = [rho_SL, rho_climb, rho_cruise, rho_cruise, rho_cruise, rho_cruise, rho_cruise, rho_cruise, rho_cruise, rho_cruise, rho_cruise, rho_cruise, rho_cruise];
 
-l_fuselage         = aircraft.geometry.fuselage.length;
-Re_fuselage_values = speed_of_sound .* wing_airfoil_mach .* l_fuselage ./ kinematic_viscosities;
-%Re_fuselage_values = [72630000, 81690000, 75060000, 81320000, 87570000, 93830000, 100090000, 112600000, 125110000, 131360000, 137620000, 141370000, 150130000];
+nu_SL     = 0.00001461;
+nu_6000   = 0.00002416;
+nu_cruise = 0.00003706;
+kinematic_viscosity = [nu_SL, nu_6000, nu_cruise, nu_cruise, nu_cruise, nu_cruise, nu_cruise, nu_cruise, nu_cruise, nu_cruise, nu_cruise, nu_cruise, nu_cruise];
+dynamic_viscosity   = kinematic_viscosity * rho;
+
+speed_of_sound  = [a_SL, a_climb, a_cruise, a_cruise, a_cruise, a_cruise, a_cruise, a_cruise, a_cruise, a_cruise, a_cruise, a_cruise, a_cruise];
+flight_velocity = freestream_mach.*speed_of_sound;
+
+Cf_turbulent_calc = @(Re) 0.455 ./ ((log10(Re)).^2.58 * (1 + 0.144 * freesteam_mach.^2)^0.65); % turbulent
 
 %% Fuselage %%
 
 % Aircraft parameters
-Swet_fuselage  = aircraft.geometry.fuselage.S_wet; % [m^2]
+l_fuselage     = aircraft.geometry.fuselage.length;
+S_wet_fuselage  = aircraft.geometry.fuselage.S_wet; % [m^2]
 A_max_fuselage = aircraft.geometry.fuselage.A_max; % Estimated cross-sectional area
+
 Q_fuselage     = 1; % Interference factor, given on slide 16 of lecture 14
 
-CD0_fuselage_array = zeros(size(Mach_numbers));
+Re_fuselage = speed_of_sound .* wing_airfoil_mach .* l_fuselage ./ kinematic_viscosities;
+%Re_fuselage_values = [72630000, 81690000, 75060000, 81320000, 87570000, 93830000, 100090000, 112600000, 125110000, 131360000, 137620000, 141370000, 150130000];
 
-for i = 1:length(Mach_numbers)
-    
-    % Flight conditions
-    M = Mach_numbers(i);
-    Re_fuselage = Re_fuselage_values(i);
-    V = Mach_numbers(i) * speed_of_sound(i); % Compute velocity
-    mu = kinematic_viscosities(i) * rho; % Dynamic viscosity
-    x_laminar = 0.3; % Estimated
+% Skin friction coefficients - from slides
+Cf_fuselage = Cf_turbulent_calc(Re_fuselage);
 
-    % Skin friction coefficients - from slides
-    Cf_fuselage_laminar = 1.328 / sqrt(Re_fuselage);
-    Cf_fuselage_turbulent = 0.455 / ((log10(Re_fuselage))^2.58 * (1 + 0.144 * M^2)^0.65);
-    Cf_fuselage_effective = x_laminar * Cf_fuselage_laminar + (1 - x_laminar) * Cf_fuselage_turbulent;
+% No laminar flow as we're a camoflaged fighter jet
+% x_laminar = 0; % Estimated from slide 11 of lecture 14 (military jet with camo = 0)
+% Cf_fuselage_laminar   = 1.328 ./ sqrt(Re_fuselage);
+% Cf_fuselage_effective = x_laminar * Cf_fuselage_laminar + (1 - x_laminar) * Cf_fuselage_turbulent;
 
-    % Fineness ratio and form factor for fuselage
-    f = l_fuselage / sqrt(4 * pi * A_max_fuselage);
-    FF_fuselage = 0.9 + (5 / (f^1.5)) + (f / 400);
+% Fineness ratio and form factor for fuselage, slide 13
+f_fuse = l_fuselage / sqrt(4 * pi * A_max_fuselage);
+FF_fuselage = 0.9 + (5 / (f_fuse^1.5)) + (f_fuse / 400); 
 
-    CD0_fuselage = ((Cf_fuselage_effective * FF_fuselage * Q_fuselage * Swet_fuselage) / S_ref_w);
-    
-    CD0_fuselage_array(i) = CD0_fuselage;
-end
+CD0_fuselage_arr = ((Cf_fuselage .* FF_fuselage .* Q_fuselage .* S_wet_fuselage) / S_ref_w);
 
 %% Inlets %%
 
 % Inlet parameters
-Swet_inlets = 8.562 * 1.5; % [m^2], Estimated
-l_inlets = 1.0; % [m]
-Q_inlets = 1; % Assumed 1
+l_inlet     = aircraft.geometry.inlet.length; % [m]
+S_wet_inlet  = aircraft.geometry.inlet.S_wet; % [m^2], Estimated
+A_max_inlet = aircraft.geometry.inlet.length;
 
-CD0_inlets_array = zeros(size(Mach_numbers));
+Q_inlet = 1; % Assumed 1
 
-for i = 1:length(Mach_numbers)
-    
-    % Flight conditions
-    M = Mach_numbers(i);
-    Re_inlets = Re_fuselage_values(i) * (l_inlets / l_fuselage); 
-    V = Mach_numbers(i) * speed_of_sound(i); 
-    x_laminar_inlets = 0.3; % Estimated
+Re_inlet = Re_fuselage * (l_inlet / l_fuselage); 
 
-    % Skin friction coefficients
-    Cf_inlets_laminar = 1.328 / sqrt(Re_inlets);
-    Cf_inlets_turbulent = 0.455 / ((log10(Re_inlets))^2.58 * (1 + 0.144 * M^2)^0.65);
-    Cf_inlets_effective = x_laminar_inlets * Cf_inlets_laminar + (1 - x_laminar_inlets) * Cf_inlets_turbulent;
+Cf_inlet = Cf_turbulent_calc(Re_inlet);
 
-    % Form factor
-    f_inlets = l_inlets / sqrt(4 * pi * (Swet_inlets / (4 * pi))); 
-    FF_inlets = 1 + 1.5 / (f_inlets^1.5) + (f_inlets / 400);
+% Form factor
+f_inlet  = l_inlet / sqrt(4 * pi * A_max_inlet); 
+FF_inlet = 0.9 + (5 / (f_inlet^1.5)) + (f_inlet / 400); 
 
-    CD0_inlets = ((Cf_inlets_effective * FF_inlets * Q_inlets * Swet_inlets) / S_ref_w);
-
-    CD0_inlets_array(i) = CD0_inlets;
-end
+CD0_inlets = ((Cf_inlet * FF_inlet * Q_inlet * S_wet_inlet) / S_ref_w) * 2; % Two inlets, multiply by two
 
 %% Wings (Both) %%
 
 % Wing parameters
-Swet_wings = 48.514; % [m^2]
+S_wet_wing = aircraft.geometry.wing.S_wet; % [m^2]
 Q_wings = 1; % Assumed 1 for a mid-wing configuration
 loc_max_thickness = 0.386; % [m]
 thickness_to_chord = 0.06; % Average is 6%

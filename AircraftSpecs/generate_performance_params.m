@@ -42,7 +42,6 @@ aircraft.performance.mach.max_alt = 1.6; %[Mach number], at 35000 feet
 aircraft.performance.mach.endurance = 0.4; % estimate from online
 
 aircraft.performance.mach.takeoff = 0.282; %estimate from?
-aircraft.performance.mach.
 
 
 %% SUSTAINED TURN
