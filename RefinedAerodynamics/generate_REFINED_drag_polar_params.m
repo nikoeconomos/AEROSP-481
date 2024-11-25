@@ -209,24 +209,27 @@ aero.e.clean         = oswaldfactor(aircraft.geometry.wing.AR, aircraft.geometry
 aero.e.takeoff_flaps = oswaldfactor(aircraft.geometry.wing.AR, aircraft.geometry.wing.sweep_LE,'shevell', aero.CD0.takeoff_flaps, 0, 0.98);
 aero.e.landing_flaps = oswaldfactor(aircraft.geometry.wing.AR, aircraft.geometry.wing.sweep_LE,'shevell', aero.CD0.landing_flaps, 0, 0.98);
 
+aero.e.htail = 1.78 * (1 - (0.045 * aircraft.geometry.htail.AR^0.68) ) - 0.64;
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% LIFT INDUCED DRAG CALCULATIONS %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+AR_wing = aircraft.geometry.wing.AR;
 
-AR = aircraft.geometry.wing.AR;
-
-aero.CDi.clean         = aero.CL.clean         / (pi * AR * aero.e.clean);
-aero.CDi.takeoff_flaps = aero.CL.takeoff_flaps / (pi * AR * aero.e.takeoff_flaps);
-aero.CDi.landing_flaps = aero.CL.landing_flaps / (pi * AR * aero.e.landing_flaps);
+aero.CDi.clean         = aero.CL.clean^2         / (pi * AR_wing * aero.e.clean);
+aero.CDi.takeoff_flaps = aero.CL.takeoff_flaps^2 / (pi * AR_wing * aero.e.takeoff_flaps);
+aero.CDi.landing_flaps = aero.CL.landing_flaps^2 / (pi * AR_wing * aero.e.landing_flaps);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% TRIM DRAG CALCULATIONS %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % For horizontal tail
-aspect_ratio_t = 7.984;
-et = 1.78 * (1 - (0.045 * aspect_ratio_t^0.68)) - 0.64;
+AR_htail = aircraft.geometry.htail.AR;
+
+
+
 x = 6.4337; % [m]
 MAC_tail = 0.9921; % [m]
 S_tail = 3.667 * 2; % [m^2]
