@@ -79,8 +79,7 @@ function aircraft = generate_component_weights(aircraft)
 
     wing.flap_deflect_takeoff = deg2rad(15);
     wing.flap_deflect_landing = deg2rad(30);
-    wing.slat_deflect_takeoff = deg2rad(7);
-    wing.slat_deflect_landing = deg2rad(16);
+    wing.flap_deflect_takeoff = deg2rad(15);
 
   
     %% WING MASS AND CG %%

@@ -30,13 +30,11 @@ wing = aircraft.geometry.wing;
 % For all aircraft aspects - Given in table in drive under utilities
 S_ref_wing = wing.S_ref; % [m^2]
 
-Mach_numbers = [0.282, 0.565, 0.847, 0.918, 0.988, 1.059, 1.129, 1.271, 1.412, 1.482, 1.553, 1.595, 1.6];
-
 wing_airfoil_mach = [0.20 0.40 0.60 0.65 0.70 ...
                      0.75 0.80 0.90 1.00 1.05 ...
-                     1.10 1.13 1.20];
+                     1.10 1.13];
 
-freesteam_mach  = airfoil_mach/cos(aircraft.geometry.wing.sweep_LE);
+freesteam_mach  = wing_airfoil_mach/cos(aircraft.geometry.wing.sweep_LE);
 
 ht_airfoil_mach = freesteam_mach*cos(aircraft.geometry.wing.sweep_LE);
 
@@ -53,10 +51,8 @@ nu_SL     = 0.00001461;
 nu_6000   = 0.00002416;
 nu_cruise = 0.00003706;
 kinematic_viscosity = [nu_SL, nu_6000, nu_cruise, nu_cruise, nu_cruise, nu_cruise, nu_cruise, nu_cruise, nu_cruise, nu_cruise, nu_cruise, nu_cruise, nu_cruise];
-dynamic_viscosity   = kinematic_viscosity * rho;
 
 speed_of_sound  = [a_SL, a_climb, a_cruise, a_cruise, a_cruise, a_cruise, a_cruise, a_cruise, a_cruise, a_cruise, a_cruise, a_cruise, a_cruise];
-flight_velocity = freestream_mach.*speed_of_sound;
 
 Cf_turbulent_calc = @(Re) 0.455 ./ ((log10(Re)).^2.58 * (1 + 0.144 * freesteam_mach.^2)^0.65); % turbulent
 
@@ -84,7 +80,7 @@ Cf_fuselage = Cf_turbulent_calc(Re_fuselage);
 f_fuse = l_fuselage / sqrt(4 * pi * A_max_fuselage);
 FF_fuselage = 0.9 + (5 / (f_fuse^1.5)) + (f_fuse / 400); 
 
-CD0_fuselage_arr = ((Cf_fuselage .* FF_fuselage .* Q_fuselage .* S_wet_fuselage) / S_ref_wing);
+CD0_fuselage = ((Cf_fuselage .* FF_fuselage .* Q_fuselage .* S_wet_fuselage) / S_ref_wing);
 
 %% Inlets %%
 
@@ -123,18 +119,18 @@ Cf_wing = Cf_turbulent_calc(Re_wing);
 
 FF_wing = (1 + (0.6 / (loc_max_thickness_wing)) * (t_c_wing) + 100 * (t_c_wing)^4) * (1.34 * freesteam_mach.^0.18 * cos(sweep_HC_wing)^0.28);
 
-CD0_wing = ((Cf_wing * FF_wing * Q_wing * S_wet_wing) / S_ref_wing);
+CD0_wing = (Cf_wing * FF_wing * Q_wing * S_wet_wing) / S_ref_wing;
 
 %% Horizontal Stabilizer (Both) %%
 
 % Horizontal stabilizer parameters
 S_wet_htail = aircraft.geometry.htail.S_wet; % [m^2]
-Q_h_t = 1.0; % Assumed 1
+Q_htail = 1.0; % Assumed 1
 
-loc_max_thickness_htail  = aircraft.geometry.wing.chordwise_loc_max_thickness; % [unitless]
-t_c_htail                = aircraft.geometry.wing.t_c_root; % Average is 6%
+loc_max_thickness_htail  = aircraft.geometry.htail.chordwise_loc_max_thickness; % [unitless]
+t_c_htail                = aircraft.geometry.htail.t_c_root; % Average is 6%
 
-sweep_HC_htail = aircraft.geometry..sweep_HC; % [degrees] Sweep angle of max thickness line
+sweep_HC_htail = aircraft.geometry.htail.sweep_HC; % [degrees] Sweep angle of max thickness line
 MAC_htail      = aircraft.geometry.htail.MAC; % [m]
 
 Re_htail = Re_fuselage * (MAC_htail / l_fuselage);
@@ -143,87 +139,81 @@ Cf_htail = Cf_turbulent_calc(Re_htail);
 
 FF_htail = (1 + (0.6 / (loc_max_thickness_htail)) * (t_c_htail) + 100 * (t_c_htail)^4) * (1.34 * freesteam_mach.^0.18 * cos(sweep_HC_htail)^0.28);
 
-CD0_htail = ((Cf_htail * FF_htail * Q_htail * S_wet_htail) / S_ref_wing);
-
-for i = 1:length(Mach_numbers)
-
-    % Flight conditions
-    M = Mach_numbers(i);
-    Re_HS = Re_fuselage_values(i) * (c_HS / l_fuselage);
-    V = Mach_numbers(i) * speed_of_sound(i);
-    x_laminar_HS = 0.3; % Estimated
-
-    % Skin friction coefficients
-    Cf_HS_laminar = 1.328 / sqrt(Re_HS);
-    Cf_HS_turbulent = 0.455 / ((log10(Re_HS))^2.58 * (1 + 0.144 * M^2)^0.65);
-    Cf_HS_effective = x_laminar_HS * Cf_HS_laminar + (1 - x_laminar_HS) * Cf_HS_turbulent;
-
-    % Form factor
-    f_HS = c_HS / (2 * (S_wet_h_t / S_ref_wing)^(1/2)); 
-    FF_HS = 1 + 2.7 / f_HS + (f_HS / 400);
-
-    CD0_HS = ((Cf_HS_effective * FF_HS * Q_h_t * S_wet_h_t) / S_ref_wing);
-
-    CD0_HS_array(i) = CD0_HS;
-end
+CD0_htail = (Cf_htail * FF_htail * Q_htail * S_wet_htail) / S_ref_wing;
 
 %% Vertical Stabilizer (Both) %%
 
-% Vertical stabilizer parameters
-Swet_VS = 3.73; % [m^2]
-c_VS = 1.381; % [m]
-Q_VS = 1.08; % For an H-tail configuration
+% Horizontal stabilizer parameters
+S_wet_vtail = aircraft.geometry.vtail.S_wet; % [m^2]
+Q_vtail = 1.0; % Assumed 1
 
-CD0_VS_array = zeros(size(Mach_numbers)); 
+loc_max_thickness_vtail  = aircraft.geometry.vtail.chordwise_loc_max_thickness; % [unitless]
+t_c_vtail                = aircraft.geometry.vtail.t_c_root; % Average is 6%
 
-for i = 1:length(Mach_numbers)
-    % Flight conditions
-    M = Mach_numbers(i);
-    Re_VS = Re_fuselage_values(i) * (c_VS / l_fuselage); 
-    V = Mach_numbers(i) * speed_of_sound(i); 
-    x_laminar_VS = 0.3; % Estimated
+sweep_HC_vtail = aircraft.geometry.vtail.sweep_HC; % [degrees] Sweep angle of max thickness line
+MAC_vtail      = aircraft.geometry.vtail.MAC; % [m]
 
-    % Skin friction coefficients
-    Cf_VS_laminar = 1.328 / sqrt(Re_VS);
-    Cf_VS_turbulent = 0.455 / ((log10(Re_VS))^2.58 * (1 + 0.144 * M^2)^0.65);
-    Cf_VS_effective = x_laminar_VS * Cf_VS_laminar + (1 - x_laminar_VS) * Cf_VS_turbulent;
+Re_vtail = Re_fuselage * (MAC_vtail / l_fuselage);
 
-    % Form factor
-    f_VS = c_VS / (2 * (Swet_VS / S_ref_wing)^(1/2));
-    FF_VS = 1 + 2.7 / f_VS + (f_VS / 400); 
+Cf_vtail = Cf_turbulent_calc(Re_vtail);
 
-    CD0_VS = ((Cf_VS_effective * FF_VS * Q_VS * Swet_VS) / S_ref_wing);
+FF_vtail = (1 + (0.6 / (loc_max_thickness_vtail)) * (t_c_vtail) + 100 * (t_c_vtail)^4) * (1.34 * freesteam_mach.^0.18 * cos(sweep_HC_vtail)^0.28);
 
-    CD0_VS_array(i) = CD0_VS;
-end
+CD0_vtail = (Cf_vtail * FF_vtail * Q_vtail * S_wet_vtail) / S_ref_wing;
+
+
+%% Landing Gear
+
+% Raymer table 12.6
+streamline_wheel_tire_per_area = 0.18;
+streamlined_strut_per_area = 0.05;
+
+%frontal areas pulled from cad sketch of lg 11/24/2024
+main_wheel_frontal_area = 0.158; %m^2 all from CAD
+nose_wheel_frontal_area = 0.065;
+main_strut_frontal_area = 0.165;
+nose_strut_frontal_area = 0.071;
+
+CD0_main_wheels = streamline_wheel_tire_per_area * main_wheel_frontal_area * 2;
+CD0_nose_wheels = streamline_wheel_tire_per_area * nose_wheel_frontal_area * 2;
+CD0_main_struts = streamlined_strut_per_area     * main_strut_frontal_area * 2;
+CD0_nose_strut  = streamlined_strut_per_area     * nose_strut_frontal_area * 1; % only one of these
+
+CD0_lg = CD0_main_wheels + CD0_nose_wheels + CD0_main_struts + CD0_nose_strut;
 
 %% Miscellaneous Drag %%
 
-CD_misc = 0; % Assumed to be zero because no main sources apply to our aircraft
+CD0_misc = 0; % Assumed to be zero because no main sources apply to our aircraft
 
 %% Leakage and Protuberance Drag %%
 
-CD_lp = 0.02; % Estimated from table in slides
+CD0_lp = 0.05; % Estimated from table in slides slide 20
 
 %% Total Parasitic Drag Calc %%
 
-total_components_CD0 = CD0_fuselage + CD0_inlets + CD0_wings + CD0_needle + CD0_HS + CD0_VS; 
-CD0 = (1/S_ref_wing) * (total_components_CD0) + CD_misc + CD_lp; 
-CD0_total = CD0;
-disp(['The total parasitic drag (CD) is ', num2str(CD0)]) % Used to ensure CD0 looks reasonable
+CD0_component_sum  = CD0_fuselage + CD0_inlets + CD0_wing  + CD0_htail + CD0_vtail; 
+
+aircraft.aerodynamics.CD0.clean = CD0_component_sum + CD0_misc + CD0_lp; 
 
 %% Flap Drag %%
 
-F_flap = 0.0144; % Given value for plain flaps
+F_flap = 0.0144; % for plain flaps, lecture 14 slide 24
+
+
 Cf = 0.325; % [m]
+
 C_wing_at_flap = 1.375; % [m] Outboard
+
 S_flapped = 11.611; % [m^2]
+
 delta_flap = 40; % From raymer, between 40-45 degrees for max lift
 
 delta_CD0_flap = F_flap * (Cf / C_wing_at_flap) * (S_flapped / S_ref_wing) * (delta_flap - 10);
 disp(['The delta flap drag (delta_CD_flap) is ', num2str(delta_CD0_flap)])
 
 %% Lift Induced Drag %%
+
+
 
 CL = 1.25; % Max CL
 aspect_ratio = 3.068;
