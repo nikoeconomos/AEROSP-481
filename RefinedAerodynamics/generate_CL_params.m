@@ -22,7 +22,7 @@ sectional_clean_Cl = 0.5248542; % From simulation at AOA = 2, takeoff, landing
 
 % From simulation at AOA = 6
 sectional_slat_TO_Cl = 0.88913;
-sectional_flap_TO_Cl = ;
+sectional_flap_TO_Cl = 1.36804;
 
 % From simulation at AOA = 10
 sectional_slat_L_Cl = 1.460362;
