@@ -45,9 +45,9 @@ M_supersonic = 1;
 
 
 % Wing CL alpha calculations
-CL_a_w_to = 2*pi*wing.AR / (2 + sqrt( (wing.AR/0.97)^2 * (1 + tan(wing.sweep_QC)^2 - M_takeoff^2) + 4)); % TODO CONFIRM sweep is for leading edge, not QC or whatever
+CL_a_w_to = 2*pi*wing.AR / (2 + sqrt( (wing.AR/0.97)^2 * (1 + tan(wing.sweep_QC)^2 - M_takeoff^2) + 4)); 
 CL_a_w_c  = 2*pi*wing.AR / (2 + sqrt( (wing.AR/0.97)^2 * (1 + tan(wing.sweep_QC)^2 - M_c^2) + 4));
-CL_a_w_s  = 2*pi*wing.AR / (2 + sqrt( (wing.AR/0.97)^2 * (1 + tan(wing.sweep_QC)^2 - M_supersonic^2) + 4));
+CL_a_w_s  = 2*pi*wing.AR / (2 + sqrt( (wing.AR/0.97)^2 * (1 + tan(wing.sweep_QC)^2 - M_supersonic^2) + 4)); % TODO Change
 
 % Downwash correction for regression H tail CL alpha
 dw_corr_to = 2*CL_a_w_to / (pi*wing.AR);
