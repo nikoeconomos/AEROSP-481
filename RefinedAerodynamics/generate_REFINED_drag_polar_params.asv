@@ -32,24 +32,38 @@ S_ref_w = wing.S_ref; % [m^2]
 
 Mach_numbers = [0.282, 0.565, 0.847, 0.918, 0.988, 1.059, 1.129, 1.271, 1.412, 1.482, 1.553, 1.595, 1.6];
 
-mach = [0.20 0.40 0.60 0.65 0.70 ...
-        0.75 0.80 0.90 1.00 1.05 ...
-        1.10 1.13 1.20]
+wing_airfoil_mach = [0.20 0.40 0.60 0.65 0.70 ...
+                     0.75 0.80 0.90 1.00 1.05 ...
+                     1.10 1.13 1.20];
 
-altitudes    = [0, 6000, 10600, 10600, 10600, 10600, 10600, 10600, 10600, 10600, 10600, 10600, 10600];
+freesteam_mach  = airfoil_mach/cos(aircraft.geometry.wing.sweep_LE);
 
-kinematic_viscosities = [0.00001461, 0.00002416, 0.00003706, 0.00003706, 0.00003706, 0.00003706, 0.00003706, 0.00003706, 0.00003706, 0.00003706, 0.00003706, 0.00003706, 0.00003706];
-speed_of_sound = [340.3, 316.5, 297.4, 297.4, 297.4, 297.4, 297.4, 297.4, 297.4, 297.4, 297.4, 297.4, 297.4];
+ht_airfoil_mach = freesteam_mach*cos(aircraft.geometry.wing.sweep_LE);
 
-Re_fuselage_values = [72630000, 81690000, 75060000, 81320000, 87570000, 93830000, 100090000, 112600000, 125110000, 131360000, 137620000, 141370000, 150130000];
+alt_cruise = aircraft.performance.cruise_alt;
+alt_climb  = 6000;
+altitudes  = [0, alt_climb, alt_cruise, alt_cruise, alt_cruise, alt_cruise, alt_cruise, alt_cruise, alt_cruise, alt_cruise, alt_cruise, alt_cruise, alt_cruise];
 
-rho = 1.225; % Sea level density
+
+v_SL     = 0.00001461;
+v_6000   = 0.00002416;
+v_cruise = 0.00003706;
+kinematic_viscosities = [v_SL, v_6000, v_cruise, v_cruise, v_cruise, v_cruise, v_cruise, v_cruise, v_cruise, v_cruise, v_cruise, v_cruise, v_cruise];
+
+[~, ~, rho_SL, a_SL]         = standard_atmosphere_calc(0);
+[~, ~, rho_climb, a_climb]   = standard_atmosphere_calc(alt_climb);
+[~, ~, rho_cruise, a_cruise] = standard_atmosphere_calc(alt_cruise);
+rho            = []
+speed_of_sound = [a_SL, a_climb, a_cruise, a_cruise, a_cruise, a_cruise, a_cruise, a_cruise, a_cruise, a_cruise, a_cruise, a_cruise, a_cruise];
+
+l_fuselage         = aircraft.geometry.fuselage.length;
+Re_fuselage_values = speed_of_sound .* wing_airfoil_mach .* l_fuselage ./ kinematic_viscosities;
+%Re_fuselage_values = [72630000, 81690000, 75060000, 81320000, 87570000, 93830000, 100090000, 112600000, 125110000, 131360000, 137620000, 141370000, 150130000];
 
 %% Fuselage %%
 
 % Aircraft parameters
-l_fuselage     = 15.59; % [m]
-Swet_fuselage  = 81.3657; % [m^2]
+Swet_fuselage  = aircraft.geometry.fuselage.S_wet; % [m^2]
 A_max_fuselage = pi * (l_fuselage / 4)^2; % Estimated cross-sectional area
 Q_fuselage     = 1; % Interference factor, given on slide 16 of lecture 14
 

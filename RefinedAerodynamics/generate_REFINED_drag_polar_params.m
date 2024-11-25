@@ -50,22 +50,21 @@ v_6000   = 0.00002416;
 v_cruise = 0.00003706;
 kinematic_viscosities = [v_SL, v_6000, v_cruise, v_cruise, v_cruise, v_cruise, v_cruise, v_cruise, v_cruise, v_cruise, v_cruise, v_cruise, v_cruise];
 
-[~, ~, ~, a_SL]     = standard_atmosphere_calc(0);
-[~, ~, ~, a_climb]  = standard_atmosphere_calc(alt_climb);
-[~, ~, ~, a_cruise] = standard_atmosphere_calc(alt_cruise);
+[~, ~, rho_SL, a_SL]         = standard_atmosphere_calc(0);
+[~, ~, rho_climb, a_climb]   = standard_atmosphere_calc(alt_climb);
+[~, ~, rho_cruise, a_cruise] = standard_atmosphere_calc(alt_cruise);
+rho            = [rho_SL, rho_climb, rho_cruise, rho_cruise, rho_cruise, rho_cruise, rho_cruise, rho_cruise, rho_cruise, rho_cruise, rho_cruise, rho_cruise, rho_cruise]
 speed_of_sound = [a_SL, a_climb, a_cruise, a_cruise, a_cruise, a_cruise, a_cruise, a_cruise, a_cruise, a_cruise, a_cruise, a_cruise, a_cruise];
 
-l_fuselage = 
-Re_fuselage_values = [72630000, 81690000, 75060000, 81320000, 87570000, 93830000, 100090000, 112600000, 125110000, 131360000, 137620000, 141370000, 150130000];
-
-rho = 1.225; % Sea level density
+l_fuselage         = aircraft.geometry.fuselage.length;
+Re_fuselage_values = speed_of_sound .* wing_airfoil_mach .* l_fuselage ./ kinematic_viscosities;
+%Re_fuselage_values = [72630000, 81690000, 75060000, 81320000, 87570000, 93830000, 100090000, 112600000, 125110000, 131360000, 137620000, 141370000, 150130000];
 
 %% Fuselage %%
 
 % Aircraft parameters
-l_fuselage     = 15.59; % [m]
-Swet_fuselage  = 81.3657; % [m^2]
-A_max_fuselage = pi * (l_fuselage / 4)^2; % Estimated cross-sectional area
+Swet_fuselage  = aircraft.geometry.fuselage.S_wet; % [m^2]
+A_max_fuselage = aircraft.geometry.fuselage.A_max; % Estimated cross-sectional area
 Q_fuselage     = 1; % Interference factor, given on slide 16 of lecture 14
 
 CD0_fuselage_array = zeros(size(Mach_numbers));
