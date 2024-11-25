@@ -75,8 +75,8 @@ function aircraft = generate_component_weights(aircraft)
     wing.c_root = 2*wing.S_ref / ( (1+wing.taper_ratio) * wing.b); % TODO where does this come from? - CAD ACCURATE
     wing.c_tip = wing.c_root*wing.taper_ratio;
 
-    wing.t_c_root                    = 0.05; % 6% tc ratio, from our design airfoil TODO UPDATE
-    wing.chordwise_loc_max_thickness = 0.48;
+    wing.t_c_root                    = 0.05; % 5% tc ratio, from our design airfoil
+    wing.chordwise_loc_max_thickness = 0.50; % pulled from cad
 
     wing.S_ctrl_surf = 3.39*2; % from CAD
 
