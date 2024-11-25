@@ -75,8 +75,8 @@ function aircraft = generate_component_weights(aircraft)
 
     wing.sweep_flap_hinge = 0;
 
-    wing.c_flapped_c = 0.3; % ratio of flapped chord to chord
-    wing.c_slatted_c = 0.1; % TODO Verify/update
+    wing.c_flapped_over_c = 0.3; % ratio of flapped chord to chord
+    wing.c_slatted_over_c = 0.1; % TODO Verify/update
 
     wing.flap_deflect_takeoff = deg2rad(15);
     wing.flap_deflect_landing = deg2rad(30);

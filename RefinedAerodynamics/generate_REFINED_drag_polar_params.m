@@ -23,9 +23,10 @@ function [aircraft] = generate_REFINED_drag_polar_params(aircraft)
 % Need to calculate drag at each component, then add together for total
 % drag
 
-aircraft = generate_target_CL_values(aircraft);
+aircraft = generate_target_CL_params(aircraft);
 
 wing = aircraft.geometry.wing;
+aero = aircraft.aerodynamics;
 
 % For all aircraft aspects - Given in table in drive under utilities
 S_ref_wing = wing.S_ref; % [m^2]
@@ -36,25 +37,11 @@ wing_airfoil_mach = [0.20 0.40 0.60 0.65 0.70 ...
 
 freesteam_mach  = wing_airfoil_mach/cos(aircraft.geometry.wing.sweep_LE);
 
-ht_airfoil_mach = freesteam_mach*cos(aircraft.geometry.wing.sweep_LE);
-
-alt_cruise = aircraft.performance.cruise_alt;
-alt_climb  = 6000;
-altitude   = [0, alt_climb, alt_cruise, alt_cruise, alt_cruise, alt_cruise, alt_cruise, alt_cruise, alt_cruise, alt_cruise, alt_cruise, alt_cruise, alt_cruise];
-
-[~, ~, rho_SL, a_SL]         = standard_atmosphere_calc(0);
-[~, ~, rho_climb, a_climb]   = standard_atmosphere_calc(alt_climb);
-[~, ~, rho_cruise, a_cruise] = standard_atmosphere_calc(alt_cruise);
-rho            = [rho_SL, rho_climb, rho_cruise, rho_cruise, rho_cruise, rho_cruise, rho_cruise, rho_cruise, rho_cruise, rho_cruise, rho_cruise, rho_cruise, rho_cruise];
-
-nu_SL     = 0.00001461;
-nu_6000   = 0.00002416;
-nu_cruise = 0.00003706;
-kinematic_viscosity = [nu_SL, nu_6000, nu_cruise, nu_cruise, nu_cruise, nu_cruise, nu_cruise, nu_cruise, nu_cruise, nu_cruise, nu_cruise, nu_cruise, nu_cruise];
-
-speed_of_sound  = [a_SL, a_climb, a_cruise, a_cruise, a_cruise, a_cruise, a_cruise, a_cruise, a_cruise, a_cruise, a_cruise, a_cruise, a_cruise];
-
 Cf_turbulent_calc = @(Re) 0.455 ./ ((log10(Re)).^2.58 * (1 + 0.144 * freesteam_mach.^2)^0.65); % turbulent
+
+%%%%%%%%%%%%%%%%%%%%%%
+%% CD0 CALCULATIONS %%
+%%%%%%%%%%%%%%%%%%%%%%
 
 %% Fuselage %%
 
@@ -161,7 +148,6 @@ FF_vtail = (1 + (0.6 / (loc_max_thickness_vtail)) * (t_c_vtail) + 100 * (t_c_vta
 
 CD0_vtail = (Cf_vtail * FF_vtail * Q_vtail * S_wet_vtail) / S_ref_wing;
 
-
 %% Landing Gear
 
 % Raymer table 12.6
@@ -189,40 +175,54 @@ CD0_misc = 0; % Assumed to be zero because no main sources apply to our aircraft
 
 CD0_lp = 0.05; % Estimated from table in slides slide 20
 
-%% Total Parasitic Drag Calc %%
-
-CD0_component_sum  = CD0_fuselage + CD0_inlets + CD0_wing  + CD0_htail + CD0_vtail; 
-
-aircraft.aerodynamics.CD0.clean = CD0_component_sum + CD0_misc + CD0_lp; 
-
 %% Flap Drag %%
 
 F_flap = 0.0144; % for plain flaps, lecture 14 slide 24
 
+cf_c = aircraft.geometry.wing.c_flapped_over_c; % ratio of flapped chord to chord
 
-Cf = 0.325; % [m]
+S_flapped = aircraft.geometry.wing.S_flapped; % [m^2]
 
-C_wing_at_flap = 1.375; % [m] Outboard
+flap_deflect_takeoff = aircraft.geometry.wing.flap_deflect_takeoff;
+flap_deflect_landing = aircraft.geometry.wing.flap_deflect_landing;
 
-S_flapped = 11.611; % [m^2]
+delta_CD0_takeoff_flaps = F_flap * (cf_c) * (S_flapped / S_ref_wing) * (flap_deflect_takeoff - 10);
+delta_CD0_landing_flaps = F_flap * (cf_c) * (S_flapped / S_ref_wing) * (flap_deflect_landing - 10);
 
-delta_flap = 40; % From raymer, between 40-45 degrees for max lift
+%% Total Parasitic Drag Calc %%
 
-delta_CD0_flap = F_flap * (Cf / C_wing_at_flap) * (S_flapped / S_ref_wing) * (delta_flap - 10);
-disp(['The delta flap drag (delta_CD_flap) is ', num2str(delta_CD0_flap)])
+CD0_component_sum  = CD0_fuselage + CD0_inlets + CD0_wing  + CD0_htail + CD0_vtail; 
 
-%% Lift Induced Drag %%
+aero.CD0.clean = CD0_component_sum + CD0_misc + CD0_lp; 
+
+aero.CD0.takeoff_flaps      = aero.CD0.clean + delta_CD0_takeoff_flaps;
+aero.CD0.takeoff_flaps_gear = aero.CD0.takeoff_flaps + CD0_lg;
+
+aero.CD0.landing_flaps = aero.CD0.clean + delta_CD0_landing_flaps;
+aero.CD0.landing_flaps_gear = aero.CD0.landing_flaps + CD0_lg;
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+%% CALCULATE e VALUES %%
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+aero.e.clean         = oswaldfactor(aircraft.geometry.wing.AR, aircraft.geometry.wing.sweep_LE,'shevell', aero.CD0.clean, 0, 0.98);
+aero.e.takeoff_flaps = oswaldfactor(aircraft.geometry.wing.AR, aircraft.geometry.wing.sweep_LE,'shevell', aero.CD0.takeoff_flaps, 0, 0.98);
+aero.e.landing_flaps = oswaldfactor(aircraft.geometry.wing.AR, aircraft.geometry.wing.sweep_LE,'shevell', aero.CD0.landing_flaps, 0, 0.98);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% LIFT INDUCED DRAG CALCULATIONS %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
+AR = aircraft.geometry.wing.AR;
 
-CL = 1.25; % Max CL
-aspect_ratio = 3.068;
-e = 0.68; % Estimated
+aero.CDi.clean         = aero.CL.clean         / (pi * AR * aero.e.clean);
+aero.CDi.takeoff_flaps = aero.CL.takeoff_flaps / (pi * AR * aero.e.takeoff_flaps);
+aero.CDi.landing_flaps = aero.CL.landing_flaps / (pi * AR * aero.e.landing_flaps);
 
-CD_i = CL^2 / pi * aspect_ratio * e;
-disp(['The total lift induced drag (CD_i) is ', num2str(CD_i)])
-
-%% Trim Drag %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% TRIM DRAG CALCULATIONS %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % For horizontal tail
 aspect_ratio_t = 7.984;
