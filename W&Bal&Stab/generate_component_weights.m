@@ -303,6 +303,8 @@ function aircraft = generate_component_weights(aircraft)
     w.empty = w.togw - w.components.fuel - w.components.payload;
     w.max_landing_weight = (1-(w.PDI_ff/2))* w.togw;
 
+    w.half_fuel = (1-(w.ff/2))* w.togw;
+
     %%%%%%%%%%%%%%%%%
     %% FUEL VOLUME %%
     %%%%%%%%%%%%%%%%%
