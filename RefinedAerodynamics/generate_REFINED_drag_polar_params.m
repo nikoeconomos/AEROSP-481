@@ -251,7 +251,7 @@ CL_wing_landing = aero.CL.landing_flaps; % NEED TO UPDATE ONCE VALUE IS DONE
 
 Cl = 2 * pi * 10 * (pi/180); % [rad] GET ACTUAL DISTRIBUTION, FOR DIFFERENT CONFIGS??
 c  = @(y) 4.187 - (0.628*y); % PARAMETRIZE W/ TAPER RATIO
-x_ac = 2.2218; ?????; %TODO WHAT IS THIS?
+x_ac = NaN; % before it was 2.2218; %TODO WHAT IS THIS?
 
 b_wing = aircraft.geometry.wing.b; % [m]
 
@@ -290,8 +290,8 @@ CLt_takeoff = (CL_wing_takeoff * (x_w/MAC_HT) + CM_pitch_minus_tail_takeoff) * (
 CLt_landing = (CL_wing_landing * (x_w/MAC_HT) + CM_pitch_minus_tail_landing) * (x / (x-x_w)) * (1 / V_HT);
 
 aero.CD_trim.clean         = (CLt_clean^2   / ( pi * aero.e.htail * AR_htail) ) * (S_HT / S_ref_wing); 
-aero.CD_trim.takeoff_flaps = (CLt_takeoff^2 / ( pi * aero.e.htail * AR_htail) ) * (S_HT / S_ref_wing);)
-aero.CD_trim.landing_flaps = (CLt_landing^2 / ( pi * aero.e.htail * AR_htail) ) * (S_HT / S_ref_wing);)
+aero.CD_trim.takeoff_flaps = (CLt_takeoff^2 / ( pi * aero.e.htail * AR_htail) ) * (S_HT / S_ref_wing);
+aero.CD_trim.landing_flaps = (CLt_landing^2 / ( pi * aero.e.htail * AR_htail) ) * (S_HT / S_ref_wing);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% TOTAL DRAG COEFFICIENT %%
