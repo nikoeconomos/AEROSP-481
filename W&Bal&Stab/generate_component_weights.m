@@ -48,6 +48,7 @@ function aircraft = generate_component_weights(aircraft)
 
     aircraft.geometry.fuselage.width = 2.1; % max width of fuselage from CAD
     aircraft.geometry.fuselage.length = 17.576; % length of fuselage from CAD
+    aircraft.geomtery.fuselage.A_max = ;
 
     aircraft.weight.density.fuselage_area = 23; %kg/m2 metabook p76
 
