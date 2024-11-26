@@ -26,9 +26,12 @@ function adjusted_cost = adjust_cost_inflation_calc(base_cost, base_year, target
 
 % Inflation adjustment function using the CEF method
 
+% Compare years again 2006 (from Raymer)
+compare_year = 2006;
+
 % Calculate bCEF (Base Year CEF) and tCEF (Then Year CEF)
-bCEF = 5.17053 + 0.104981 * (base_year - 2006);  % Base year CEF TODO why is this 2006
-tCEF = 5.17053 + 0.104981 * (target_year - 2006); % Target year CEF
+bCEF = 5.17053 + 0.104981 * (base_year - compare_year);  % Base year CEF TODO
+tCEF = 5.17053 + 0.104981 * (target_year - compare_year); % Target year CEF
 
 % Calculate the effective CEF
 CEF = tCEF / bCEF;

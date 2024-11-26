@@ -29,12 +29,12 @@ W = aircraft.weight.togw * 2.20462; %TOGW in [lbs], multiplied TOGW in kg with c
 % Quantity %
 Qd = 3; % Number of aircraft produced during development phase, number is sually between 2-10 so selected 3 due to 
 % cost restrictions and sizable industry knowledge on interceptor aircraft development 
-Qp = 1000; % Number of aircraft produced foor program duration (from RFP)
+Qp = 1000; % Number of aircraft produced for program duration (from RFP)
 Q = Qd + Qp; % Total aircraft quantity produced during program
 
 % Mission Requirements %
-S = 277.821180117969 * 1.944; % Maximum aircraft speed at best altitude in [kts], used dash speed at 35,000 ft and 
-% multiplied speed in m/s with conversion factor to get value in kts 
+S = 277.821180117969 * 1.944; % Maximum aircraft speed at best altitude in [knots], used dash speed at 35,000 ft and 
+% multiplied speed in m/s with conversion factor (1.944) to get value in knots 
 
 % Inflation Adjustments %
 target_year = 2024;
@@ -78,7 +78,7 @@ manufacturing_cost = manufacturing_hours * aircraft.labor.manufacturing_hourly_2
 
 %% Quality Control %%
 %%%%%%%%%%%%%%%%%%%%%
-quality_control_cost = 0.13 * manufacturing_cost; % Assuming that this guideline holds in 2024
+quality_control_cost = 0.13 * manufacturing_cost; % Typically 10-15% in aerospace manufacturing. This holds
 
 
 
