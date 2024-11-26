@@ -45,12 +45,16 @@ aircraft.aerodynamics.LD_cruise_from_CL_and_CD0_calc = @ (CL, CD0, k) 0.943 * ai
 %% Drag polar %%
 %%%%%%%%%%%%%%%%
 
+aircraft.aerodynamics.LD.max = aircraft.aerodynamics.LD.max_clean/0.943; % next to eq 2.15 in metabook
+aircraft.aerodynamics.LD.dash = 0.93 * aircraft.aerodynamics.LD.max_clean; 
+
 aircraft = generate_drag_polar_params(aircraft, 0.0219); %intial guess of CD0
 
 %% Efficiencies (not oswald)
 
 aircraft.aerodynamics.eta.wing  = 0.97; % wing efficiency (NOT OSWALD): usually 0.97 from metabook
 aircraft.aerodynamics.eta.htail = 0.8;  % tail efficiency: taking into account downwash from metabook
+>>>>>>> main
 
 %% AR wetted (STORES IN GEOMETRY)
 

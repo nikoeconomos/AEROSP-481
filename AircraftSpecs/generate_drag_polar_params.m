@@ -26,13 +26,15 @@ aero = aircraft.aerodynamics;
 
 %% ----------- Clean Configuration (Cruise) -----------
 % parasite drag coefficient (CD0) for clean configuration
-aero.CD0.clean = CD0_clean; 
+aero.CD0.cruise = CD0_clean; 
 
+<<<<<<< HEAD
 aero.e.cruise = oswaldfactor(aircraft.geometry.wing.AR, aircraft.geometry.wing.sweep_LE,'shevell', aero.CD0.clean, 0, 0.98);
-aero.CL.cruise = 0.5675; % from 06 Preliminary sizing presentation Slide 48
-aero.CD.cruise = aero.CD_parabolic_drag_polar_calc(aero.CD0.clean, aero.CL.cruise, aero.e.cruise);
+aero.CL.cruise = 1.25; % from 06 Preliminary sizing presentation Slide 48
+aero.CD.cruise = aero.CD_parabolic_drag_polar_calc(aero.CD0.clean, aero.CL.clean, aero.e.clean);
 
-aero.LD.max_clean = aero.LD_max_calc(aero.e.clean, aero.CD0.clean);
+aero.LD.max_cruise = aero.LD_max_calc(aero.e.clean, aero.CD0.clean);
+aero.LD.cruise = aero.CL.clean/aero.CD.clean;
 
 %% ----------- Takeoff Configuration 2 (Flaps Deployed, gear up ) -----------
 
