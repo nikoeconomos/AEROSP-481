@@ -229,8 +229,9 @@ aero.CDi.landing_flaps = aero.CL.landing_flaps^2 / (pi * AR_wing * aero.e.landin
 %% TRIM DRAG CALCULATIONS %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% TODO
+%% TODO FINISH
 
+%{
 % For horizontal tail
 AR_htail = aircraft.geometry.htail.AR;
 
@@ -292,11 +293,27 @@ CLt_landing = (CL_wing_landing * (x_w/MAC_HT) + CM_pitch_minus_tail_landing) * (
 aero.CD_trim.clean         = (CLt_clean^2   / ( pi * aero.e.htail * AR_htail) ) * (S_HT / S_ref_wing); 
 aero.CD_trim.takeoff_flaps = (CLt_takeoff^2 / ( pi * aero.e.htail * AR_htail) ) * (S_HT / S_ref_wing);
 aero.CD_trim.landing_flaps = (CLt_landing^2 / ( pi * aero.e.htail * AR_htail) ) * (S_HT / S_ref_wing);
+%}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% WAVE DRAG CALCULATIONS %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% TODO FINISH
+%{
+k             = 0.95; % for transonic airfoils
+sweep_QC_wing = aircraft.geometry.wing.sweep_QC_wing;
+t_c           = aircraft.geometry.wing.t_c;
+CL_cruise     = aircraft.aerodynamics.CL.cruise;
+
+aircraft.aerodynamics.MDD = k / cos(sweep_QC_wing) - t_c / cos(sweep_QC_wing)^2 - CL_cruise / (10 * cos(sweep_QC_wing)^3);
+%}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% TOTAL DRAG COEFFICIENT %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%% TODO ADD WAVE, TRIM DRAG
 aero.CD.clean = aero.CD0.clean + aero.CDi.clean + CD_trim;
 
 aero.CD.takeoff_flaps      = aero.CD0.takeoff_flaps      + aero.CDi.takeoff_flaps + aero.CD_trim.takeoff_flaps;

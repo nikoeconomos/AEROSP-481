@@ -18,7 +18,7 @@ function [aircraft] = generate_CL_params(aircraft)
 
 %% Define constant parameters
 
-sectional_clean_Cl  = 0.5248542; % From simulation at AOA = 2, takeoff, landing
+sectional_clean_Cl  = 0.5248542; % From simulation at AOA = 2, takeoff speed
 
 sectional_cruise_Cl = 0.6305; % From simulation at AOA = 2, cruise
 
