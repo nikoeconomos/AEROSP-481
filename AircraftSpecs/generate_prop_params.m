@@ -44,4 +44,11 @@ aircraft.propulsion.airflow = 122.4; %kg/s
 aircraft.propulsion.length = 4.6; %m
 
 
+% Equation 1: T / T(V=0) = A * M_inf^(-n) anderson p 176
+%T_T_V0 = A * M_inf^(-n);
+
+% Equation 2: T / T0 = (rho / rho_0)^m
+%T_T0 = (rho / rho_0)^m;
+
+
 end

@@ -30,10 +30,14 @@ function aircraft = generate_component_weights(aircraft)
     %% FUDGE FACTORS %% 
    
     % (Metabook 7.3.4)
+    % Chose upper end of fudge factors given that the lightest possible
+    % strucutre may also be the most expensive one but it would be
+    % unreasonable not to include modern weight saving materials and
+    % configurations at all
 
-    aircraft.weight.fudge_factor.wing = 0.85;
-    aircraft.weight.fudge_factor.tail = 0.83;
-    aircraft.weight.fudge_factor.fuselage = 0.9;
+    aircraft.weight.fudge_factor.wing = 0.9;
+    aircraft.weight.fudge_factor.tail = 0.88;
+    aircraft.weight.fudge_factor.fuselage = 0.95;
 
     %%%%%%%%%%%%%%
     %% FUSELAGE %%
@@ -65,6 +69,18 @@ function aircraft = generate_component_weights(aircraft)
     wing.c_tip = wing.c_root*wing.taper_ratio;
 
     wing.xRLE = 7.175; %m positino of leading edge of the root chord
+
+    wing.S_flapped = 10.588*2; % TODO UPDATE
+    wing.S_slatted = 10.588*2; % TODO UPDATE
+
+    wing.sweep_flap_hinge = 0;
+
+    wing.c_flapped_c = 0.3; % ratio of flapped chord to chord
+
+    wing.flap_deflect_takeoff = deg2rad(15);
+    wing.flap_deflect_landing = deg2rad(30);
+    wing.flap_deflect_takeoff = deg2rad(15);
+
   
     %% WING MASS AND CG %%
 
@@ -195,12 +211,13 @@ function aircraft = generate_component_weights(aircraft)
 
     %% ALGORITHM %%    
     
-    % intial estimate
+    % intial estimate FOR THE REPORT, VALUES NOT USED
     [W_0, ff] = togw_as_func_of_T_S_calc(aircraft, aircraft.propulsion.T_max, aircraft.geometry.wing.S_ref);
     W_e_init  = W_0*aircraft.weight.W_e_regression_calc(W_0);
     W_f_init  = ff * W_0;
-    learning_curve_costs = avg_flyaway_cost_calc(W_0, 1000);
-    learning_curve_costs = avg_flyaway_cost_calc(W_0, 1000);
+    [avg_flyaway_cost_250, ~]  = avg_flyaway_cost_calc(W_0, 250)
+    [avg_flyaway_cost_500, ~]  = avg_flyaway_cost_calc(W_0, 500)
+    [avg_flyaway_cost_1000, ~] = avg_flyaway_cost_calc(W_0, 1000)
 
 
     tol = 1e-3;
@@ -253,7 +270,7 @@ function aircraft = generate_component_weights(aircraft)
     f.cannon          = 1.204;
     f.left_wing       = 1.480;
     f.right_wing      = f.left_wing; 
-    f.left_conformal  = 0.575;
+    f.left_conformal  = 0.6783;
     f.right_conformal = f.left_conformal;
     f.engine          = 1.273;
 

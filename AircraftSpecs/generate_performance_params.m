@@ -24,22 +24,26 @@ aircraft.name = 'Libellula';
 %% OUR DESIGN POINTS
 
 aircraft.performance.TW_design_military = 0.55; % A SPOT WE MANUALLY CHOOSE FROM THE TW-WS DIAGRAM [N/N]
-aircraft.performance.TW_design = 1.05; % A SPOT WE MANUALLY CHOOSE FROM THE TW-WS DIAGRAM [N/N]
-aircraft.performance.WS_design = 525; % A SPOT WE MANUALLY CHOOSE FROM THE TW-WS DIAGRAM, [N/m^2]
+aircraft.performance.TW_design = 1.1; % A SPOT WE MANUALLY CHOOSE FROM THE TW-WS DIAGRAM [N/N]
+aircraft.performance.WS_design = 450; % A SPOT WE MANUALLY CHOOSE FROM THE TW-WS DIAGRAM, [N/m^2]
 
 %% loads
-aircraft.performance.load_factor.upper_limit = 7; % [g's] with 50% fuel
-aircraft.performance.load_factor.lower_limit = -3; % [g's]  with 50% fuel
+aircraft.performance.load_factor.limit_upper_limit = 7; % [g's] with 50% fuel
+aircraft.performance.load_factor.limit_lower_limit = -3; % [g's]  with 50% fuel
+aircraft.performance.load_factor.ultimate_upper_limit = 7*1.5; % [g's] with 50% fuel
+aircraft.performance.load_factor.ultimate_lower_limit = -3*1.5; % [g's]  with 50% fuel
 aircraft.performance.dynamic_pressure_load = 102128.48; %[Pa], 2133 psf in rfp
 
 %% altitude
 aircraft.performance.cruise_alt = 10668; % [m]
 
 %% mach numbers
-aircraft.performance.mach.cruise = 0.85; % TODO UPDATE --> estimate from online
-aircraft.performance.mach.dash = 1.6; % from rfp
-aircraft.performance.mach.max_alt = 1.6; %[Mach number], at 35000 feet
+aircraft.performance.mach.cruise    = 0.85; % TODO UPDATE --> estimate from online
+aircraft.performance.mach.dash      = 1.6; % from rfp
+aircraft.performance.mach.max_alt   = 1.6; %[Mach number], at 35000 feet
 aircraft.performance.mach.endurance = 0.4; % estimate from online
+aircraft.performance.mach.climb   = 0.548; % TODO UPDATE 
+aircraft.performance.mach.takeoff = 0.282; %estimate from?
 
 %% SUSTAINED TURN
 aircraft.performance.mach.max_sustained_turn = 1.2; %[Mach] from RFP
