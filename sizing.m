@@ -14,6 +14,7 @@ aircraft = generate_init_weight_params(aircraft);
 aircraft = generate_geometry_params(aircraft);
 
 aircraft = generate_aerodynamics_params(aircraft);
+
 % plot_drag_polar(aircraft);
 %drawnow
 
@@ -28,13 +29,13 @@ aircraft = generate_climb_segments(aircraft);
 
 %% GENERATE PRELIMINARY SIZINCAG PLOTS %%
 
-plot_T_W_W_S_space(aircraft)
-drawnow
+%plot_T_W_W_S_space(aircraft)
+%drawnow
 
-plot_T_S_space(aircraft)
+%plot_T_S_space(aircraft)
 %plot_T_S_space_F35(aircraft)
-[togw, ff] = togw_as_func_of_T_S_calc(aircraft, aircraft.propulsion.T_max, aircraft.geometry.wing.S_ref)
-drawnow
+%[togw, ff] = togw_as_func_of_T_S_calc(aircraft, aircraft.propulsion.T_max, aircraft.geometry.wing.S_ref)
+%drawnow
 
 %aircraft = generate_component_weights(aircraft);
 %aircraft = generate_aerodynamics_params(aircraft);
@@ -42,8 +43,15 @@ drawnow
 aircraft = generate_REFINED_drag_polar_params(aircraft);
 
 aircraft = generate_cost_params(aircraft);
+aircraft = generate_LG_params(aircraft);
+
+
+%% PRINT RESULTS %%
+
+disp("weight")
+aircraft.weight
  
-aircraft = generate_REFINED_drag_polar_params(aircraft);
+
 
 %% PRINT RESULTS %%
 
