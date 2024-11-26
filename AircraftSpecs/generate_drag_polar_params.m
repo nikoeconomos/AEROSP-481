@@ -28,15 +28,15 @@ aero = aircraft.aerodynamics;
 % parasite drag coefficient (CD0) for clean configuration
 aero.CD0.clean = CD0_clean; 
 
-aero.e.clean = oswaldfactor(aircraft.geometry.wing.AR, aircraft.geometry.wing.sweep_LE,'shevell', aero.CD0.clean, 0, 0.98);
-aero.CL.clean = 1.25; % from 06 Preliminary sizing presentation Slide 48
-aero.CD.clean = aero.CD_parabolic_drag_polar_calc(aero.CD0.clean, aero.CL.clean, aero.e.clean);
+aero.e.cruise = oswaldfactor(aircraft.geometry.wing.AR, aircraft.geometry.wing.sweep_LE,'shevell', aero.CD0.clean, 0, 0.98);
+aero.CL.cruise = 0.5675; % from 06 Preliminary sizing presentation Slide 48
+aero.CD.cruise = aero.CD_parabolic_drag_polar_calc(aero.CD0.clean, aero.CL.cruise, aero.e.cruise);
 
 aero.LD.max_clean = aero.LD_max_calc(aero.e.clean, aero.CD0.clean);
 
 %% ----------- Takeoff Configuration 2 (Flaps Deployed, gear up ) -----------
 
-aero.CL.takeoff_flaps = 1.7; % from 06 Preliminary sizing presentation Slide 48
+aero.CL.takeoff_flaps = 1.4116; % from 06 Preliminary sizing presentation Slide 48
 
 % calculate new parasitic drag
 delta_CD0_takeoff_flaps = 0.010;  % Additional drag due to takeoff flaps, metabook table 4.2
@@ -60,7 +60,7 @@ aero.LD.max_takeoff_flaps_gear = aero.LD_max_calc(aero.e.takeoff_flaps, aero.CD0
 
 %% ----------- Landing Configuration 1 (Flaps, gear up) -----------
 
-aero.CL.landing_flaps = 2; % from 06 Preliminary sizing presentation Slide 48
+aero.CL.landing_flaps = 1.928; % from 06 Preliminary sizing presentation Slide 48
 
 % calculate new parasitic drag
 delta_CD0_landing_flaps = 0.055;  % Additional drag due to landing flaps, metabook table 4.2

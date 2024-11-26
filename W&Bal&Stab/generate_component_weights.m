@@ -78,13 +78,13 @@ function aircraft = generate_component_weights(aircraft)
     wing.t_c_root                    = 0.05; % 5% tc ratio, from our design airfoil
     wing.chordwise_loc_max_thickness = 0.50; % pulled from cad
 
-    wing.S_ctrl_surf = 3.39*2; % from CAD
-
+    %sweeps
     wing.sweep_LE = aircraft.geometry.wing.sweep_LE; % in radians, set in generate_geometry
     wing.sweep_QC = atan( tan(wing.sweep_LE) - (4 / wing.AR) * ((0.25 * (1 - wing.taper_ratio)) / (1 + wing.taper_ratio)) ); % formula from aerodynamics slide 24
     wing.sweep_HC = atan( tan(wing.sweep_LE) - (4 / wing.AR) * ((0.50 * (1 - wing.taper_ratio)) / (1 + wing.taper_ratio)) );
     wing.sweep_TE = atan( tan(wing.sweep_LE) - (4 / wing.AR) * ((1.00 * (1 - wing.taper_ratio)) / (1 + wing.taper_ratio)) );
 
+    % locations/MAC
     wing.xRLE = 7.175; %m positino of leading edge of the root chord, from CAD
     wing.xR25 = wing.xRLE + 0.25*wing.c_root; % position of quarter chord at root of wing
 
@@ -93,6 +93,23 @@ function aircraft = generate_component_weights(aircraft)
 
     wing.xMAC   = aircraft.weight.func.xMAC_calc(wing.xRLE, wing.b, wing.c_root, wing.c_tip, wing.sweep_LE);
     wing.x40MAC = aircraft.weight.func.x40MAC_calc(wing.xMAC, wing.MAC);
+
+    % Flaps and slats
+    
+    wing.S_ctrl_surf = 3.39*2; % from CAD TODO UPDATE
+
+    wing.S_flapped = 10.588*2; % TODO UPDATE
+    wing.S_slatted = 10.588*2; % TODO UPDATE
+
+    wing.sweep_flap_hinge = 0;
+
+    wing.c_flapped_over_c = 0.3; % ratio of flapped chord to chord
+    wing.c_slatted_over_c = 0.1; % TODO Verify/update
+
+    wing.flap_deflect_takeoff = deg2rad(15);
+    wing.flap_deflect_landing = deg2rad(30);
+    wing.slat_deflect_takeoff = deg2rad(7);
+    wing.slat_deflect_landing = deg2rad(16);
     
     % re update aircraft struct
     aircraft.geometry.wing = wing;
