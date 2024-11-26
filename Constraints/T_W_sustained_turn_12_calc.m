@@ -21,6 +21,8 @@ function [T_W] = T_W_sustained_turn_12_calc(aircraft, W_S)
 
 %% Define variables
     
+    % metabook 4.9
+
     g = 9.8067;
 
     AR = aircraft.geometry.wing.AR;

@@ -41,6 +41,9 @@ aircraft.performance.mach.dash = 1.6; % from rfp
 aircraft.performance.mach.max_alt = 1.6; %[Mach number], at 35000 feet
 aircraft.performance.mach.endurance = 0.4; % estimate from online
 
+aircraft.performance.mach.takeoff = 0.282; %estimate from?
+
+
 %% SUSTAINED TURN
 aircraft.performance.mach.max_sustained_turn = 1.2; %[Mach] from RFP
 aircraft.performance.mach.min_sustained_turn = 0.9; %[Mach] from RFP

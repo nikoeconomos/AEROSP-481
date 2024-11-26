@@ -14,7 +14,7 @@ aircraft = generate_init_weight_params(aircraft);
 aircraft = generate_geometry_params(aircraft);
 
 aircraft = generate_aerodynamics_params(aircraft);
-plot_drag_polar(aircraft);
+% plot_drag_polar(aircraft);
 %drawnow
 
 aircraft = generate_init_weight_params(aircraft); % run again for better estimate
@@ -39,7 +39,11 @@ drawnow
 %aircraft = generate_component_weights(aircraft);
 %aircraft = generate_aerodynamics_params(aircraft);
 
-%aircraft = generate_cost_params(aircraft);
+aircraft = generate_REFINED_drag_polar_params(aircraft);
+
+aircraft = generate_cost_params(aircraft);
+ 
+aircraft = generate_REFINED_drag_polar_params(aircraft);
 
 %% PRINT RESULTS %%
 
@@ -84,4 +88,7 @@ TWmax = a.propulsion.T_max/(w0*9.81);
 disp('twreal mil')
 TWmil = a.propulsion.T_military/(w0*9.81);
 disp('wsreal')
-WS = w0/a.geometry.wing.S_ref;
+
+WS = w0/a.geometry.wing.S_ref
+
+a = plot_CL_design_space(a);
