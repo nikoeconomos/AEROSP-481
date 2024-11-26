@@ -37,24 +37,34 @@ aircraft.aerodynamics.k_calc = @(e) 1/(pi*aircraft.geometry.wing.AR*e); % standa
 
 aircraft.aerodynamics.CL_from_CD0_calc = @(CD0, k) sqrt(CD0 / k); % 4.12.1 algorithm 3
 
-aircraft.aerodynamics.LD_from_CL_and_CD0_calc = @ (CL, CD0, k) 0.94*CL/(CD0 + k * CL^2);  % 4.12.1 algorithm 3
+aircraft.aerodynamics.LD_from_CL_and_CD0_calc = @ (CL, CD0, k) CL/(CD0 + k * CL^2);  % 4.12.1 algorithm 3
+
+aircraft.aerodynamics.LD_cruise_from_CL_and_CD0_calc = @ (CL, CD0, k) 0.943 * aircraft.aerodynamics.LD_from_CL_and_CD0_calc(CL, CD0, k);
 
 
 %% Drag polar %%
 %%%%%%%%%%%%%%%%
 
-aircraft = generate_drag_polar_params(aircraft);
 aircraft.aerodynamics.LD.max = aircraft.aerodynamics.LD.max_clean/0.943; % next to eq 2.15 in metabook
 aircraft.aerodynamics.LD.dash = 0.93 * aircraft.aerodynamics.LD.max_clean; 
 
+aircraft = generate_drag_polar_params(aircraft, 0.0219); %intial guess of CD0
+
+%% Efficiencies (not oswald)
+
+aircraft.aerodynamics.eta.wing  = 0.97; % wing efficiency (NOT OSWALD): usually 0.97 from metabook
+aircraft.aerodynamics.eta.htail = 0.8;  % tail efficiency: taking into account downwash from metabook
+>>>>>>> main
+
 %% AR wetted (STORES IN GEOMETRY)
 
-aircraft.geometry.AR_wetted = (aircraft.aerodynamics.LD.max/14)^2 ; % from raymer new edition pg 40, for military aircraft, KLD = 14
+%aircraft.geometry.AR_wetted = (aircraft.aerodynamics.LD.max/14)^2 ; % from raymer new edition pg 40, for military aircraft, KLD = 14
 
 %% Stall Speed at takeoff 
 
 aircraft.environment.rho_SL_15C = 1.225; %[kg.m^3]  % 15 degrees celsius, sea level
 aircraft.environment.rho_SL_30C = 1.1644; % [kg/m^3] % 45 degrees celsius, sea level. Calculated from an online calc
+aircraft.environment.rho_4000ft_30C = 1.013054; % kg/m3
 
 aircraft.performance.max_alt = 15240; %[m], got this from f35 guess (50,000 feet). Needs to be updated with our actual max altitude. TOD UPDATE
 

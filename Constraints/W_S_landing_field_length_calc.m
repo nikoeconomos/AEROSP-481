@@ -48,7 +48,7 @@ end
 
 ac_50_fuel = 1-(ff/2);
 
-W_S = W_S_L / ac_50_fuel; % factor of 0.85 is Mlanding/Mtakeoff (90%)
+W_S = W_S_L / 0.85; % factor of 0.85 is Mlanding/Mtakeoff (90%)
 
 %% Raymer 5.5
 %W_S = sigma*CL_max*(s_land-s_a)/5; % raymer 5.5

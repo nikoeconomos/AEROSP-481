@@ -39,13 +39,13 @@ aircraft.mission.climb.ks = [1.2, 1.2, 1.2,...
 %%%%%%%
 
 aircraft.mission.climb.e = [aircraft.aerodynamics.e.takeoff_flaps, aircraft.aerodynamics.e.takeoff_flaps, aircraft.aerodynamics.e.takeoff_flaps,...
-                            aircraft.aerodynamics.e.cruise, aircraft.aerodynamics.e.landing_flaps, 0.85*aircraft.aerodynamics.e.landing_flaps];
+                            aircraft.aerodynamics.e.clean, aircraft.aerodynamics.e.landing_flaps, 0.85*aircraft.aerodynamics.e.landing_flaps];
 
 %% MAXIMUM LIFT COEFFICIENT %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 aircraft.mission.climb.CL_max = [aircraft.aerodynamics.CL.takeoff_flaps, aircraft.aerodynamics.CL.takeoff_flaps, aircraft.aerodynamics.CL.takeoff_flaps,...
-                                 aircraft.aerodynamics.CL.cruise, aircraft.aerodynamics.CL.landing_flaps, 0.85*aircraft.aerodynamics.CL.landing_flaps]; % taken from table in Roskam textbook, OEI balked landing climb value is 0.85
+                                 aircraft.aerodynamics.CL.clean, aircraft.aerodynamics.CL.landing_flaps, 0.85*aircraft.aerodynamics.CL.landing_flaps]; % taken from table in Roskam textbook, OEI balked landing climb value is 0.85
                                                                                                                                                         % calculated following method in metabook page 40
 
 %% ZERO LIFT DRAG COEFFICIENT %%
