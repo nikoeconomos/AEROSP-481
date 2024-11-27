@@ -31,7 +31,7 @@ comp_weights = [aircraft.weight.components.fuel + aircraft.weight.components.oil
                 aircraft.weight.components.lg, aircraft.weight.components.xtra, ...
                 aircraft.weight.components.gfe_total];
 
-%{
+
 % Reorder components to place 'Fuel' and 'Payload' next to each other in the chart
 fuel_idx = find(strcmp(comp_names, 'Fuel'));
 payload_idx = find(strcmp(comp_names, 'Payload'));
@@ -73,7 +73,7 @@ end
 
 % Add a title
 title(['Aircraft Component Weight Breakdown. TOGW: ', num2str(round(aircraft.weight.togw)), ' kg']);
-%}
+
 
 %% OEW, FUEL, PAYLOAD
 

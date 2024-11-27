@@ -1,4 +1,4 @@
-function [aircraft] = plot_cost_pie_chart(aircraft)
+function [] = plot_cost_pie_chart(aircraft)
 % Description: This function makes a pie chart displaying the cost
 % breakdown of different cost values and categories
 % 

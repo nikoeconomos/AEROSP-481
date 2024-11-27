@@ -34,14 +34,14 @@ for i = 1:n
 
     %% find which CD_0, e, k, and rho from altitude
     if h < 100
-        CD0 = aircraft.aerodynamics.CD0.takeoff_flaps_gear; % for immediately after takeoff, less than 100m (chatgpt)
-        e   = aircraft.aerodynamics.e.takeoff_flaps;
+        CD0 = aircraft.aerodynamics.CD0.takeoff_flaps_slats_gear; % for immediately after takeoff, less than 100m (chatgpt)
+        e   = aircraft.aerodynamics.e.takeoff_flaps_slats;
     elseif h >= 100 && h < 400
-        CD0 = aircraft.aerodynamics.CD0.takeoff_flaps; % takeoff flaps only, less than 400 meters (chatgpt)
-        e   = aircraft.aerodynamics.e.takeoff_flaps;
+        CD0 = aircraft.aerodynamics.CD0.takeoff_flaps_slats; % takeoff flaps only, less than 400 meters (chatgpt)
+        e   = aircraft.aerodynamics.e.takeoff_flaps_slats;
     else
-        CD0 = aircraft.aerodynamics.CD0.clean; % rest of climb
-        e   = aircraft.aerodynamics.e.clean;
+        CD0 = aircraft.aerodynamics.CD0.cruise; % rest of climb
+        e   = aircraft.aerodynamics.e.cruise;
     end
     % k from the e decide above
     k = aircraft.aerodynamics.k_calc(e);

@@ -32,7 +32,7 @@ function [T_W] = T_W_sustained_turn_09_calc(aircraft, W_S)
 
     n = 1/cos(aircraft.performance.bank_angle_360); %raymer 5.19
 
-    CD0_clean = aircraft.aerodynamics.CD0.clean;
+    CD0_clean = aircraft.aerodynamics.CD0.cruise;
 
 %% calculation
     q   = rho*(turn_velocity)^2/2; % Pa

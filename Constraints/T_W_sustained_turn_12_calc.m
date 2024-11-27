@@ -34,7 +34,7 @@ function [T_W] = T_W_sustained_turn_12_calc(aircraft, W_S)
 
     n = 1/cos(aircraft.performance.bank_angle_360); % trig
 
-    CD0_clean = aircraft.aerodynamics.CD0.clean;
+    CD0_clean = aircraft.aerodynamics.CD0.cruise;
 
 %% calculation
 

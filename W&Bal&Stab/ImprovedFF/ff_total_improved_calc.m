@@ -66,7 +66,7 @@ for i = 1:length(aircraft.mission.segments)
         TSFC = mission.TSFC(i);
         velocity = mission.velocity(i); % find optimal
         altitude = mission.alt(i); % find optimal
-        e = aircraft.aerodynamics.e.clean;
+        e = aircraft.aerodynamics.e.cruise;
 
         W_curr = W_0 * ff_current;
 
@@ -91,8 +91,8 @@ for i = 1:length(aircraft.mission.segments)
     elseif mission.segments(i) == "loiter" || mission.segments(i) == "reserve" %  no difference between them
         endurance = mission.endurance(i);
         TSFC = mission.TSFC(i);
-        e   = aircraft.aerodynamics.e.clean;
-        CD0 = aircraft.aerodynamics.CD0.clean; % UPDATE FOR TRIM?
+        e   = aircraft.aerodynamics.e.cruise;
+        CD0 = aircraft.aerodynamics.CD0.cruise; % UPDATE FOR TRIM?
 
         LD_max = aircraft.aerodynamics.LD_max_calc(e, CD0); % Use LD max for loiter
 

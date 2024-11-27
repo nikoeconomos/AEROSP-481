@@ -24,7 +24,7 @@ function T_W = T_W_dash_calc(aircraft, W_S)
     AR = aircraft.geometry.wing.AR;
     e = aircraft.aerodynamics.e.supersonic; % span efficiency
 
-    CD0_clean = aircraft.aerodynamics.CD0.clean;
+    CD0_clean = aircraft.aerodynamics.CD0.cruise;
 
     dash_mach = aircraft.performance.mach.dash;
     [~,~,rho,~] = standard_atmosphere_calc(10668); %35000ft = 10668m

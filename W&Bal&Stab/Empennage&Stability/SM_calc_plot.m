@@ -36,7 +36,14 @@ function aircraft = SM_calc_plot(aircraft, mach)
     C_L_alpha_w = zeros(1 , length(mach));
     C_L_alpha_h = zeros(1 , length(mach));
 
+    C_L_alpha_w   = 2*pi*AR_w ./ (2+sqrt( (AR_w/eta_w)^2 * (1+tan(Lambda_HC_w)^2 - mach.^2) +4)); % Metabook 8.18
+    
+    C_L_alpha_h_0 = 2*pi*AR_h ./ (2+sqrt( (AR_h/eta_h)^2 * (1+tan(Lambda_HC_h)^2 - mach.^2) +4)); % 8.19
+    de_da         = 2*C_L_alpha_w / (pi*AR_w);
+    C_L_alpha_h   = C_L_alpha_h_0.*(1 - de_da).*eta_h; % 8.21
+
     %% TODO MAKE TRANSONIC AND SUPERSONIC UNIQUE --> Juan data?
+    %{
     for i = 1:length(mach)
         if mach(i) <= 0.8
 
@@ -66,6 +73,7 @@ function aircraft = SM_calc_plot(aircraft, mach)
 
         end
     end
+    %}
 
     aircraft.stability.C_L_alpha.wing = C_L_alpha_w;
     aircraft.stability.C_L_alpha.htail = C_L_alpha_h;

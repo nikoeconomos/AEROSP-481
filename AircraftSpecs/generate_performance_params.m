@@ -23,9 +23,9 @@ aircraft.name = 'Libellula';
 
 %% OUR DESIGN POINTS
 
-aircraft.performance.TW_design_military = 0.55; % A SPOT WE MANUALLY CHOOSE FROM THE TW-WS DIAGRAM [N/N]
-aircraft.performance.TW_design = 1.1; % A SPOT WE MANUALLY CHOOSE FROM THE TW-WS DIAGRAM [N/N]
-aircraft.performance.WS_design = 450; % A SPOT WE MANUALLY CHOOSE FROM THE TW-WS DIAGRAM, [N/m^2]
+aircraft.performance.TW_design_military = 0.62; % A SPOT WE MANUALLY CHOOSE FROM THE TW-WS DIAGRAM [N/N]
+aircraft.performance.TW_design = 1.05; % A SPOT WE MANUALLY CHOOSE FROM THE TW-WS DIAGRAM [N/N]
+aircraft.performance.WS_design = 550; % A SPOT WE MANUALLY CHOOSE FROM THE TW-WS DIAGRAM, [N/m^2]
 
 %% loads
 aircraft.performance.load_factor.limit_upper_limit = 7; % [g's] with 50% fuel
@@ -44,10 +44,15 @@ aircraft.performance.mach.max_alt   = 1.6; %[Mach number], at 35000 feet
 aircraft.performance.mach.endurance = 0.4; % estimate from online
 aircraft.performance.mach.climb   = 0.548; % TODO UPDATE 
 aircraft.performance.mach.takeoff = 0.282; %estimate from?
-
-%% SUSTAINED TURN
 aircraft.performance.mach.max_sustained_turn = 1.2; %[Mach] from RFP
 aircraft.performance.mach.min_sustained_turn = 0.9; %[Mach] from RFP
+
+m = aircraft.performance.mach;
+
+aircraft.performance.mach.arr = [m.takeoff, m.climb, m.cruise,...
+                                 m.min_sustained_turn, m.max_sustained_turn, m.dash];
+
+%% Instantaneous turn
 
 aircraft.performance.bank_angle_360 = deg2rad(60); %[rad] ESTIMATE FROM ONLINE
 
@@ -56,7 +61,7 @@ aircraft.performance.bank_angle_360 = deg2rad(60); %[rad] ESTIMATE FROM ONLINE
 g = 9.8067;
 
 aircraft.performance.max_instantaneous_turn_rate = deg2rad(18); %rad/s
-aircraft.performance.corner_speed = 155.556; % m/s, 550 km/hr in raymer page 138
+aircraft.performance.corner_speed = 135; % m/s TODO UPDATE With VN diagram
 
 aircraft.performance.n_inst = sqrt( ((aircraft.performance.max_instantaneous_turn_rate*aircraft.performance.corner_speed)/g)^2+1); %raymer 5.19
 

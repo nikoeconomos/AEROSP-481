@@ -31,7 +31,7 @@ rho_SL_30C = aircraft.environment.rho_SL_30C; %[kg/m^3]
 
 sigma = rho_SL_30C/rho_1219_MSL;
 
-CL_max = aircraft.aerodynamics.CL.landing_flaps;  
+CL_max = aircraft.aerodynamics.CL.landing_flaps_slats;  
 
 %% Hamburg
 
@@ -42,13 +42,10 @@ W_S_L = kl*sigma*CL_max*(s_land-s_a); %[kg/m^2]
 if strcmp(aircraft.name, 'F-35')
     ff = 0.278;
 else
-    aircraft = generate_PDI_mission(aircraft);
-    ff = ff_total_calc(aircraft);
+    ff = ff_total_calc(aircraft)+0.02;
 end
 
-ac_50_fuel = 1-(ff/2);
-
-W_S = W_S_L / 0.85; % factor of 0.85 is Mlanding/Mtakeoff (90%)
+W_S = W_S_L / ( 1 - (ff/2)); % factor of 0.85 is Mlanding/Mtakeoff (90%)
 
 %% Raymer 5.5
 %W_S = sigma*CL_max*(s_land-s_a)/5; % raymer 5.5

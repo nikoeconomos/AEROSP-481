@@ -31,29 +31,42 @@ function aircraft = generate_component_weights(aircraft)
     %% FUDGE FACTORS %% 
    
     % (Metabook 7.3.4)
-    % Chose upper end of fudge factors given that the lightest possible
-    % strucutre may also be the most expensive one but it would be
-    % unreasonable not to include modern weight saving materials and
-    % configurations at all
+    % Chose lowest end of fudge factors for max weight saving
 
-    aircraft.weight.fudge_factor.wing = 0.9;
-    aircraft.weight.fudge_factor.tail = 0.88;
-    aircraft.weight.fudge_factor.fuselage = 0.95;
+    aircraft.weight.fudge_factor.wing = 0.85;
+    aircraft.weight.fudge_factor.tail = 0.83;
+    aircraft.weight.fudge_factor.fuselage = 0.90;
 
     %%%%%%%%%%%%%%
     %% FUSELAGE %%
     %%%%%%%%%%%%%%
 
-    aircraft.geometry.fuselage.S_wet = 90.9387; % m2 from CAD
+    aircraft.geometry.fuselage.S_wet = 94.614; % m2 from CAD
 
     aircraft.geometry.fuselage.width = 2.1; % max width of fuselage from CAD
-    aircraft.geometry.fuselage.length = 17.576; % length of fuselage from CAD
-    aircraft.geomtery.fuselage.A_max = NaN; % TODO UPDATE
+    aircraft.geometry.fuselage.length = 16.459; % length of fuselage from CAD
+    aircraft.geometry.fuselage.height = 1.632; % length of fuselage from CAD
+    aircraft.geometry.fuselage.A_max = 2.5; % m2, TODO UPDATE
 
     aircraft.weight.density.fuselage_area = 23; %kg/m2 metabook p76
 
     aircraft.weight.components.fuselage = (aircraft.geometry.fuselage.S_wet*aircraft.weight.density.fuselage_area)...
                                           *aircraft.weight.fudge_factor.fuselage;
+
+    % roskam 5.26, Not accurate (unused)
+    K_inl = 1.25; % for buried engine
+    q_D   = 2133; % from RFP
+    l_f = ConvLength(aircraft.geometry.fuselage.length, 'ft', 'm');
+    h_f = ConvLength(aircraft.geometry.fuselage.height, 'ft', 'm');
+    aircraft.weight.func.fuselage_roskam = @(W0) ConvMass(1 * 10^0.43 * (K_inl)^1.42 * (q_D / 100)^0.283 * (W0 / 1000)^0.95 * (l_f / h_f)^0.71, 'lbm', 'kg') ...
+                                                 * aircraft.weight.fudge_factor.fuselage; 
+
+
+    % for drag calculation. Not currently being used. TODO UPDATE
+    aircraft.geometry.inlet.length = NaN;
+    aircraft.geometry.inlet.S_wet  = NaN;
+    aircraft.geometry.inlet.A_max  = NaN;
+    
 
     %%%%%%%%%%%%%%%%%%%
     %% WING GEOMETRY %%
@@ -67,7 +80,7 @@ function aircraft = generate_component_weights(aircraft)
     wing.S_ref = aircraft.geometry.wing.S_ref; %m2, updated in geometry
 
     %wing.S_wet = wing.S_ref*2; %m2 TODO APPROXIMATION, UPDATE WITH A BETTER ONE
-    wing.S_wet = 24.716*2;
+    wing.S_wet = wing.S_ref*2;
     wing.b = sqrt(wing.AR*wing.S_ref);
 
     wing.taper_ratio = 0.35;
@@ -94,23 +107,8 @@ function aircraft = generate_component_weights(aircraft)
     wing.xMAC   = aircraft.weight.func.xMAC_calc(wing.xRLE, wing.b, wing.c_root, wing.c_tip, wing.sweep_LE);
     wing.x40MAC = aircraft.weight.func.x40MAC_calc(wing.xMAC, wing.MAC);
 
-    % Flaps and slats
-    
-    wing.S_ctrl_surf = 3.39*2; % from CAD TODO UPDATE
-
-    wing.S_flapped = 10.588*2; % TODO UPDATE
-    wing.S_slatted = 10.588*2; % TODO UPDATE
-
-    wing.sweep_flap_hinge = 0;
-
-    wing.c_flapped_over_c = 0.3; % ratio of flapped chord to chord
-    wing.c_slatted_over_c = 0.1; % TODO Verify/update
-
-    wing.flap_deflect_takeoff = deg2rad(15);
-    wing.flap_deflect_landing = deg2rad(30);
-    wing.slat_deflect_takeoff = deg2rad(7);
-    wing.slat_deflect_landing = deg2rad(16);
-    
+    % Flaps and slats (IN GENERATE CL PARAMS)
+      
     % re update aircraft struct
     aircraft.geometry.wing = wing;
   
@@ -125,7 +123,8 @@ function aircraft = generate_component_weights(aircraft)
 
     % RAYMER METABOOK 7.11, cargo/transport
     N_z = aircraft.performance.load_factor.ultimate_upper_limit;
-    aircraft.weight.func.wing_weight_raymer = @(W_0) ConvMass( 0.0051 * ( ConvMass(W_0, 'kg', 'lbm') * N_z)^0.557 ...
+    aircraft.weight.func.wing_weight_raymer = @(W_0) aircraft.weight.fudge_factor.wing * ...
+                                                     ConvMass( 0.0051 * ( ConvMass(W_0, 'kg', 'lbm') * N_z)^0.557 ...
                                                                     * ConvArea(wing.S_ref, 'm2', 'ft2')^0.649 * wing.AR^0.5 ... 
                                                                     * (wing.t_c_root)^(-0.4) * (1 + wing.taper_ratio)^0.1 * (cos(wing.sweep_QC))^(-1) ...
                                                                     * ConvArea(wing.S_ctrl_surf, 'm2', 'ft2')^0.1, ...
@@ -133,7 +132,8 @@ function aircraft = generate_component_weights(aircraft)
     
     % KROO METABOOK 7.12, general?
     n = aircraft.performance.load_factor.ultimate_upper_limit;
-    aircraft.weight.func.wing_weight_kroo   = @(W_0, W_zf) ConvMass( 4.22 * ConvArea(wing.S_ref, 'm2', 'ft2') ... 
+    aircraft.weight.func.wing_weight_kroo   = @(W_0, W_zf) aircraft.weight.fudge_factor.wing *  ...
+                                                           ConvMass( 4.22 * ConvArea(wing.S_ref, 'm2', 'ft2') ... 
                                                                         + 1.642e-6 * (n * ConvLength(wing.b^3, 'm', 'ft') * sqrt(ConvMass(W_0, 'kg', 'lbm') * ConvMass(W_zf, 'kg', 'lbm'))...
                                                                             * (1 + 2 * wing.taper_ratio)) ...
                                                                           / ( ConvArea(wing.S_ref, 'm2', 'ft2') * (wing.t_c_root) ...
@@ -159,7 +159,7 @@ function aircraft = generate_component_weights(aircraft)
     % S = wing area in ft^2
     K_w = 1; %for fixed wing aircraft
     n_ult = aircraft.performance.load_factor.ultimate_upper_limit;
-    aircraft.weight.func.wing_weight_roskam_USN = @(WTO) ...
+    aircraft.weight.func.wing_weight_roskam_USN = @(WTO)  ...
                                                        ConvMass( 19.29 * ( ...
                                                                          ( (K_w * n_ult * ConvMass(WTO, 'kg', 'lbm') ) / (wing.t_c_root) ) ...
                                                                          * ( ( tan(wing.sweep_LE) - 2 * (1 - wing.taper_ratio) / (wing.AR * (1 + wing.taper_ratio) ) )^2 + 1) * 10^-6 ...
@@ -206,11 +206,15 @@ function aircraft = generate_component_weights(aircraft)
     %% ENGINE WEIGHT %%
     %%%%%%%%%%%%%%%%%%%
 
-    aircraft.weight.components.engine_dry = 1800; %kg, the f110
+    aircraft.weight.components.engine_dry = 1840; %kg, the f110
 
-    theoretical_engine_weight          = w_eng_calc(aircraft.propulsion.T_max);
-    theoretical_engine_dry_weight      = ConvMass((0.521*ConvForce(aircraft.propulsion.T_max, 'N', 'lbf')^0.9),'lbm', 'kg');
-    aircraft.weight.components.engine  = theoretical_engine_weight - theoretical_engine_dry_weight  + aircraft.weight.components.engine_dry;
+    theoretical_engine_weight       = w_eng_calc(aircraft.propulsion.T_military); % using military is more accurate for this estimate
+    theoretical_engine_dry_weight   = ConvMass((0.521*ConvForce(aircraft.propulsion.T_military, 'N', 'lbf')^0.9),'lbm', 'kg');
+    theoretical_engine_start_weight = ConvMass((9.330*(ConvMass(theoretical_engine_dry_weight, 'kg', 'lbm')/1000)^1.078),'lbm', 'kg');
+    adjusted_engine_start_weight    = ConvMass((9.330*(ConvMass(aircraft.weight.components.engine_dry, 'kg', 'lbm')/1000)^1.078),'lbm', 'kg');
+
+    aircraft.weight.components.engine  = theoretical_engine_weight - theoretical_engine_dry_weight   + aircraft.weight.components.engine_dry ...
+                                                                   - theoretical_engine_start_weight + adjusted_engine_start_weight;
 
     %%%%%%%%%%%%
     %% CANNON %%
@@ -260,11 +264,6 @@ function aircraft = generate_component_weights(aircraft)
     
     % intial estimate FOR THE REPORT, VALUES NOT USED
     [W_0, ff] = togw_as_func_of_T_S_calc(aircraft, aircraft.propulsion.T_max, aircraft.geometry.wing.S_ref);
-    W_e_init  = W_0*aircraft.weight.W_e_regression_calc(W_0);
-    W_f_init  = ff * W_0;
-    % [avg_flyaway_cost_250, ~]  = avg_flyaway_cost_calc(W_0, 250)
-    % [avg_flyaway_cost_500, ~]  = avg_flyaway_cost_calc(W_0, 500)
-    % [avg_flyaway_cost_1000, ~] = avg_flyaway_cost_calc(W_0, 1000)
 
     tol = 1e-3;
     converged = false;
@@ -276,15 +275,15 @@ function aircraft = generate_component_weights(aircraft)
         w.ff = ff_total_improved_calc(aircraft, W_0);
         
         w.components.fuel = ff    * W_0;
-        w.components.lg   = 0.043 * W_0;
-        w.components.xtra = 0.17  * W_0 - w.components.gfe_total;
+        w.components.lg   = 0.033 * W_0;
+        w.components.xtra = 0.14  * W_0 - w.components.gfe_total;
 
         % Use Roskam; It is the most viable for fighters
+        %w.components.fuselage = w.func.fuselage_roskam(W_0);
         %w.components.wing = w.func.wing_weight_raymer(W_0);
         %w.components.wing = w.func.wing_weight_kroo(W_0, w.components.fuel);
         %w.components.wing = w.func.wing_weight_roskam_USN(W_0);
-        w.components.wing = w.func.wing_weight_roskam_USAF(W_0);
-        
+        w.components.wing  = w.func.wing_weight_roskam_USAF(W_0);
 
         W_0_new = w.components.engine ...
                 + w.components.wing ...
@@ -309,8 +308,8 @@ function aircraft = generate_component_weights(aircraft)
     % re update with new vals
     w.ff   = ff;
     w.components.fuel = ff    * W_0;
-    w.components.lg   = 0.043 * W_0;
-    w.components.xtra = 0.17  * W_0 - w.components.gfe_total;
+    w.components.lg   = 0.033 * W_0;
+    w.components.xtra = 0.14  * W_0 - w.components.gfe_total;
 
     %w.components.wing = aircraft.weight.func.wing_weight_area(aircraft.geometry.wing.S_ref);
     %w.components.wing = w.func.wing_weight_raymer(W_0);
@@ -324,6 +323,10 @@ function aircraft = generate_component_weights(aircraft)
     w.max_landing_weight = (1-(w.PDI_ff/2))* w.togw;
 
     w.half_fuel = (1-(w.ff/2))* w.togw;
+
+    W_S_derived = w.togw/aircraft.geometry.wing.S_ref
+    T_W_max_derived = aircraft.propulsion.T_max / (w.togw*9.81)
+    T_W_mil_derived = aircraft.propulsion.T_military / (w.togw*9.81)
 
     %%%%%%%%%%%%%%%%%
     %% FUEL VOLUME %%
@@ -353,19 +356,6 @@ function aircraft = generate_component_weights(aircraft)
 
     w.fuel_vol = f;
 
-    %%%%%%%%%%%%%%
-    %% MISC GFE %%
-    %%%%%%%%%%%%%%
-
-    w.components.ICNIA = ConvMass(100,'lbm','kg');
-    w.components.databus = ConvMass(10,'lbm','kg');
-    w.components.INEWS = w.components.ICNIA;
-    w.components.VMS = ConvMass(50,'lbm','kg');
-    w.components.IRSTS = w.components.VMS;
-    w.components.AESA = ConvMass(450,'lbm','kg');
-    w.components.EES = ConvMass(220,'lbm','kg');
-    w.components.APU = ConvMass(100,'lbm','kg');
-
     %%%%%%%%%%%%%%%%%%%
     %% UPDATE STRUCT %%
     %%%%%%%%%%%%%%%%%%%
@@ -377,10 +367,11 @@ function aircraft = generate_component_weights(aircraft)
     %% CG AND SM CALCULATION %%
     %%%%%%%%%%%%%%%%%%%%
 
-    aircraft = cg_calc_plot(aircraft); % TODO UPDATE MISSION PROFILE IF MISSILES CHANGE
+    % TODO FIX
     
-    mach = [0.28, 0.5, 0.85, 1.0, 1.2]; % Find SM at various Mach numbers TODO why can't 1.4 and 1.6 work
-    aircraft = SM_calc_plot(aircraft, mach); % sets the np and sm arrays for a full mission profile.
+    %aircraft = cg_calc_plot(aircraft); % TODO UPDATE MISSION PROFILE IF MISSILES CHANGE
+    
+    %aircraft = SM_calc_plot(aircraft, aircraft.performance.mach.arr); % sets the np and sm arrays for a full mission profile.
 
     %aircraft = empennage_aerodynamics_calc(aircraft);
 
@@ -388,7 +379,7 @@ function aircraft = generate_component_weights(aircraft)
     %% COST UPDATE %%
     %%%%%%%%%%%%%%%%%
 
-    aircraft.cost.avg_flyaway_cost = avg_flyaway_cost_calc(aircraft.weight.togw, 1000);
+    %aircraft.cost.avg_flyaway_cost = avg_flyaway_cost_calc(aircraft.weight.togw, 1000);
     
 
 end
