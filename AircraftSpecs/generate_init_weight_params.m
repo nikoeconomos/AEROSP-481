@@ -19,12 +19,6 @@ function [aircraft] = generate_init_weight_params(aircraft)
 % Version history revision notes:
 %                                  v1: 9/14/2024
 
-%%
-
-aircraft.performance.TW_design_military = 0.55; % A SPOT WE MANUALLY CHOOSE FROM THE TW-WS DIAGRAM [N/N]
-aircraft.performance.TW_design = 1.05; % A SPOT WE MANUALLY CHOOSE FROM THE TW-WS DIAGRAM [N/N]
-aircraft.performance.WS_design = 525; % A SPOT WE MANUALLY CHOOSE FROM THE TW-WS DIAGRAM, [N/m^2]
-
 %% CREW WEIGHTS %%
 %%%%%%%%%%%%%%%%%%
 
@@ -43,7 +37,7 @@ aircraft.weight.W_e_regression_calc = @ (W_0) 0.882*(ConvMass(W_0,'kg','lbm')^-0
 %%%%%%%%%%%%%%%%%%%%%
 
 % Weight of the missile we are tasked with using, AIM120 327 lb from RFP
-aircraft.weight.weapons.num_missiles = 6;
+aircraft.weight.weapons.num_missiles = 4;
 aircraft.weight.weapons.missile = ConvMass(327, 'lbm', 'kg'); %[kg]
 
 % Weight of the cannon we are tasked with using, 275LB from RFP. not part of payload
@@ -63,7 +57,7 @@ aircraft.weight.weapons.m61a1.total_loaded = aircraft.weight.weapons.m61a1.feed_
 
 % Weight of all usable weapons systems aboard. Missile weight*num missiles + weight of cannon ammo
 aircraft.weight.components.payload = aircraft.weight.weapons.num_missiles*aircraft.weight.weapons.missile + ...
-                          aircraft.weight.weapons.m61a1.total_loaded; %[kg]
+                          aircraft.weight.weapons.m61a1.feed_system + aircraft.weight.weapons.m61a1.ammo + aircraft.weight.weapons.m61a1.cannon; %aircraft.weight.weapons.m61a1.total_loaded;  %[kg]
 
 
 

@@ -19,13 +19,11 @@ function [aircraft] = generate_geometry_params(aircraft)
 % Version history revision notes:
 %                                  v1: 9/14/2024
 
-% All of the wing parameters stored here have been moved to generate CL params file
-
 %% WING %%
 %%%%%%%%%%%%%%%%%%
 
 % [m^2]  %table 3.5 Roskam, values for clean MTOW, for fighter jet / figure 3.22, eq metabook 4.9
-
+% CHANGE IF WRONG
 
 
 

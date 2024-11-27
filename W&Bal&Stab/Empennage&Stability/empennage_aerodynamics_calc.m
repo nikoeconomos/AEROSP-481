@@ -17,7 +17,7 @@ function [aircraft] = empennage_aerodynamics_calc(aircraft)
 % Version history revision notes:
 %                                  v2: 11/15/2024
 
-% TODO VERIFY the values and formulas
+%% TODO I BELIEVE THIS IS DEPRECATED IN FAVOR OF SM_CALC_PLOT
 
 wing = aircraft.geometry.wing;
 
