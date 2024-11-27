@@ -61,6 +61,8 @@ aircraft.performance.bank_angle_360 = deg2rad(60); %[rad] ESTIMATE FROM ONLINE
 g = 9.8067;
 
 aircraft.performance.max_instantaneous_turn_rate = deg2rad(18); %rad/s
+
+aircraft.performance.corner_speed_TAS = 262; % knots 
 aircraft.performance.corner_speed = 135; % m/s TODO UPDATE With VN diagram
 
 aircraft.performance.n_inst = sqrt( ((aircraft.performance.max_instantaneous_turn_rate*aircraft.performance.corner_speed)/g)^2+1); %raymer 5.19
