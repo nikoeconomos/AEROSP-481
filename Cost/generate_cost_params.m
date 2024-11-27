@@ -15,9 +15,10 @@ function [aircraft] = generate_cost_params(aircraft)
 %                       
 % 
 % See also: None
-% Author:                          Niko
+% Author:                          Niko, Victoria, and Joon
 % Version history revision notes:
 %                                  v1: 9/14/2024
+%                                  v2: 10/29/2024
 
 %% General Parameters %%
 %%%%%%%%%%%%%%%%%%%%%%%
@@ -26,13 +27,10 @@ target_year = 2024;
 
 block_time = block_time_calc(aircraft); % for DCA
 
-CEF_calc = @(byear, tyear) (5.17053 + 0.104981 *(tyear-2006))/(5.17053 + 0.104981*(byear - 2006));
-
+CEF_calc = @(byear, tyear) (5.17053 + 0.104981 *(tyear-2006))/(5.17053 + 0.104981*(byear - 2006)); %From metabook chapter 3
 
 %% Individual Components %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-aircraft.cost.airframe = NaN;
 
 cost = aircraft.cost;
 
@@ -57,7 +55,10 @@ Cmm_eng = (25+(18*T_max_lbf/10000))*(0.62+0.38/block_time)*CEF_calc(engine_base_
 engine_maint_cost = aircraft.propulsion.num_engines*(Cml_eng+Cmm_eng)*block_time;
 
 % engine cost
-cost.engine = 4000000; % Adjusted based on egypt article
+cost.engine = 5660000; % Based on contract for F-15EX in 2021 (adjusted for inflation)
+
+cost.aircraft = 10^(0.657+(1.4133*log10(aircraft.weight.togw*2.2))); % From Roskam
+cost.airframe = cost.aircraft - cost.engine; %From metabook chapter 3
 
 %% CREW %
 crew_base_year = 1993;
@@ -73,12 +74,12 @@ togw_lb = ConvMass(aircraft.weight.togw, 'kg', 'lbm');
 % Initialize result
 crew_costs = airline_factor * (route_factor * (togw_lb)^0.4 * mission_block_time);
 
-cost.crew.total = adjust_cost_inflation_calc(crew_costs, crew_base_year, target_year);
+cost.crew = adjust_cost_inflation_calc(crew_costs, crew_base_year, target_year);
 
 
 %% Airframe maintenance %
 
-airframe_weight = aircraft.weight.empty - aircraft.weight.components.engine; % TODO UPDATE
+airframe_weight = aircraft.weight.empty - aircraft.weight.components.engine;
 
 Cml_af = 1.03*(3+0.067*airframe_weight/1000)*maintenance_labor_rate;
 
@@ -91,9 +92,9 @@ airframe_maint = (Cml_af+Cmm_af)*block_time;
 
 Uannual = 1.5*10^3* (3.4546*block_time + 2.994 - (12.289*block_time^2 - 5.6626*block_time + 8.964)^0.5 );
 
-IRa = 0.02; %hull insurance rate 
+IRa = 0.02; % Hull insurance rate
 
-cost.insurance = (IRa*aircraft.cost.airframe/Uannual)*block_time;
+cost.insurance = (IRa*cost.airframe/Uannual)*block_time;
 
 %% Missile cost
 missile_cost_base = 386000;  % USD Pulled RFP year
@@ -103,7 +104,7 @@ cost.missile    = missile_cost_2024*aircraft.weight.weapons.num_missiles;
 
 %% Avionics cost 
 
-avionics_cost_base = 2202000;  % VERIFY
+avionics_cost_base = 2202000;  % 10% of airplane market price (Raymer)
 avionics_base_year = 2006;  
 cost.avionics = adjust_cost_inflation_calc(avionics_cost_base, avionics_base_year, target_year); % USD
 
@@ -116,8 +117,8 @@ cost.cannon = adjust_cost_inflation_calc(cannon_cost_base, cannon_base_year, tar
 
 We = ConvMass(aircraft.weight.empty, 'kg', 'lbm');
 V = ConvVel(velocity_from_flight_cond(aircraft.performance.mach.dash, 10668), 'm/s', 'ft/s');
-Q = 1000; %production number
-FTA = 6; % flight test aircraft
+Q = 1000; % Production number
+FTA = 6; % Flight test aircraft
 
 RE = 86;  % Engineering rate
 RT = 88;  % Tooling rate
@@ -140,7 +141,7 @@ RTDE_flyaway_adjusted = adjust_cost_inflation_calc(RDT_E_flyaway, 1999, target_y
 
 %% Flyaway cost with simple Roskam method
 
-[cost.avg_flyaway_cost, cost.learning_curve_costs] = avg_flyaway_cost_calc(aircraft.weight.togw, 1000);
+[cost.avg_flyaway_cost, cost.learning_curve_costs] = avg_flyaway_cost_calc(cost.aircraft, 1000);
 
 %% Update struct
 
