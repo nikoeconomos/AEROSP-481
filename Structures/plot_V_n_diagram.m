@@ -1,4 +1,4 @@
-function [aircraft] = V_n_plot(aircraft)
+function [] = plot_V_n_diagram(aircraft)
 % Description: This function generates a V-N diagram for the aircraft, 
 % providing a graphical representation of structural and
 % aerodynamic limits. It includes maneuvering and gust envelopes to evaluate 

@@ -38,6 +38,8 @@ aircraft = generate_component_weights(aircraft);
 aircraft = generate_REFINED_drag_polar_params(aircraft);
 % plot_drag_polar(aircraft);
 
+plot_V_n_diagram(aircraft);
+
 
 %% FIND AIRCRAFT COST
 
