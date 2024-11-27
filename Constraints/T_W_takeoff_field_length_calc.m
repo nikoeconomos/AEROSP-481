@@ -20,8 +20,8 @@ function T_W = T_W_takeoff_field_length_calc(aircraft, W_S)
 % Version history revision notes:
 %                                  v1: 9/22/2024
 
-CL_max_TO = aircraft.aerodynamics.CL.takeoff_flaps; %This was from Cinar to use - estimated from similar aircraft with plain flaps and will be updated once we choose flaps to use
-CD0_TO = aircraft.aerodynamics.CD0.takeoff_flaps_gear;
+CL_max_TO = aircraft.aerodynamics.CL.takeoff_flaps_slats; %This was from Cinar to use - estimated from similar aircraft with plain flaps and will be updated once we choose flaps to use
+CD0_TO = aircraft.aerodynamics.CD0.takeoff_flaps_slats_gear;
 
 rho_SL_30C = aircraft.environment.rho_SL_30C; %[kg/m^3]
 

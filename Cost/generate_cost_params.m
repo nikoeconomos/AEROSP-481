@@ -32,6 +32,8 @@ CEF_calc = @(byear, tyear) (5.17053 + 0.104981 *(tyear-2006))/(5.17053 + 0.10498
 %% Individual Components %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+aircraft.cost = struct();
+
 cost = aircraft.cost;
 
 %% Labor %

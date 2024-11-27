@@ -27,7 +27,7 @@ S_wet = aircraft.geometry.S_wet_regression_calc(W_0); % 4* sin
 
 CD0   = aircraft.aerodynamics.CD0_calc(S_wet, Sin); % Calculate C_D0 as function of S
 
-e = aircraft.aerodynamics.e.clean; % TODO UPDATE: this should change based on the part of flight we're in?
+e = aircraft.aerodynamics.e.cruise; % TODO UPDATE: this should change based on the part of flight we're in?
 k = aircraft.aerodynamics.k_calc(e);
 
 CL = aircraft.aerodynamics.CL_from_CD0_calc(CD0, k);

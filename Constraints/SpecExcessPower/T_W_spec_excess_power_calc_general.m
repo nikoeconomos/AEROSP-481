@@ -23,7 +23,7 @@ function [T_W] = T_W_spec_excess_power_calc_general(aircraft, W_S, alt, mach, CD
 % -------------------------------------------------------------------------
 
 % Aircraft struct vars
-ff = aircraft.weight.ff;
+ff = aircraft.weight.ff+0.02; % fudge factor to account for greater ff in practice
 AR = aircraft.geometry.wing.AR;
 
 % Change units to force vs kg

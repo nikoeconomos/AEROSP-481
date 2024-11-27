@@ -30,7 +30,7 @@ g = 9.81;
 
 k = aircraft.aerodynamics.k_calc(e);
 
-CD0 = aircraft.aerodynamics.CD0.clean;
+CD0 = aircraft.aerodynamics.CD0.cruise;
 
 n = 100;
 segment_range = range / n;  % Range of each segment

@@ -35,13 +35,18 @@ aero = aircraft.aerodynamics;
 % For all aircraft aspects - Given in table in drive under utilities
 S_ref_wing = wing.S_ref; % [m^2]
 
-wing_airfoil_mach = [0.20 0.40 0.60 0.65 0.70 ...
-                     0.75 0.80 0.90 1.00 1.05 ...
-                     1.10 1.13];
+freestream_mach = aircraft.performance.mach.arr; %0.282 0.54 0.85 0.9 1.2 1.6
 
-aero.drag_freesteam_mach = wing_airfoil_mach/cos(aircraft.geometry.wing.sweep_LE);
+wing_airfoil_mach = freestream_mach.*cos(aircraft.geometry.wing.sweep_LE);
 
-Cf_turbulent_calc = @(Re) 0.455 ./ ((log10(Re)).^2.58 * (1 + 0.144 * freesteam_mach.^2)^0.65); % turbulent
+[~, ~, ~, a_SL]    = standard_atmosphere_calc(0);
+[~, ~, ~, a_6000]  = standard_atmosphere_calc(6000);
+[~, ~, ~, a_10600] = standard_atmosphere_calc(10600);
+speed_of_sound = [a_SL a_6000 a_10600 a_10600 a_10600 a_10600];
+
+kinematic_viscosity = [0.00001461 0.00002416 0.00003706 0.00003706 0.00003706 0.00003706];
+
+Cf_turbulent_calc = @(Re) 0.455 ./ ((log10(Re)).^2.58 .* (1 + 0.144 .* freestream_mach.^2).^0.65); % turbulent
 
 %%%%%%%%%%%%%%%%%%%%%%
 %% CD0 CALCULATIONS %%
@@ -51,12 +56,12 @@ Cf_turbulent_calc = @(Re) 0.455 ./ ((log10(Re)).^2.58 * (1 + 0.144 * freesteam_m
 
 % Aircraft parameters
 l_fuselage     = aircraft.geometry.fuselage.length;
-S_wet_fuselage  = aircraft.geometry.fuselage.S_wet; % [m^2]
+S_wet_fuselage = aircraft.geometry.fuselage.S_wet; % [m^2]
 A_max_fuselage = aircraft.geometry.fuselage.A_max; % Estimated cross-sectional area
 
 Q_fuselage     = 1; % Interference factor, given on slide 16 of lecture 14
 
-Re_fuselage = speed_of_sound .* wing_airfoil_mach .* l_fuselage ./ kinematic_viscosities;
+Re_fuselage = speed_of_sound .* wing_airfoil_mach .* l_fuselage ./ kinematic_viscosity;
 %Re_fuselage_values = [72630000, 81690000, 75060000, 81320000, 87570000, 93830000, 100090000, 112600000, 125110000, 131360000, 137620000, 141370000, 150130000];
 
 % Skin friction coefficients - from slides
@@ -75,10 +80,11 @@ CD0_fuselage = ((Cf_fuselage .* FF_fuselage .* Q_fuselage .* S_wet_fuselage) / S
 
 %% Inlets %%
 
-% Inlet parameters
+%{ 
+%Inlet parameters
 l_inlet     = aircraft.geometry.inlet.length; % [m]
 S_wet_inlet  = aircraft.geometry.inlet.S_wet; % [m^2], Estimated
-A_max_inlet = aircraft.geometry.inlet.length;
+A_max_inlet = aircraft.geometry.inlet.A_max;
 
 Q_inlet = 1; % Assumed 1
 
@@ -91,6 +97,8 @@ f_inlet  = l_inlet / sqrt(4 * pi * A_max_inlet);
 FF_inlet = 0.9 + (5 / (f_inlet^1.5)) + (f_inlet / 400); 
 
 CD0_inlets = ((Cf_inlet * FF_inlet * Q_inlet * S_wet_inlet) / S_ref_wing) * 2; % Two inlets, multiply by two
+%}
+
 
 %% Wings (Both) %%
 
@@ -108,9 +116,9 @@ Re_wing = Re_fuselage * (MAC_wing / l_fuselage);
 
 Cf_wing = Cf_turbulent_calc(Re_wing);
 
-FF_wing = (1 + (0.6 / (loc_max_thickness_wing)) * (t_c_wing) + 100 * (t_c_wing)^4) * (1.34 * freesteam_mach.^0.18 * cos(sweep_HC_wing)^0.28);
+FF_wing = (1 + (0.6 / (loc_max_thickness_wing)) * (t_c_wing) + 100 * (t_c_wing)^4) * (1.34 * freestream_mach.^0.18 * cos(sweep_HC_wing)^0.28);
 
-CD0_wing = (Cf_wing * FF_wing * Q_wing * S_wet_wing) / S_ref_wing;
+CD0_wing = (Cf_wing .* FF_wing * Q_wing * S_wet_wing) ./ S_ref_wing;
 
 %% Horizontal Stabilizer (Both) %%
 
@@ -128,9 +136,9 @@ Re_htail = Re_fuselage * (MAC_htail / l_fuselage);
 
 Cf_htail = Cf_turbulent_calc(Re_htail);
 
-FF_htail = (1 + (0.6 / (loc_max_thickness_htail)) * (t_c_htail) + 100 * (t_c_htail)^4) * (1.34 * freesteam_mach.^0.18 * cos(sweep_HC_htail)^0.28);
+FF_htail = (1 + (0.6 / (loc_max_thickness_htail)) * (t_c_htail) + 100 * (t_c_htail)^4) * (1.34 * freestream_mach.^0.18 * cos(sweep_HC_htail)^0.28);
 
-CD0_htail = (Cf_htail * FF_htail * Q_htail * S_wet_htail) / S_ref_wing;
+CD0_htail = (Cf_htail .* FF_htail * Q_htail * S_wet_htail) ./ S_ref_wing;
 
 %% Vertical Stabilizer (Both) %%
 
@@ -148,9 +156,9 @@ Re_vtail = Re_fuselage * (MAC_vtail / l_fuselage);
 
 Cf_vtail = Cf_turbulent_calc(Re_vtail);
 
-FF_vtail = (1 + (0.6 / (loc_max_thickness_vtail)) * (t_c_vtail) + 100 * (t_c_vtail)^4) * (1.34 * freesteam_mach.^0.18 * cos(sweep_HC_vtail)^0.28);
+FF_vtail = (1 + (0.6 / (loc_max_thickness_vtail)) * (t_c_vtail) + 100 * (t_c_vtail)^4) * (1.34 * freestream_mach.^0.18 * cos(sweep_HC_vtail)^0.28);
 
-CD0_vtail = (Cf_vtail * FF_vtail * Q_vtail * S_wet_vtail) / S_ref_wing;
+CD0_vtail = (Cf_vtail .* FF_vtail * Q_vtail * S_wet_vtail) ./ S_ref_wing;
 
 %% Landing Gear
 
@@ -190,28 +198,28 @@ S_flapped = aircraft.geometry.wing.S_flapped; % [m^2]
 flap_deflect_takeoff = aircraft.geometry.wing.flap_deflect_takeoff;
 flap_deflect_landing = aircraft.geometry.wing.flap_deflect_landing;
 
-delta_CD0_takeoff_flaps = F_flap * (cf_c) * (S_flapped / S_ref_wing) * (flap_deflect_takeoff - 10);
-delta_CD0_landing_flaps = F_flap * (cf_c) * (S_flapped / S_ref_wing) * (flap_deflect_landing - 10);
+delta_CD0_takeoff_flaps_slats = F_flap * (cf_c) * (S_flapped / S_ref_wing) * (rad2deg(flap_deflect_takeoff) - 10);
+delta_CD0_landing_flaps_slats = F_flap * (cf_c) * (S_flapped / S_ref_wing) * (rad2deg(flap_deflect_landing) - 10);
 
 %% Total Parasitic Drag Calc %%
 
-CD0_component_sum  = CD0_fuselage + CD0_inlets + CD0_wing  + CD0_htail + CD0_vtail; 
+CD0_component_sum  = CD0_fuselage + CD0_wing  + CD0_htail + CD0_vtail; %+ CD0_inlets;
 
-aero.CD0.clean = CD0_component_sum + CD0_misc + CD0_lp; 
+aero.CD0.clean = CD0_component_sum(3) + CD0_misc + CD0_lp; 
 
-aero.CD0.takeoff_flaps      = aero.CD0.clean + delta_CD0_takeoff_flaps;
-aero.CD0.takeoff_flaps_gear = aero.CD0.takeoff_flaps + CD0_lg;
+aero.CD0.takeoff_flaps_slats      = aero.CD0.clean + delta_CD0_takeoff_flaps_slats;
+aero.CD0.takeoff_flaps_slats_gear = aero.CD0.takeoff_flaps_slats + CD0_lg;
 
-aero.CD0.landing_flaps = aero.CD0.clean + delta_CD0_landing_flaps;
-aero.CD0.landing_flaps_gear = aero.CD0.landing_flaps + CD0_lg;
+aero.CD0.landing_flaps_slats      = aero.CD0.clean + delta_CD0_landing_flaps_slats;
+aero.CD0.landing_flaps_slats_gear = aero.CD0.landing_flaps_slats + CD0_lg;
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 %% CALCULATE e VALUES %%
 %%%%%%%%%%%%%%%%%%%%%%%%
 
-aero.e.clean         = oswaldfactor(aircraft.geometry.wing.AR, aircraft.geometry.wing.sweep_LE,'shevell', aero.CD0.clean, 0, 0.98);
-aero.e.takeoff_flaps = oswaldfactor(aircraft.geometry.wing.AR, aircraft.geometry.wing.sweep_LE,'shevell', aero.CD0.takeoff_flaps, 0, 0.98);
-aero.e.landing_flaps = oswaldfactor(aircraft.geometry.wing.AR, aircraft.geometry.wing.sweep_LE,'shevell', aero.CD0.landing_flaps, 0, 0.98);
+aero.e.clean               = oswaldfactor(aircraft.geometry.wing.AR, aircraft.geometry.wing.sweep_LE,'shevell', aero.CD0.clean, 0, 0.98);
+aero.e.takeoff_flaps_slats = oswaldfactor(aircraft.geometry.wing.AR, aircraft.geometry.wing.sweep_LE,'shevell', aero.CD0.takeoff_flaps_slats, 0, 0.98);
+aero.e.landing_flaps_slats = oswaldfactor(aircraft.geometry.wing.AR, aircraft.geometry.wing.sweep_LE,'shevell', aero.CD0.landing_flaps_slats, 0, 0.98);
 
 aero.e.htail = 1.78 * (1 - (0.045 * aircraft.geometry.htail.AR^0.68) ) - 0.64; % from the presentation slide 26
 
@@ -221,9 +229,9 @@ aero.e.htail = 1.78 * (1 - (0.045 * aircraft.geometry.htail.AR^0.68) ) - 0.64; %
 
 AR_wing = aircraft.geometry.wing.AR;
 
-aero.CDi.clean         = aero.CL.clean^2         / (pi * AR_wing * aero.e.clean);
-aero.CDi.takeoff_flaps = aero.CL.takeoff_flaps^2 / (pi * AR_wing * aero.e.takeoff_flaps);
-aero.CDi.landing_flaps = aero.CL.landing_flaps^2 / (pi * AR_wing * aero.e.landing_flaps);
+aero.CDi.cruise             = aero.CL.cruise^2              / (pi * AR_wing * aero.e.clean);
+aero.CDi.takeoff_flaps_slats = aero.CL.takeoff_flaps_slats^2 / (pi * AR_wing * aero.e.takeoff_flaps_slats);
+aero.CDi.landing_flaps_slats = aero.CL.landing_flaps_slats^2 / (pi * AR_wing * aero.e.landing_flaps_slats);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% TRIM DRAG CALCULATIONS %%
@@ -243,8 +251,8 @@ S_HT   = aircraft.geometry.htail.S_ref; % [m^2]
 V_HT   = aircraft.geometry.htail.volume_coefficient; 
 
 CL_wing_clean   = aero.CL.clean; % NEED TO UPDATE ONCE VALUE IS DONE
-CL_wing_takeoff = aero.CL.takeoff_flaps; % NEED TO UPDATE ONCE VALUE IS DONE
-CL_wing_landing = aero.CL.landing_flaps; % NEED TO UPDATE ONCE VALUE IS DONE
+CL_wing_takeoff = aero.CL.takeoff_flaps_slats; % NEED TO UPDATE ONCE VALUE IS DONE
+CL_wing_landing = aero.CL.landing_flaps_slats; % NEED TO UPDATE ONCE VALUE IS DONE
 
 %% CMac WING
 
@@ -313,14 +321,14 @@ aircraft.aerodynamics.MDD = k / cos(sweep_QC_wing) - t_c / cos(sweep_QC_wing)^2 
 %% TOTAL DRAG COEFFICIENT %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% TODO ADD WAVE, TRIM DRAG
-aero.CD.clean = aero.CD0.clean + aero.CDi.clean + CD_trim;
+%% TODO ADD WAVE, TRIM DRAG. These are calculated for a variety of Mach numbers. find out how to integrate that array
+aero.CD.clean = aero.CD0.clean + aero.CDi.cruise; %+ aero.CD_trim.cruise + aero.CD_wave.cruise;
 
-aero.CD.takeoff_flaps      = aero.CD0.takeoff_flaps      + aero.CDi.takeoff_flaps + aero.CD_trim.takeoff_flaps;
-aero.CD.takeoff_flaps_gear = aero.CD0.takeoff_flaps_gear + aero.CDi.takeoff_flaps + aero.CD_trim.takeoff_flaps;
+aero.CD.takeoff_flaps_slats      = aero.CD0.takeoff_flaps_slats      + aero.CDi.takeoff_flaps_slats; %+ aero.CD_trim.takeoff_flaps_slats;
+aero.CD.takeoff_flaps_slats_gear = aero.CD0.takeoff_flaps_slats_gear + aero.CDi.takeoff_flaps_slats; %+ aero.CD_trim.takeoff_flaps_slats;
 
-aero.CD.landing_flaps      = aero.CD0.landing_flaps      + aero.CDi.landing_flaps + aero.CD_trim.landing_flaps;
-aero.CD.landing_flaps_gear = aero.CD0.landing_flaps_gear + aero.CDi.landing_flaps + aero.CD_trim.landing_flaps;
+aero.CD.landing_flaps_slats      = aero.CD0.landing_flaps_slats      + aero.CDi.landing_flaps_slats; %+ aero.CD_trim.landing_flaps_slats;
+aero.CD.landing_flaps_slats_gear = aero.CD0.landing_flaps_slats_gear + aero.CDi.landing_flaps_slats; %+ aero.CD_trim.landing_flaps_slats;
 
 %% REASSIGN %%
 

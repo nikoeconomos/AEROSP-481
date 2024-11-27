@@ -21,11 +21,11 @@ function [w_eng] = w_eng_calc(T_0)
 
     w_eng_dry     = 0.521*(T_0_lbf)^0.9;
     w_eng_oil     = 0.082*(T_0_lbf)^0.65;
-    w_eng_rev     = 0.034*(T_0_lbf);
+    % w_eng_rev     = 0.034*(T_0_lbf); fighters do not usually have thrust reversers
     w_eng_control = 0.260*(T_0_lbf)^0.5;
     w_eng_start   = 9.330*(w_eng_dry/1000)^1.078;
 
-    w_eng_lb = w_eng_dry + w_eng_oil + w_eng_rev + w_eng_control + w_eng_start; %[lbf]
+    w_eng_lb = w_eng_dry + w_eng_oil + w_eng_control + w_eng_start; %[lbf]
 
     w_eng = ConvMass(w_eng_lb, 'lbm', 'kg');
     
