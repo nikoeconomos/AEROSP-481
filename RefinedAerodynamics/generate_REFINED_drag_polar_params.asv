@@ -237,13 +237,6 @@ aero.CDi.landing_flaps_slats = aero.CL.landing_flaps_slats^2 / (pi * AR_wing * a
 %% TRIM DRAG CALCULATIONS %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% CMac_w spanwise points to integrate over 12 points, sectional Cl 12 
-% simulations
-
-wing_chords = linspace(aircraft.geometry.wing.c_root, aircraft.geometry.wing.c_tip, 12);
-
-
-
 %%%%% Takeoff %%%%%
 
 % Calulcate HT Cl

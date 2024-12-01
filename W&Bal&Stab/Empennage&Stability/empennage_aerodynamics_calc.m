@@ -40,7 +40,7 @@ Nt_tot  = Nt_drag + Nt_crit;
 
 % CL alpha calculation Mach numbers
 M_takeoff    = aircraft.performance.mach.takeoff;
-M_c          = aircraft.performance.mach.climb; % is this cruise or climb? if it's climb, we need to update this to our best climb speed TODO where did this come from?
+M_c          = aircraft.performance.mach.cruise; % is this cruise or climb? if it's climb, we need to update this to our best climb speed TODO where did this come from?
 M_supersonic = 1;
 
 
@@ -58,6 +58,8 @@ dw_corr_s  = 2*CL_a_w_s  / (pi*wing.AR);
 %%%%%%%%%%%%%%%
 %% PDR plots %%
 %%%%%%%%%%%%%%%
+
+% Plotted data is only relevant for biconvex HT airfoil
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Takeoff Chordwise Mach = 0.18
