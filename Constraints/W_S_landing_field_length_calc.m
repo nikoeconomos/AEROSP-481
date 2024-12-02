@@ -26,15 +26,16 @@ function W_S = W_S_landing_field_length_calc(aircraft, T_W)
 s_land = 2438.4; %[m] which is = 8,000 ft (from RFP)
 s_a = 305; %[m] - 1000 ft, commercial aircraft Sa distance according to raymer txtbook (essentially an "error" factor)
 
-rho_SL_30C = aircraft.environment.rho_SL_30C; %[kg/m^3]
-[~,~, rho_1219_MSL, ~] = standard_atmosphere_calc(1219.2); %[kg/m^3] - calculating this at 4000 ft MSL, 1219.2 m, per RFP
+[~,~,rho_SL,~] = standard_atmosphere_calc(0); %[kg/m^3]
+rho_1219_MSL = 0.962995; %[kg/m^3] - calculating this at 4000 ft MSL, 1219.2 m, per RFP
 
-sigma = rho_SL_30C/rho_1219_MSL;
+sigma = rho_1219_MSL/rho_SL; % value given by raymer, hot day at 5000 ft
 
 CL_max = aircraft.aerodynamics.CL.landing_flaps_slats;  
 
 %% Hamburg
 
+%{
 kl = .107; %[kg/m^3] - comes from raymer textbook LDG equation
 
 W_S_L = kl*sigma*CL_max*(s_land-s_a); %[kg/m^2]
@@ -46,9 +47,19 @@ else
 end
 
 W_S = W_S_L / ( 1 - (ff/2)); % factor of 0.85 is Mlanding/Mtakeoff (90%)
+%}
 
 %% Raymer 5.5
-%W_S = sigma*CL_max*(s_land-s_a)/5; % raymer 5.5
+
+W_S_L = sigma*CL_max*(s_land-s_a)/5; % raymer 5.5
+
+if strcmp(aircraft.name, 'F-35')
+    ff = 0.278;
+else
+    ff = ff_total_calc(aircraft)+0.02;
+end
+
+W_S = W_S_L / ( 1 - (ff/2));
 
 %% Roskam 3.1
 

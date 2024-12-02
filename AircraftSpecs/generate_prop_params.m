@@ -35,7 +35,7 @@ aircraft.propulsion.T_max = 144600; %[N] TOTAL THRUST FROM BOTH ENGINES
 % military thrust
 aircraft.propulsion.T_military = 84500; %[N] TOTAL THRUST
 
-aircraft.propulsion.bypass_ratio = 0.76;
+aircraft.propulsion.bypass_ratio = 0.68;
 
 aircraft.propulsion.max_diameter = 1.2; %m
 
