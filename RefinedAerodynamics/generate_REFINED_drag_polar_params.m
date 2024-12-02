@@ -61,7 +61,7 @@ A_max_fuselage = aircraft.geometry.fuselage.A_max; % Estimated cross-sectional a
 
 Q_fuselage     = 1; % Interference factor, given on slide 16 of lecture 14
 
-Re_fuselage = speed_of_sound .* wing_airfoil_mach .* l_fuselage ./ kinematic_viscosity;
+Re_fuselage = speed_of_sound .* wing_airfoil_mach .* l_fuselage ./ kinematic_viscosity
 %Re_fuselage_values = [72630000, 81690000, 75060000, 81320000, 87570000, 93830000, 100090000, 112600000, 125110000, 131360000, 137620000, 141370000, 150130000];
 
 % Skin friction coefficients - from slides
@@ -241,6 +241,22 @@ aero.CDi.landing_flaps_slats = aero.CL.landing_flaps_slats^2 / (pi * AR_wing * a
 % simulations
 
 wing_chords = linspace(aircraft.geometry.wing.c_root, aircraft.geometry.wing.c_tip, 12);
+b = linspace(0,aircraft.geometry.wing.b/2,12); % Evenly spaced points along single wing span
+x_ac = 0.25 * ( ( aircraft.geometry.wing.c_root .* (aircraft.geometry.wing.taper_ratio - 1) ... 
+        ./ aircraft.geometry.wing.b) .* b + aircraft.geometry.wing.c_root);
+
+% Update value for M = 1.6 (only flight point at which airfoil sees supersonic flow)
+x_ac_comp = 0.5 * ( ( aircraft.geometry.wing.c_root .* (aircraft.geometry.wing.taper_ratio - 1) ... 
+        ./ aircraft.geometry.wing.b) .* b(6) + aircraft.geometry.wing.c_root);
+
+Re_TO_L = Re_fuselage' * wing_chords / l_fuselage;
+
+Cl = [; ... % M = 0.282 <- 12 values per row
+    ; ... % M = 0.54
+    ; ... % M = 0.85
+    ; ... % M = 0.9
+    ; ... % M = 1.2
+    ]; % M = 1.6
 
 
 

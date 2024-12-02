@@ -17,11 +17,11 @@ function [aircraft] = generate_empennage_params(aircraft)
 %                                  v2: 11/15/2024
 
 
-    %%%%%%%%%%%%
-    %% H TAIL %%
-    %%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%%%
+    %% Horizontal TAIL %%
+    %%%%%%%%%%%%%%%%%%%%%
 
-    aircraft.geometry.htail.AR = 4; % DECIDED / TODO  UPDATE / STATE WHERE IT WAS GOTTEN FROM
+    aircraft.geometry.htail.AR = 4;
 
     % for convenience
     htail = aircraft.geometry.htail;
@@ -59,18 +59,18 @@ function [aircraft] = generate_empennage_params(aircraft)
     htail.x40MAC = aircraft.weight.func.x40MAC_calc(htail.xMAC, htail.MAC);
 
 
-    %%%%%%%%%%%%
-    %% V TAIL %%
-    %%%%%%%%%%%%
+    %%%%%%%%%%%%%%%%%%%
+    %% Vertical TAIL %%
+    %%%%%%%%%%%%%%%%%%%
 
-    aircraft.geometry.vtail.AR = 2; % TODO: UPDATE / STATE WHERE IT WAS GOTTEN FROM ( this is a bit high based on the raymer table, range 0.6-1.4 for fighers stability slide 109
+    aircraft.geometry.vtail.AR = 1.4; % Highest seen in Raymer
 
     % for convenience
     vtail = aircraft.geometry.vtail;
 
-    vtail.lever_arm = htail.lever_arm + 0.4; % TODO UPDATE / STATE WHERE IT WAS GOTTEN FROM
+    vtail.lever_arm = htail.lever_arm - 0.3; % Move in front of horizontal tail to avoid blanketing
 
-    vtail.volume_coefficient = 0.07; % Raymer decision TODO CONFIRM
+    vtail.volume_coefficient = 0.07; % Raymer
 
     vtail.S_ref = vtail.volume_coefficient * aircraft.geometry.wing.b * aircraft.geometry.wing.S_ref / vtail.lever_arm; % TODO CONFIRM AND STATE LOCATION OF EQUATION
     vtail.S_wet = 2*vtail.S_ref; %m2 APPROXIMATION, UPDATE WITH A BETTER ONE
