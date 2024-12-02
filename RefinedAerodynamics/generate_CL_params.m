@@ -27,15 +27,17 @@ wing = aircraft.geometry.wing;
 wing.sweep_LE = deg2rad(44.9); %radians
 wing.S_ref = 25.25;
 
-wing.S_flapped = 10.588*2; % TODO UPDATE
-wing.S_slatted = 10.588*2; % TODO UPDATE
+wing.S_flapped = 10.696*2; % TODO UPDATE
+wing.S_slatted = 10.696*2; % TODO UPDATE
+
+wing.b = sqrt(wing.AR * wing.S_ref);
 
 % Area ratios THAT THE ABOVE VALUES MUST AT LEAST MEET
 flapped_ratio = 0.8643; %S_flapped / S_ref; % max ratio approximated
 slatted_ratio = 0.8643; %S_slatted / S_ref;
 
-wing.sweep_flap_hinge = 0;
-wing.sweep_slat_hinge = wing.sweep_LE; % [rad]
+wing.sweep_flap_hinge = deg2rad(31.8);
+wing.sweep_slat_hinge = deg2rad(43.3); % [rad]
 
 wing.c_flapped_over_c = 0.3; % ratio of flapped chord to chord
 wing.c_slatted_over_c = 0.1; % TODO Verify/update
@@ -76,15 +78,15 @@ aircraft.aerodynamics.CL.cruise = 0.9 * sectional_cruise_Cl;
 
 % Take Off TODO include which raymer eq this was pulled from
 
-del_CL_wing_TO_slat = 0.9 * del_Cl_TO_slat * slatted_ratio * cos(wing.sweep_slat_hinge);
-del_CL_wing_TO_flap = 0.9 * del_Cl_TO_flap * flapped_ratio * cos(wing.sweep_flap_hinge);
+del_CL_wing_TO_slat = 0.9 * del_Cl_TO_slat * wing.S_slatted/wing.S_ref * cos(wing.sweep_slat_hinge);
+del_CL_wing_TO_flap = 0.9 * del_Cl_TO_flap * wing.S_flapped/wing.S_ref * cos(wing.sweep_flap_hinge);
 
 aircraft.aerodynamics.CL.takeoff_flaps_slats = base_CL_w + del_CL_wing_TO_slat + del_CL_wing_TO_flap;
 
 % Landing
 
-del_CL_wing_L_slat = 0.9 * del_Cl_L_slat * slatted_ratio * cos(wing.sweep_slat_hinge);
-del_CL_wing_L_flap = 0.9 * del_Cl_L_flap * flapped_ratio * cos(wing.sweep_flap_hinge);
+del_CL_wing_L_slat = 0.9 * del_Cl_L_slat * wing.S_slatted/wing.S_ref * cos(wing.sweep_slat_hinge);
+del_CL_wing_L_flap = 0.9 * del_Cl_L_flap * wing.S_flapped/wing.S_ref * cos(wing.sweep_flap_hinge);
 
 aircraft.aerodynamics.CL.landing_flaps_slats = base_CL_w + del_CL_wing_L_slat + del_CL_wing_L_flap;
 

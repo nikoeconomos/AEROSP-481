@@ -39,8 +39,8 @@ c_bar = aircraft.geometry.wing.S_ref / aircraft.geometry.wing.b; % Mean geometri
 CL_max    = aircraft.aerodynamics.CL.cruise;
 C_L_alpha = 3.0562; % parameter on different branch TODO DEFINE FOR 
 
-n_limit    = aircraft.performance.load_factor.upper_limit; % Positive limit load factor
-n_negative = aircraft.performance.load_factor.lower_limit; % Negative limit load factor
+n_limit    = aircraft.performance.load_factor.limit_upper_limit; % Positive limit load factor
+n_negative = aircraft.performance.load_factor.limit_lower_limit; % Negative limit load factor
 
 %% Gust velocity interpolation
 
@@ -61,11 +61,13 @@ U_e_VC = interp1(table_altitudes, VC, cruise_altitude); % ft/s
 U_e_VD = interp1(table_altitudes, VD, cruise_altitude); % ft/s
 
 % mu for gust 
+W_S = W_S_min_imp_mass;
 mu = (2 * W_S) / (rho_cruise * c_bar * C_L_alpha * g);
 disp(mu)
 
 % Gust alleviation factor (K_g)
 K_g = (0.88 * mu) / (5.3 + mu);
+
 
 %% Velocities
 
@@ -125,7 +127,7 @@ n_gust_neg_at_VD = 1 - ((K_g * C_L_alpha * U_e_VD * VD_EAS_kts) / (498 * W_S_min
 
 % Calculate the neg n-value of the 25 ft/s gust line at V_B
 n_gust_pos_at_VB = 1 + ((K_g * C_L_alpha * U_e_VB * VB_EAS_kts) / (498 * W_S_min_imp_mass));
-n_gust_neg_at_VB = 1 - ((K_g * C_L_alpha * U_e_VB * VB_EAS_kts) / (498 * W_S_min_imp_mass));
+n_gust_neg_at_VB = 1 - ((K_g * C_L_alpha * U_e_VB * VB_EAS_kts) / (498 * W_S_min_imp_mass)); 
 
 % Combined envelope (intersection of gust and maneuver lines)
 n_combined_pos = n_maneuver_positive;
@@ -161,7 +163,7 @@ plot([VD_EAS VD_EAS], [n_gust_pos_at_VD n_gust_neg_at_VD],'k-', 'LineWidth', 2, 
 % Critical speeds
 plot(VA_EAS, n_limit, 'ko', 'MarkerFaceColor', 'k', 'DisplayName', 'Corner Speed');
 plot(VS_EAS, 1, 'mo', 'MarkerFaceColor', 'm', 'DisplayName', 'Stall Speed (VS)');
-plot(VB_EAS, n_pos_gust_at_VB, 'go', 'MarkerFaceColor', 'g', 'DisplayName', 'Gust Design Speed');
+plot(VB_EAS, n_gust_pos_at_VB, 'go', 'MarkerFaceColor', 'g', 'DisplayName', 'Gust Design Speed');
 
 % Annotations
 text(VA_EAS, n_limit + 0.5, 'V_A', 'HorizontalAlignment', 'center', 'FontSize', 10);
@@ -169,24 +171,24 @@ text(VS_EAS, 1.1, 'V_S', 'HorizontalAlignment', 'center', 'FontSize', 10);
 text(VB_EAS, 3.5 + 0.5, 'V_B', 'HorizontalAlignment', 'center', 'FontSize', 10);
 
 % Mark the point where the gust line intersects V_C
-plot(VC_EAS, n_gust_at_VC, 'ro', 'MarkerFaceColor', 'r', 'DisplayName', 'Design Speed (pos lim)');
-text(VC_EAS, n_gust_at_VC + 0.5, 'V_C', 'HorizontalAlignment', 'center', 'FontSize', 10);
-plot(VC_EAS, n_neg_gust_at_VC, 'ro', 'MarkerFaceColor', 'r','DisplayName', 'Design Speed (neg lim)');
+plot(VC_EAS, n_gust_pos_at_VC, 'ro', 'MarkerFaceColor', 'r', 'DisplayName', 'Design Speed (pos lim)');
+text(VC_EAS, n_gust_pos_at_VC + 0.5, 'V_C', 'HorizontalAlignment', 'center', 'FontSize', 10);
+plot(VC_EAS, n_gust_neg_at_VC, 'ro', 'MarkerFaceColor', 'r','DisplayName', 'Design Speed (neg lim)');
 
 % Mark the point where the gust line intersects V_D
-plot(VD_EAS, n_gust_at_VD, 'go', 'MarkerFaceColor', 'g', 'DisplayName', 'Do Not Exceed Speed (pos lim)');
-text(VD_EAS, n_gust_at_VD + 0.5, 'V_D', 'HorizontalAlignment', 'center', 'FontSize', 10);
-plot(VD_EAS, n_neg_gust_at_VD, 'go', 'MarkerFaceColor', 'g','DisplayName', 'Do Not Exceed Speed (neg lim)');
+plot(VD_EAS, n_gust_pos_at_VD, 'go', 'MarkerFaceColor', 'g', 'DisplayName', 'Do Not Exceed Speed (pos lim)');
+text(VD_EAS, n_gust_pos_at_VD + 0.5, 'V_D', 'HorizontalAlignment', 'center', 'FontSize', 10);
+plot(VD_EAS, n_gust_neg_at_VD, 'go', 'MarkerFaceColor', 'g','DisplayName', 'Do Not Exceed Speed (neg lim)');
 
-plot([VC_EAS VD_EAS], [n_gust_at_VC n_gust_at_VD], 'k-', 'LineWidth', 2, 'DisplayName', 'Limit Combined Envelope');
-plot([VC_EAS VD_EAS], [n_neg_gust_at_VC n_neg_gust_at_VD], 'k-', 'LineWidth', 2, 'DisplayName', 'Limit Combined Envelope');
+plot([VC_EAS VD_EAS], [n_gust_pos_at_VC n_gust_pos_at_VD], 'k-', 'LineWidth', 2, 'DisplayName', 'Limit Combined Envelope');
+plot([VC_EAS VD_EAS], [n_gust_neg_at_VC n_gust_neg_at_VD], 'k-', 'LineWidth', 2, 'DisplayName', 'Limit Combined Envelope');
 
 % Mark the point where the gust line intersects n_limit
-text(VB_EAS, n_neg_gust_at_VB - 0.5, 'V_B', 'HorizontalAlignment', 'center', 'FontSize', 10);
-plot(VB_EAS, n_neg_gust_at_VB, 'go', 'MarkerFaceColor', 'g','DisplayName', 'Do Not Exceed Speed (neg lim)');
+text(VB_EAS, n_gust_neg_at_VB - 0.5, 'V_B', 'HorizontalAlignment', 'center', 'FontSize', 10);
+plot(VB_EAS, n_gust_neg_at_VB, 'go', 'MarkerFaceColor', 'g','DisplayName', 'Do Not Exceed Speed (neg lim)');
 
-plot ([VB_EAS VC_EAS], [n_pos_gust_at_VB n_gust_at_VC],  'k-', 'LineWidth', 2, 'DisplayName', 'Limit Combined Envelope');
-plot ([VB_EAS VC_EAS], [n_negative n_neg_gust_at_VC],  'k-', 'LineWidth', 2, 'DisplayName', 'Limit Combined Envelope');
+plot ([VB_EAS VC_EAS], [n_gust_pos_at_VB n_gust_pos_at_VC],  'k-', 'LineWidth', 2, 'DisplayName', 'Limit Combined Envelope');
+plot ([VB_EAS VC_EAS], [n_negative n_gust_neg_at_VC],  'k-', 'LineWidth', 2, 'DisplayName', 'Limit Combined Envelope');
 
 % Labels, grid, and legend
 title('V-n Diagram');
