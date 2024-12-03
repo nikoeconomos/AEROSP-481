@@ -27,37 +27,35 @@ function aircraft = cg_calc_plot(aircraft)
     %% CENTER OF GRAVITY %%
     %%%%%%%%%%%%%%%%%%%%%%%
 
-    %% CG LOCATIONS %%  
+     %% CG LOCATIONS %%  
 
     w.cg_pos = struct();
 
-    w.cg_pos.engine = [14.128, 0, 0.774];
+    w.cg_pos.engine = [12.835, 0, 0.27];
 
     w.cg_pos.vtail  = [aircraft.geometry.vtail.x40MAC, 0, 0];
     w.cg_pos.htail  = [aircraft.geometry.htail.x40MAC, 0, 0];
     w.cg_pos.wing   = [aircraft.geometry.wing.x40MAC,  0, 0.863];
 
-    w.cg_pos.fuselage = [10.634, 0, 0.517]; % m, CENTROID OF THE FUSELAGE FROM CAD
+    w.cg_pos.fuselage = [8.892, 0, 0.801]; % m, CENTROID OF THE FUSELAGE FROM CAD
 
-    w.cg_pos.cannon             = [7.124, 0.661, 0.957];
-    w.cg_pos.cannon_feed_system = [7.5445, 0.411, 0.957]; 
+    w.cg_pos.cannon             = [5.969, 0.661, 0.59];
+    w.cg_pos.cannon_feed_system = [6.125, 0.411, 0.59]; 
 
-    w.cg_pos.missile_1 = [8.065, -0.47,  0.367];
-    w.cg_pos.missile_2 = [8.065, 0.47,  0.367];
+    w.cg_pos.missile_1 = [8.065, -0.741,  -0.03];
+    w.cg_pos.missile_2 = [7.172, 0.741,  -0.03];
 
-    w.cg_pos.missile_3 = [8.065, -0.74, 0.627];
-    w.cg_pos.missile_4 = [8.065, 0.74, 0.627];
+    w.cg_pos.missile_3 = [7.172, -0.251, -0.18];
+    w.cg_pos.missile_4 = [7.172, 0.251, -0.18];
 
-    w.cg_pos.missile_5 = [8.065, -0.2, 0.627];
-    w.cg_pos.missile_6 = [8.065, 0.2, 0.627];
-
-    w.cg_pos.xtra = [7.9029, 0, 0]; % 45% of fuselage length (raymer table)
-
+    w.cg_pos.xtra = [16.501*0.45, 0, 0]; % 45% of fuselage length (raymer table)
+    %NEED TO UPDATE FUEL LOCATIONS AFTER RESIZING
     w.cg_pos.nose_fuel            = [5.951, -0.091,  0.773];
     w.cg_pos.cannon_fuel          = [9.112,  -0.035,  1.027];
     w.cg_pos.left_wing_fuel       = [10.278, -2.249, 0.834];
     w.cg_pos.right_wing_fuel      = [10.278, 2.249,  0.834]; 
     w.cg_pos.rear_fuel            = [12.02, 0, 1.113];
+<<<<<<< HEAD
     w.cg_pos.ICNIA                = [4.551, 0, 0.649];
     w.cg_pos.databus              = [4.408, -0.315, 0.672];
     w.cg_pos.INEWS                = [5.046, 0, 0.744];
@@ -66,6 +64,18 @@ function aircraft = cg_calc_plot(aircraft)
     w.cg_pos.AESA                 = [3.871, 0, 0.624];
     w.cg_pos.EES                  = [13.501, 0.74, 0.754];
     w.cg_pos.APU                  = [13.082, -0.689, 0.424];
+
+=======
+
+    w.cg_pos.ICNIA                = [3.375, 0, 0.145];
+    w.cg_pos.databus              = [2.782, -0.365, 0.268];
+    w.cg_pos.INEWS                = [3.87, 0, 0.24];
+    w.cg_pos.VMS                  = [12.979, -0.748, 0.29];
+    w.cg_pos.IRSTS                = [3.41, 0, 0.63];
+    w.cg_pos.AESA                 = [2.695, 0, 0.12];
+    w.cg_pos.EES                  = [12.325, 0.74, 0.25];
+    w.cg_pos.APU                  = [11.906, -0.689, -0.08];
+>>>>>>> 958fc0587364b3690fe4381caa665e40a2345caf
     %w.cg_pos.lg_main = [?,?,?];
     %w.cg_pos.lg_nose = [?,?,?];
  
@@ -87,7 +97,9 @@ function aircraft = cg_calc_plot(aircraft)
                          g.AESA,...
                          g.EES,...
                          g.APU,...
-                         w.weapons.m61a1.cannon]; % TODO: ADD LANDING GEAR WHEN SIZED/PLACED
+                         w.weapons.m61a1.cannon;
+                         c.lg * 0.85; % metabook table 7.1
+                         c.lg * 0.15]; % metabook 7.1
     
     empty_cg_pos = [w.cg_pos.engine; 
                     w.cg_pos.vtail; 
@@ -103,7 +115,9 @@ function aircraft = cg_calc_plot(aircraft)
                     w.cg_pos.AESA;
                     w.cg_pos.EES;
                     w.cg_pos.APU;
-                    w.cg_pos.cannon;]; % TODO ADD LANDING GEAR
+                    w.cg_pos.cannon;
+                    w.cg_pos.lg_main;
+                    w.cg_pos.lg_nose;]; % TODO ADD LANDING GEAR
     
     w.cg_sum.empty = sum(empty_comp_weight);
     w.cg_pos_weighted.empty = empty_comp_weight * empty_cg_pos;

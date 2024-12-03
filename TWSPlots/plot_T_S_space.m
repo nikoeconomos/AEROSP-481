@@ -100,7 +100,7 @@ function [] = plot_T_S_space(aircraft)
     %% PLOT ALL TOGETHER %%
     %%%%%%%%%%%%%%%%%%%%%%%
 
-    figure('Position', [50, 50, 1000, 800]); % Adjust figure size
+    figure('Position', [50, 50, 1500, 800]); % Adjust figure size
     hold on;
     
     % Takeoff and Landing Constraints (Solid Lines - Distinct Colors)
@@ -152,7 +152,7 @@ function [] = plot_T_S_space(aircraft)
     ylim([T_min T_max]);
     xlabel('S [m^2]');
     ylabel('T [N]');
-    title('T-S Plot for Libellula''s Custom Interceptor');
+    title('T-S Plot for the F-81');
     
     hold off; 
 
@@ -165,7 +165,7 @@ function [] = plot_T_S_space(aircraft)
         %% PLOT WEIGHT CONTOURS AND CONSTRAINING LINES %%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-    figure('Position', [50, 50, 1000, 800]); % Adjust figure size
+    figure('Position', [50, 50, 1500, 800]); % Adjust figure size
     hold on;
     
     contourf(S, T, TOGW, 100, 'LineStyle', 'none');        % plot contours
@@ -183,12 +183,12 @@ function [] = plot_T_S_space(aircraft)
 
     s_pt_max = plot(S_selected, T_selected, 'ko', 'MarkerSize', 5, 'MarkerFaceColor', 'r'); % black circle
     % Create a label with the s and t values
-    label = sprintf('(%.1f, %.0f)', S_selected, T_selected);  % Format the label with two decimal places
+    label = sprintf('(%.2f, %.0f)', S_selected, T_selected);  % Format the label with two decimal places
     text(S_selected + 0.3, T_selected+6000, label, 'BackgroundColor', 'white', 'EdgeColor', 'black', 'FontSize', 9, 'Color', 'k');
 
     s_pt_mil = plot(S_selected, aircraft.propulsion.T_military, 'ro', 'MarkerSize', 5, 'MarkerFaceColor', 'r'); % black circle
     % Create a label with the s and t values
-    label = sprintf('(%.1f, %.0f)', S_selected, aircraft.propulsion.T_military);  % Format the label with two decimal places
+    label = sprintf('(%.2f, %.0f)', S_selected, aircraft.propulsion.T_military);  % Format the label with two decimal places
     text(S_selected + 0.3, aircraft.propulsion.T_military+6000, label, 'BackgroundColor', 'white', 'EdgeColor', 'black', 'FontSize', 9, 'Color', 'k');
 
     % Add legend
@@ -212,7 +212,7 @@ function [] = plot_T_S_space(aircraft)
     %% PLOT COST CONTOURS AND CONSTRAINING LINES %%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-    figure('Position', [50, 50, 1000, 800]); % Adjust figure size
+    figure('Position', [50, 50, 1500, 800]); % Adjust figure size
     hold on;
     
     contourf(S, T, avg_cost, 100, 'LineStyle','none');        % plot contours
@@ -230,12 +230,12 @@ function [] = plot_T_S_space(aircraft)
 
     s_pt_max = plot(S_selected, T_selected, 'ko', 'MarkerSize', 5, 'MarkerFaceColor', 'r'); % black circle
     % Create a label with the s and t values
-    label = sprintf('(%.1f, %.0f)', S_selected, T_selected);  % Format the label with two decimal places
+    label = sprintf('(%.2f, %.0f)', S_selected, T_selected);  % Format the label with two decimal places
     text(S_selected + 0.3, T_selected+6000, label, 'BackgroundColor', 'white', 'EdgeColor', 'black', 'FontSize', 9, 'Color', 'k');
 
     s_pt_mil = plot(S_selected, aircraft.propulsion.T_military, 'ro', 'MarkerSize', 5, 'MarkerFaceColor', 'r'); % black circle
     % Create a label with the s and t values
-    label = sprintf('(%.1f, %.0f)', S_selected, aircraft.propulsion.T_military);  % Format the label with two decimal places
+    label = sprintf('(%.2f, %.0f)', S_selected, aircraft.propulsion.T_military);  % Format the label with two decimal places
     text(S_selected + 0.3, aircraft.propulsion.T_military+6000, label, 'BackgroundColor', 'white', 'EdgeColor', 'black', 'FontSize', 9, 'Color', 'k');
 
     % Add legend
