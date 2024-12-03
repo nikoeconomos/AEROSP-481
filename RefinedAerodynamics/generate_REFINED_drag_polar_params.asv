@@ -241,7 +241,7 @@ aero.CDi.landing_flaps_slats = aero.CL.landing_flaps_slats^2 / (pi * AR_wing * a
 % CMac_w spanwise points to integrate over 12 points, sectional Cl 12 
 % simulations
 
-Kf = 0.038; % Fusselage pitching moment factor obtained from table from NACA TR 711 with %l_fus = 0.55
+Kf = 0.033; % Fusselage pitching moment factor obtained from table from NACA TR 711 with %l_fus = 0.55
 Wf = 2.4; % Max fusselage width
 
 CM_fus_coeff = Kf * l_fuselage * Wf^2 / (wing.MAC * ...
@@ -259,16 +259,18 @@ xw_comp = wing.xMAC + 0.5 * wing.MAC;
 
 wing_chords = linspace(wing.c_root, wing.c_tip, 12);
 
-b = linspace(1.3,(wing.b/2) - 1.3,12); % Evenly spaced points along single wing span
+b = linspace(0, (wing.b/2)-1.3,12); % Evenly spaced points along single wing span
 
-x_ac = 0.25 * ( ( wing.c_root .* (wing.taper_ratio - 1) ... 
-        ./ wing.b) .* b + wing.c_root);
+b_xloc = linspace(0, wing.b/2,12); % To figure out x displacements along wing by using sweep
+
+
+
+x_ac = b_xloc .* tan(wing.sweep_QC) - ;
 
 % Update value for M = 1.6 (only flight point at which airfoil sees supersonic flow)
-x_ac_comp = 0.5 * ( ( wing.c_root .* (wing.taper_ratio - 1) ... 
-        ./ wing.b) .* b(6) + wing.c_root);
+x_ac_comp = b_xloc .* tan(wing.sweep_HC);
 
-Re_TO_L = Re_fuselage' * wing_chords / l_fuselage;
+Re_chords = Re_fuselage' * wing_chords / l_fuselage;
 
 % Changes in Cl along span are small for all but twisted sections at wing
 % tip where airfoil AoA = 0 (last 2)
@@ -284,6 +286,7 @@ Cl = [0.5279586, 0.5279586, 0.5279586, 0.5279586, 0.5279586, 0.5279586, 0.527958
 
 % Changes in Cm along span are small for all but twisted sections at wing
 % tip where airfoil AoA = 0 (last 2)
+
 Cm_ac = [-0.0794227, -0.0794227, -0.0794227, -0.0794227, -0.0794227, -0.0794227, -0.0794227, -0.0794227, -0.0794227, -0.0794227, -0.07812929, -0.07812929; % M = 0.282 TO
 -0.05963526, -0.05963526, -0.05963526, -0.05963526, -0.05963526, -0.05963526, -0.05963526, -0.05963526, -0.05963526, -0.05963526, -0.06916824, -0.06916824; ... % M = 0.282 L
 -0.08260348, -0.08260348, -0.08260348, -0.08260348, -0.08260348, -0.08260348, -0.08260348, -0.08260348, -0.08260348, -0.08260348, -0.08149004, -0.08149004; ... % 0.54
@@ -294,15 +297,13 @@ Cm_ac = [-0.0794227, -0.0794227, -0.0794227, -0.0794227, -0.0794227, -0.0794227,
 -0.2471044, -0.2471044, -0.2471044, -0.2471044, -0.2471044, -0.2471044, -0.2471044, -0.2471044, -0.2471044, -0.2471044, -0.24567651, -0.24567651; ... % Del TO flaps
 -0.19837374, -0.19837374, -0.19837374, -0.19837374, -0.19837374, -0.19837374, -0.19837374, -0.19837374, -0.19837374, -0.19837374, -0.19649686, -0.19649686]; % Del L flaps
 
-CM_ac_w = zeros(9,1);
+CM_ac_w = zeros(1,9);
 
-CM_ac_minus_tail = zeros(7,1);
+CM_ac_minus_tail = zeros(1,7);
 
-CL_tail = zeros(7,1);
+CL_tail = zeros(1,7);
 
-aircraft.geometry.htail.span_eff = 1.78 * (1 - 0.045 * aircraft.geometry.htail.AR ^ 0.68) - 0.64;
-
-CD_trim = zeros(7,1);
+CD_trim = zeros(1,7);
 
 CM_norm = 1 / (wing.MAC * wing.S_ref); % Normalize CM_ac_w integrals by wing dimensions
 
@@ -316,7 +317,7 @@ CL_t_coeff_comp = xt_comp / (htail.volume_coefficient * (xt_comp - xw_comp));
 CL_wing = [aero.CL.takeoff_flaps_slats, aero.CL.landing_flaps_slats, 0.9 * 0.5545099, ...
     aero.CL.cruise, 0.9 * 0.6550923, 0.9 * 0.7320457, 0.9 * 0.2170855];
 
-for k = 1:size(CM_ac_w)
+for k = 1:length(CM_ac_w)
     
     left_func = Cl(k,:) .* wing_chords .* x_ac;
     right_func = Cm_ac(k,:) .* wing_chords.^2;
@@ -333,7 +334,7 @@ for k = 1:size(CM_ac_w)
 
 end
 
-for j = 1:size(CL_tail)
+for j = 1:length(CL_tail)
     
     if j == 1
         CM_ac_minus_tail(j) = CM_ac_w(j) + CM_fus_TO + CM_ac_w(7);
@@ -350,11 +351,23 @@ for j = 1:size(CL_tail)
         CL_tail(j) = (CL_wing(j) * (xw_comp / wing.MAC) + CM_ac_minus_tail(j)) * CL_t_coeff_comp;
     end
 
-    CD_trim(j) = CL_tail(j)^2 * (htail.Sref / (pi * htail.span_eff * htail.AR * wing.Sref));
+    CD_trim(j) = CL_tail(j)^2 * (htail.S_ref / (pi * aero.e.htail * htail.AR * wing.S_ref));
 
 end
 
+aero.CD_trim = CD_trim;
+aero.CL_htail = CL_tail;
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% TRIM DRAG CALCULATIONS IF CL_T IS STILL TOO BIG %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% CL_tail = [0.9 1 0.6 0.7 0.72 0.78 0.2]; % MADE UP
+% 
+% CD_trim = CL_tail.^2 * (htail.S_ref / (pi * aero.e.htail * htail.AR * wing.S_ref));
+% 
+% aero.CD_trim = CD_trim;
+% aero.CL_htail = CL_tail;
 
 %% TODO FINISH
 
@@ -441,14 +454,16 @@ aircraft.aerodynamics.MDD = k / cos(sweep_QC_wing) - t_c / cos(sweep_QC_wing)^2 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% TODO ADD WAVE, TRIM DRAG. These are calculated for a variety of Mach numbers. find out how to integrate that array
-aero.CD.clean = aero.CD0.clean + aero.CDi.cruise; %+ aero.CD_trim.cruise + aero.CD_wave.cruise;
+aero.CD.clean = aero.CD0.clean + aero.CDi.cruise + aero.CD_trim(4); %+ aero.CD_wave.cruise;
 
-aero.CD.takeoff_flaps_slats      = aero.CD0.takeoff_flaps_slats      + aero.CDi.takeoff_flaps_slats + aero.; %+ aero.CD_trim.takeoff_flaps_slats;
-aero.CD.takeoff_flaps_slats_gear = aero.CD0.takeoff_flaps_slats_gear + aero.CDi.takeoff_flaps_slats; %+ aero.CD_trim.takeoff_flaps_slats;
+aero.CD.takeoff_flaps_slats      = aero.CD0.takeoff_flaps_slats      + aero.CDi.takeoff_flaps_slats + aero.CD_trim(1);
+aero.CD.takeoff_flaps_slats_gear = aero.CD0.takeoff_flaps_slats_gear + aero.CDi.takeoff_flaps_slats + aero.CD_trim(1);
 
-aero.CD.landing_flaps_slats      = aero.CD0.landing_flaps_slats      + aero.CDi.landing_flaps_slats; %+ aero.CD_trim.landing_flaps_slats;
-aero.CD.landing_flaps_slats_gear = aero.CD0.landing_flaps_slats_gear + aero.CDi.landing_flaps_slats; %+ aero.CD_trim.landing_flaps_slats;
+aero.CD.landing_flaps_slats      = aero.CD0.landing_flaps_slats      + aero.CDi.landing_flaps_slats + aero.CD_trim(2);
+aero.CD.landing_flaps_slats_gear = aero.CD0.landing_flaps_slats_gear + aero.CDi.landing_flaps_slats + aero.CD_trim(2);
 
 %% REASSIGN %%
 
 aircraft.aerodynamics = aero;
+aircraft.geometry.htail = htail;
+
