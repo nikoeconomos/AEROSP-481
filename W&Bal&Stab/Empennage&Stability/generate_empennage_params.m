@@ -48,7 +48,7 @@ function [aircraft] = generate_empennage_params(aircraft)
     htail.t_c_root                    = 0.0524; % 5% tc ratio, from our 1st optimization airfoil from mach aero
     htail.chordwise_loc_max_thickness = 0.575; % pulled from cad
     
-    htail.xRLE = 15.208; % m position of leading edge of the root chord, from CAD, from nose tip TODO UPDATE
+    htail.xRLE = 14.167; % m position of leading edge of the root chord, from CAD, from nose tip TODO UPDATE
 
     % MAC and CG = at 0.4MAC
     htail.MAC  = aircraft.weight.func.MAC_calc(htail.c_root, htail.c_tip);
@@ -90,7 +90,7 @@ function [aircraft] = generate_empennage_params(aircraft)
     vtail.t_c_root                    = 0.033; % 3.33%
     vtail.chordwise_loc_max_thickness = 0.500; % biconvex
     
-    vtail.xRLE = 15.191; %m position of leading edge of the root chord, from CAD, from nose tip TODO UPDATE IF NECESSARY 
+    vtail.xRLE = 13.663; %m position of leading edge of the root chord, from CAD, from nose tip TODO UPDATE IF NECESSARY 
 
     % MAC and CG = at 0.4MAC
     vtail.MAC   = aircraft.weight.func.MAC_calc  (vtail.c_root, vtail.c_tip);

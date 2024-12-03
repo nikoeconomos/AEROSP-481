@@ -19,6 +19,7 @@ aircraft = generate_init_weight_params(aircraft); % run again for better estimat
 
 aircraft = generate_climb_segments(aircraft);
 
+
 % INPUT F35 PARAMETERS IF DESIRED
 % aircraft = generate_F35_params(aircraft);
 
@@ -27,7 +28,7 @@ aircraft = generate_climb_segments(aircraft);
 %plot_T_W_W_S_space(aircraft)
 
 
-plot_T_S_space(aircraft)
+%plot_T_S_space(aircraft)
 % plot_T_S_space_F35(aircraft)
 % [togw, ff] = togw_as_func_of_T_S_calc(aircraft, aircraft.propulsion.T_max, aircraft.geometry.wing.S_ref)
 
