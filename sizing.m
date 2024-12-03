@@ -24,7 +24,7 @@ aircraft = generate_climb_segments(aircraft);
 
 %% GENERATE PRELIMINARY SIZINCAG PLOTS %%
 
-%plot_T_W_W_S_space(aircraft)
+% plot_T_W_W_S_space(aircraft)
 
 
 %plot_T_S_space(aircraft)
@@ -34,7 +34,6 @@ aircraft = generate_climb_segments(aircraft);
 %% REFINE SIZING
 
 aircraft = generate_component_weights(aircraft);
-% aircraft = generate_LG_params(aircraft);
 
 aircraft = generate_REFINED_drag_polar_params(aircraft);
 % plot_drag_polar(aircraft);

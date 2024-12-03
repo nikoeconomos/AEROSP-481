@@ -197,10 +197,18 @@ function aircraft = cg_calc_plot(aircraft)
     [cg_excursion_arr_full_mission, cg_excursion_dx_arr, cg_weight_arr_full_mission] = cg_excursion_calc(aircraft, full_mission); 
     figure();
     hold on;
-    plot(cg_excursion_arr_full_mission(:,1), cg_weight_arr_full_mission, '-o', 'MarkerFaceColor', 'k')
+
+    % Define colors from the palette
+    dark_blue = [0.20, 0.30, 0.40];  % Dark bluish-gray for the line
+    light_blue = [0.70, 0.80, 0.90];  % Soft light blue for the marker face
+    
+    % Plot the data with the specified colors
+    plot(cg_excursion_arr_full_mission(:,1), cg_weight_arr_full_mission, ...
+    '-o', 'MarkerFaceColor', light_blue, 'MarkerEdgeColor', dark_blue, 'LineWidth', 1, 'Color', dark_blue);
+    
     xlabel('Position of CG Relative to Nose [m]');
     ylabel('Aircraft Weight [kg]');
-    title(['CG Excursion Plot for Full Mission:', newline(), 'loading, dropping all payload, using all fuel']);
+    title(['CG Excursion Plot for Full Mission:', newline(), 'Loading payload & fuel, Firing weapons, Using all fuel']);
     hold off; 
 
     aircraft.weight.cg.excursion_arr_full_mission = cg_excursion_arr_full_mission; % update aircraft struct

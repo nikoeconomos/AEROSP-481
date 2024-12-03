@@ -21,6 +21,8 @@ function aircraft = SM_calc_plot(aircraft, mach)
 
     %% SET VALUES %%
 
+    mach = aircraft.performance.mach.arr;
+
     cg_excursion_arr = aircraft.weight.cg.excursion_arr_full_mission; % Calculated previously in CG_calc_plot. Full mission start to finish
 
     AR_w = aircraft.geometry.wing.AR;
@@ -32,7 +34,6 @@ function aircraft = SM_calc_plot(aircraft, mach)
     Lambda_HC_w = aircraft.geometry.wing.sweep_HC; 
     Lambda_HC_h = aircraft.geometry.htail.sweep_HC;
 
-
     C_L_alpha_w = zeros(1 , length(mach));
     C_L_alpha_h = zeros(1 , length(mach));
 
@@ -43,7 +44,7 @@ function aircraft = SM_calc_plot(aircraft, mach)
     C_L_alpha_h   = C_L_alpha_h_0.*(1 - de_da).*eta_h; % 8.21
 
     %% TODO MAKE TRANSONIC AND SUPERSONIC UNIQUE --> Juan data?
-    %{
+    
     for i = 1:length(mach)
         if mach(i) <= 0.8
 
@@ -73,7 +74,6 @@ function aircraft = SM_calc_plot(aircraft, mach)
 
         end
     end
-    %}
 
     aircraft.stability.C_L_alpha.wing = C_L_alpha_w;
     aircraft.stability.C_L_alpha.htail = C_L_alpha_h;

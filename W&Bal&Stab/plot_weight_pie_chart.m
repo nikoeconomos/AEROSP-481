@@ -22,7 +22,7 @@ function [] = plot_weight_pie_chart(aircraft)
 
 % Define the cost components and their corresponding weights
 comp_names = {'Fuel', 'Payload', 'Engine', 'Fuselage', 'Wing', 'Empennage', ...
-              'LG', 'Xtra', 'GFE'};
+              'LG', 'Extra', 'GFE'};
 comp_weights = [aircraft.weight.components.fuel + aircraft.weight.components.oil ,  ...
                 aircraft.weight.components.payload, ...
                 aircraft.weight.components.engine, ...
@@ -87,9 +87,11 @@ main_categories = {'Fuel', 'Payload', 'OEW'};
 main_weights = [fuel_weight, payload_weight, oew_weight];
 
 % Define colors: red for Fuel, orange for Payload, and darker pale blue for OEW
-main_colors = [0.784, 0.275, 0.275;       % Red for Fuel
-               0.902, 0.549, 0.275;       % Orange for Payload
-               0.30,  0.50,  1];            % Darker pale blue for OEW
+main_colors = [
+    0.50, 0.30, 0.30;  % Muted dark red for Fuel
+    0.60, 0.40, 0.30;  % Muted dark orange for Payload
+    0.20, 0.30, 0.40;  % Dark bluish-gray (adjusted for more blue)
+];
 
 % Create the pie chart
 figure;
@@ -116,7 +118,7 @@ title(['Fuel, Payload, and OEW Breakdown. TOGW: ', num2str(round(aircraft.weight
 %% OEW BREAKDOWN 
 
 % Define OEW component names and weights
-oew_names = {'Engine', 'Fuselage', 'Wing', 'Empennage', 'LG', 'Xtra', 'GFE'};
+oew_names = {'Engine', 'Fuselage', 'Wing', 'Empennage', 'LG', 'Extra', 'GFE'};
 oew_weights = [aircraft.weight.components.engine, ...
                aircraft.weight.components.fuselage, aircraft.weight.components.wing, ...
                aircraft.weight.components.htail + aircraft.weight.components.vtail, ...
@@ -124,14 +126,15 @@ oew_weights = [aircraft.weight.components.engine, ...
                aircraft.weight.components.gfe_total];
 
 % Define distinct shades of blue for each OEW component
-oew_colors = [0.2, 0.4, 0.8;  % Dark blue
-              0.3, 0.5, 0.9;  % Medium dark blue
-              0.4, 0.6, 0.9;  % Medium blue
-              0.5, 0.7, 0.9;  % Lighter medium blue
-              0.6, 0.8, 1.0;  % Pale blue
-              0.3, 0.7, 0.9;  % Muted teal blue
-              0.2, 0.5, 0.7]; % Grayish blue
-
+oew_colors = [
+    0.12, 0.17, 0.20;  % Medium dark gray-blue
+    0.20, 0.30, 0.35;  % Soft medium blue-gray
+    0.30, 0.40, 0.50;  % Muted medium blue
+    0.45, 0.55, 0.65;  % Balanced blue-gray
+    0.60, 0.70, 0.80;  % Light blue-gray
+    0.70, 0.80, 0.90;  % Soft light blue
+    0.80, 0.85, 0.95;  % Very light blue-gray
+];
 % Create the pie chart
 figure;
 h_oew = pie(oew_weights);

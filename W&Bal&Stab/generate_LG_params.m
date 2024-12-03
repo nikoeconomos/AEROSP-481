@@ -25,8 +25,8 @@ function aircraft = generate_LG_params(aircraft)
     fwd_CGx  = min(aircraft.weight.cg.excursion_arr_full_mission(:,1)); % farthest forward CG value, x only
     rear_CGx = max(aircraft.weight.cg.excursion_arr_full_mission(:,1)); % farthest backward CG value, x only
 
-    nose_LGx = 5.175;  %m; location of nose landing gear
-    main_LGx = 11.375; %m; location of main landing gear
+    nose_LGx = 8.2;  %m; location of nose landing gear
+    main_LGx = 11.1; %m; location of main landing gear
 
     B  = main_LGx-nose_LGx; %m; distance between landing gears
 
@@ -35,7 +35,7 @@ function aircraft = generate_LG_params(aircraft)
     Mf = main_LGx - fwd_CGx;
     Ma = main_LGx - rear_CGx;
 
-    H = 1.52; %m; height of the CG relative to ground
+    H = max(aircraft.weight.cg.excursion_arr_full_mission(:,3)); %m; height of the CG relative to ground
 
     max_static_load_main = W*Na/B;
     max_static_load_nose = W*Mf/B;
@@ -46,12 +46,12 @@ function aircraft = generate_LG_params(aircraft)
     if Ma/B > 0.05
         disp('Main landing gear location constraint (Ma) satisfied.');
     else
-        disp('Main landing gear location constraint not satisfied. Consider moving landing gear backward.');
+        disp('Main landing gear location constraint Ma not satisfied. Consider moving landing gear backward.');
     end
     if Mf/B < 0.2
         disp('Main landing gear location constraint (Mf) satisfied.');
     else
-        disp('Main landing gear location constraint not satisfied. Consider moving landing gear forward.');
+        disp('Main landing gear location constraint Mf not satisfied. Consider moving landing gear forward.');
     end
 
     main_wheel_load_min = max_static_load_main/2;

@@ -373,8 +373,9 @@ function aircraft = generate_component_weights(aircraft)
     % TODO FIX
     
     aircraft = cg_calc_plot(aircraft); % TODO UPDATE MISSION PROFILE IF MISSILES CHANGE
+    aircraft = generate_LG_params(aircraft);
     
-    aircraft = SM_calc_plot(aircraft, aircraft.performance.mach.arr); % sets the np and sm arrays for a full mission profile.
+    aircraft = SM_calc_plot(aircraft); % sets the np and sm arrays for a full mission profile.
 
     %aircraft = empennage_aerodynamics_calc(aircraft);
 
