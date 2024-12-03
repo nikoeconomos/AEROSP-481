@@ -63,7 +63,7 @@ function [aircraft] = generate_empennage_params(aircraft)
     %% Vertical TAIL %%
     %%%%%%%%%%%%%%%%%%%
 
-    aircraft.geometry.vtail.AR = 1.4; % Highest seen in Raymer
+    aircraft.geometry.vtail.AR = 2; % Highest seen in Raymer
 
     % for convenience
     vtail = aircraft.geometry.vtail;
@@ -75,11 +75,11 @@ function [aircraft] = generate_empennage_params(aircraft)
     vtail.S_ref = vtail.volume_coefficient * aircraft.geometry.wing.b * aircraft.geometry.wing.S_ref / vtail.lever_arm; % TODO CONFIRM AND STATE LOCATION OF EQUATION
     vtail.S_wet = 2*vtail.S_ref; %m2 APPROXIMATION, UPDATE WITH A BETTER ONE
 
-    vtail.b = sqrt(vtail.AR * vtail.S_ref);
+    vtail.b = sqrt(vtail.AR * 2*vtail.S_ref);
 
     vtail.taper_ratio = 0.35;
 
-    vtail.c_root = 2*vtail.S_ref / ( (1 + vtail.taper_ratio) * vtail.b); %previously equal to 1.3815 % TODO where did this come from?
+    vtail.c_root = 4*vtail.S_ref / ( (1 + vtail.taper_ratio) * vtail.b); %previously equal to 1.3815 % TODO where did this come from?
     vtail.c_tip  = vtail.c_root*vtail.taper_ratio;  
 
     vtail.sweep_LE = deg2rad(55); % radians
