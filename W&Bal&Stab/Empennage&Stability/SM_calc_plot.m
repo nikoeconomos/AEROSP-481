@@ -1,4 +1,4 @@
-function aircraft = SM_calc_plot(aircraft, mach)
+function aircraft = SM_calc_plot(aircraft)
 % Description: Using values obtained from cg_excursion_calc.m to find
 % changes in static margin
 % 
@@ -24,7 +24,30 @@ function aircraft = SM_calc_plot(aircraft, mach)
     mach = aircraft.performance.mach.arr;
 
     cg_excursion_arr = aircraft.weight.cg.excursion_arr_full_mission; % Calculated previously in CG_calc_plot. Full mission start to finish
+   
+    C_L_alpha_w = zeros(1 , length(mach));
+    C_L_alpha_h = zeros(1 , length(mach));
 
+    % These values come from CFD from Juan
+    C_L_alpha_w(1) = 6.01; 
+    C_L_alpha_w(2) = 6.31;
+    C_L_alpha_w(3) = 6.69;
+    C_L_alpha_w(4) = 7.46;
+    C_L_alpha_w(5) = 6.45;
+    C_L_alpha_w(6) = 7.09;
+
+    C_L_alpha_h(1) = NaN;
+    C_L_alpha_h(2) = NaN;
+    C_L_alpha_h(3) = NaN;
+    C_L_alpha_h(4) = NaN;
+    C_L_alpha_h(5) = NaN;
+    C_L_alpha_h(6) = NaN;
+
+    aircraft.stability.C_L_alpha.wing = C_L_alpha_w;
+    aircraft.stability.C_L_alpha.htail = C_L_alpha_h;
+
+    % DEPRECATED: Datcom formulas
+    %{
     AR_w = aircraft.geometry.wing.AR;
     AR_h = aircraft.geometry.htail.AR;
     
@@ -34,23 +57,12 @@ function aircraft = SM_calc_plot(aircraft, mach)
     Lambda_HC_w = aircraft.geometry.wing.sweep_HC; 
     Lambda_HC_h = aircraft.geometry.htail.sweep_HC;
 
-    C_L_alpha_w = zeros(1 , length(mach));
-    C_L_alpha_h = zeros(1 , length(mach));
-
-    %C_L_alpha_w   = 2*pi*AR_w ./ (2+sqrt( (AR_w/eta_w)^2 * (1+tan(Lambda_HC_w)^2 - mach.^2) +4)); % Metabook 8.18
+    C_L_alpha_w   = 2*pi*AR_w ./ (2+sqrt( (AR_w/eta_w)^2 * (1+tan(Lambda_HC_w)^2 - mach.^2) +4)); % Metabook 8.18
+    C_L_alpha_h_0 = 2*pi*AR_h ./ (2+sqrt( (AR_h/eta_h)^2 * (1+tan(Lambda_HC_h)^2 - mach.^2) +4)); % 8.19
+    de_da         = 2*C_L_alpha_w / (pi*AR_w);
+    C_L_alpha_h   = C_L_alpha_h_0.*(1 - de_da).*eta_h; % 8.21
+    %}
     
-    %C_L_alpha_h_0 = 2*pi*AR_h ./ (2+sqrt( (AR_h/eta_h)^2 * (1+tan(Lambda_HC_h)^2 - mach.^2) +4)); % 8.19
-    %de_da         = 2*C_L_alpha_w / (pi*AR_w);
-    %C_L_alpha_h   = C_L_alpha_h_0.*(1 - de_da).*eta_h; % 8.21
-
-    %% TODO MAKE TRANSONIC AND SUPERSONIC UNIQUE --> Juan data?
-    
-    
-
-    aircraft.stability.C_L_alpha.wing = C_L_alpha_w;
-    aircraft.stability.C_L_alpha.htail = C_L_alpha_h;
-    
-
     %% Finding Kf based on location of wing quarter chord
 
     % Values from metabook table 8.1
@@ -93,6 +105,7 @@ function aircraft = SM_calc_plot(aircraft, mach)
     np_mach_arr = np_arr(1,:);
     
     %% PLOT %%
+    
     figure;
     plot(mach,np_mach_arr,'-o', 'MarkerFaceColor', 'k');
     title('Neutral Point location at varying Mach numbers');
