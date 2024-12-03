@@ -66,6 +66,7 @@ function aircraft = cg_calc_plot(aircraft)
     w.cg_pos.AESA                 = [3.871, 0, 0.624];
     w.cg_pos.EES                  = [13.501, 0.74, 0.754];
     w.cg_pos.APU                  = [13.082, -0.689, 0.424];
+
     %w.cg_pos.lg_main = [?,?,?];
     %w.cg_pos.lg_nose = [?,?,?];
  
@@ -87,7 +88,9 @@ function aircraft = cg_calc_plot(aircraft)
                          g.AESA,...
                          g.EES,...
                          g.APU,...
-                         w.weapons.m61a1.cannon]; % TODO: ADD LANDING GEAR WHEN SIZED/PLACED
+                         w.weapons.m61a1.cannon;
+                         c.lg * 0.85; % metabook table 7.1
+                         c.lg * 0.15]; % metabook 7.1
     
     empty_cg_pos = [w.cg_pos.engine; 
                     w.cg_pos.vtail; 
@@ -103,7 +106,9 @@ function aircraft = cg_calc_plot(aircraft)
                     w.cg_pos.AESA;
                     w.cg_pos.EES;
                     w.cg_pos.APU;
-                    w.cg_pos.cannon;]; % TODO ADD LANDING GEAR
+                    w.cg_pos.cannon;
+                    w.cg_pos.lg_main;
+                    w.cg_pos.lg_nose;]; % TODO ADD LANDING GEAR
     
     w.cg_sum.empty = sum(empty_comp_weight);
     w.cg_pos_weighted.empty = empty_comp_weight * empty_cg_pos;

@@ -83,7 +83,7 @@ function [] = plot_T_W_W_S_space(aircraft)
     %% Plotting the calculated values, all together%%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-    figure('Position', [50, 50, 1000, 800]); % Adjust figure size
+    figure('Position', [50, 50, 1500, 800]); % Adjust figure size
     hold on;
     
     % Takeoff and Landing Constraints (Solid Lines - Distinct Colors)
@@ -135,7 +135,7 @@ function [] = plot_T_W_W_S_space(aircraft)
     ylim([0 t]);
     xlabel('W/S [kg/m^2]');
     ylabel('T/W [N/N]');
-    title('T/W - W/S plot for Libellula''s custom interceptor');
+    title('T/W - W/S plot for the F-81');
     
     hold off;
 
@@ -143,7 +143,7 @@ function [] = plot_T_W_W_S_space(aircraft)
     %% Plotting the calculated values, Military Thrust %%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-    figure('Position', [50, 50, 1000, 800]); % Adjust figure size
+    figure('Position', [50, 50, 1500, 800]); % Adjust figure size
     hold on;
     
     % Takeoff and Landing Constraints (Solid Lines - Distinct Colors)
@@ -218,14 +218,14 @@ fill(x_fill, y_fill, 'c', 'EdgeColor', 'none', 'FaceAlpha', 0.5);
     ylim([0 t]);
     xlabel('W/S [kg/m^2]');
     ylabel('T/W [N/N]');
-    title('T/W - W/S Plot for Libellula''s Custom Interceptor, Military Thrust');
+    title('T/W - W/S Plot for the F-81, Military Thrust');
         
     hold off;
 
     %% MAX THRUST PLOT %%
     %%%%%%%%%%%%%%%%%%%%%
 
-    figure('Position', [50, 50, 1000, 800]); % Adjust figure size
+    figure('Position', [50, 50, 1500, 800]); % Adjust figure size
     hold on;
     
     % Takeoff and Landing Constraints (Solid Lines - Distinct Colors)
@@ -267,7 +267,7 @@ fill(x_fill, y_fill, 'c', 'EdgeColor', 'none', 'FaceAlpha', 0.5);
     ylim([0 t]);
     xlabel('W/S [kg/m^2]');
     ylabel('T/W [N/N]');
-    title('T/W - W/S Plot for Libellula''s Custom Interceptor, Maximum Thrust');
+    title('T/W - W/S Plot for the F-81, Maximum Thrust');
     
     hold off;
     
