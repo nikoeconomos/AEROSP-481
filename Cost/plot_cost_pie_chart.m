@@ -1,4 +1,4 @@
-function [] = plot_cost_pie_chart(aircraft)
+function [aircraft] = plot_cost_pie_chart(aircraft)
 % Description: This function makes a pie chart displaying the cost
 % breakdown of different cost values and categories
 % 
@@ -61,17 +61,48 @@ TOC = IOC + DOC;
 
 %% Plotting %%
 
-figure;
-data = [IOC DOC TOC];
-Components = categorical(["IOC", "DOC", "TOC"]);
-piechart(data, Components)
-title("Cost Breakdown")
+    function aircraft = plot_cost_pie_chart(aircraft)
+    % Color Palette
+    custom_colormap1 = [
+     0.078, 0.098, 0.118; % Dark shade
+     0.157, 0.208, 0.235; % Light shade
+     0.941, 0.953, 0.957; % Gray
+    ];
+    custom_colormap2 = [
+     0.157, 0.208, 0.235; % Light shade
+     0.941, 0.953, 0.957; % Gray
+    ];
 
-figure;
-DOC_data = [FOC COC];
-DOC_labels = categorical(["FOC", "COC"]);
-piechart(DOC_data, DOC_labels)
-title("DOC Breakdown")
+    % First Pie Chart: Cost Breakdown
+    figure;
+    data = [aircraft.IOC, aircraft.DOC, aircraft.TOC]; % Use struct notation
+    labels = {'IOC', 'DOC', 'TOC'}; 
+    
+    % Create pie chart
+    p1 = pie(data, labels);
+    
+    % Manually set colors for pie slices
+    for k = 1:2:length(p1)
+        p1(k).FaceColor = custom_colormap1(ceil(k/2), :);
+    end
+    
+    title("Cost Breakdown");
+    
+    % Second Pie Chart: DOC Breakdown
+    figure;
+    DOC_data = [aircraft.FOC, aircraft.COC]; % Use struct notation
+    DOC_labels = {'FOC', 'COC'}; 
+    
+    % Create pie chart
+    p2 = pie(DOC_data, DOC_labels);
+    
+    % Manually set colors for pie slices
+    for k = 1:2:length(p2)
+        p2(k).FaceColor = custom_colormap2(ceil(k/2), :);
+    end
+    
+    title("DOC Breakdown");
+    end
 
 %% Displaying Costs %%
 

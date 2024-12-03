@@ -32,8 +32,6 @@ CEF_calc = @(byear, tyear) (5.17053 + 0.104981 *(tyear-2006))/(5.17053 + 0.10498
 %% Individual Components %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-aircraft.cost = struct();
-
 cost = aircraft.cost;
 
 %% Labor %
@@ -57,7 +55,7 @@ Cmm_eng = (25+(18*T_max_lbf/10000))*(0.62+0.38/block_time)*CEF_calc(engine_base_
 engine_maint_cost = aircraft.propulsion.num_engines*(Cml_eng+Cmm_eng)*block_time;
 
 % engine cost
-cost.engine = 5660000; % Based on contract for F-15EX in 2021 (adjusted for inflation)
+cost.engine = 9165621.37; % Based on contract with Lockhead Martin F-16 Fleet in 2000 (adjusted for inflation)
 
 cost.aircraft = 10^(0.657+(1.4133*log10(aircraft.weight.togw*2.2))); % From Roskam
 cost.airframe = cost.aircraft - cost.engine; %From metabook chapter 3
@@ -92,14 +90,14 @@ airframe_maint = (Cml_af+Cmm_af)*block_time;
 
 %% INSURANCE %%
 
-Uannual = 1.5*10^3* (3.4546*block_time + 2.994 - (12.289*block_time^2 - 5.6626*block_time + 8.964)^0.5 );
+Uannual = 1.5*10^3 * (3.4546*block_time + 2.994 - (12.289*block_time^2 - 5.6626*block_time + 8.964)^0.5 );
 
 IRa = 0.02; % Hull insurance rate
 
 cost.insurance = (IRa*cost.airframe/Uannual)*block_time;
 
 %% Missile cost
-missile_cost_base = 386000;  % USD Pulled RFP year
+missile_cost_base = 386000;  % USD Pulled from RFP
 missile_base_year = 2006;
 missile_cost_2024 = adjust_cost_inflation_calc(missile_cost_base, missile_base_year, target_year); % USD
 cost.missile    = missile_cost_2024*aircraft.weight.weapons.num_missiles;
@@ -141,7 +139,7 @@ RDT_E_flyaway = HE * RE + HT * RT + HM * RM + HQ * RQ + CD + CF + CM + cost.engi
 RTDE_flyaway_adjusted = adjust_cost_inflation_calc(RDT_E_flyaway, 1999, target_year); % slides page 34
 
 
-%% Flyaway cost with simple Roskam method
+%% Flyaway cost
 
 [cost.avg_flyaway_cost, cost.learning_curve_costs] = avg_flyaway_cost_calc(cost.aircraft, 1000);
 
