@@ -14,11 +14,12 @@ function [cg_excursion_arr, cg_excursion_dx_arr, cg_weight_arr] = cg_excursion_c
 %           % 1 - empty weight
             % 2 - fuel - 100%
             % 3 - missiles 1 / 2 (bottom)
-            % 4 - missiles 3 / 4 (
-            % 5 - missiles 5 / 6
-            % 6 - loaded feed system
-            % 7 - cannon bullets
-%           % 8 - fuel - 50%
+            % 4 - missiles 3 / 4 
+            % 5 - missiles 5 / 6 DEPRECATED
+            % 6 - loaded feed system (bullets + casings + feed system)
+            % 7 - cannon bullets (firing all bullets but keeping the casings/feed system)
+            % 8 - fuel - 50%
+            % 9 - fuel - 25%
 %    
 % 
 % OUTPUTS:
@@ -42,10 +43,10 @@ function [cg_excursion_arr, cg_excursion_dx_arr, cg_weight_arr] = cg_excursion_c
     % 1 - empty weight
     % 2 - fuel - 100%
     % 3 - missiles 1 / 2 (bottom)
-    % 4 - missiles 3 / 4 (
-    % 5 - missiles 5 / 6
-    % 6 - loaded feed system
-    % 7 - cannon bullets
+    % 4 - missiles 3 / 4 
+    % 5 - missiles 5 / 6 DEPRECATED
+    % 6 - loaded feed system (bullets + casings + feed system)
+    % 7 - cannon bullets (firing all bullets but keeping the casings/feed system)
     % 8 - fuel - 50%
     % 9 - fuel - 25%
    
@@ -53,7 +54,7 @@ function [cg_excursion_arr, cg_excursion_dx_arr, cg_weight_arr] = cg_excursion_c
                w.cg_sum.fuel;
                w.weapons.missile*2;
                w.weapons.missile*2;
-               w.weapons.missile*2;
+               NaN;                  %DEPRECATED
                w.weapons.m61a1.loaded_feed_system;
                w.weapons.m61a1.bullets;
                w.cg_sum.fuel*0.5;
@@ -63,7 +64,7 @@ function [cg_excursion_arr, cg_excursion_dx_arr, cg_weight_arr] = cg_excursion_c
                        w.cg_pos_weighted.fuel;            % 2
                        w.cg_pos_weighted.missiles12;      % 3
                        w.cg_pos_weighted.missiles34;      % 4
-                       w.cg_pos_weighted.missiles56;      % 5
+                       [NaN, NaN, NaN];                   % 5 DEPRECATED
                        w.cg_pos_weighted.loaded_feed_system; % 6
                        w.cg_pos_weighted.bullets;         % 7
                        w.cg_pos_weighted.fuel*0.5;        % 8
@@ -90,11 +91,9 @@ function [cg_excursion_arr, cg_excursion_dx_arr, cg_weight_arr] = cg_excursion_c
         end
 
         cg_excursion_arr(i, 1:3) = scenario_pos_sum ./ scenario_weight_sum;
-        cg_weight_arr(i) = scenario_weight_sum+w.components.lg; % ADDING LANDING GEAR BECAUSE IT IS NOT SIZED YET, TODO REMOVE
+        cg_weight_arr(i) = scenario_weight_sum;
     end
 
     cg_excursion_dx_arr = convert_cg_excursion_to_delta_x(cg_excursion_arr);
-
-    %% SEE ABOVE FOR THE ADDITION OF LG THAT SHOULD BE REMOVED %%
 
 end
