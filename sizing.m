@@ -33,10 +33,10 @@ plot_T_S_space(aircraft)
 
 %% REFINE SIZING
 
-aircraft = generate_component_weights(aircraft);
+%aircraft = generate_component_weights(aircraft);
 % aircraft = generate_LG_params(aircraft);
 
-aircraft = generate_REFINED_drag_polar_params(aircraft);
+%aircraft = generate_REFINED_drag_polar_params(aircraft);
 % plot_drag_polar(aircraft);
 
 plot_V_n_diagram(aircraft);
@@ -44,7 +44,7 @@ plot_V_n_diagram(aircraft);
 
 %% FIND AIRCRAFT COST
 
-aircraft = generate_cost_params(aircraft);
+%aircraft = generate_cost_params(aircraft);
 % plot_cost_pie_chart(aircraft);
 
 
