@@ -19,6 +19,7 @@ aircraft = generate_init_weight_params(aircraft); % run again for better estimat
 
 aircraft = generate_climb_segments(aircraft);
 
+
 % INPUT F35 PARAMETERS IF DESIRED
 % aircraft = generate_F35_params(aircraft);
 
@@ -35,7 +36,7 @@ aircraft = generate_climb_segments(aircraft);
 
 aircraft = generate_component_weights(aircraft);
 
-aircraft = generate_REFINED_drag_polar_params(aircraft);
+%aircraft = generate_REFINED_drag_polar_params(aircraft);
 % plot_drag_polar(aircraft);
 
 plot_V_n_diagram(aircraft);
@@ -43,7 +44,7 @@ plot_V_n_diagram(aircraft);
 
 %% FIND AIRCRAFT COST
 
-aircraft = generate_cost_params(aircraft);
+%aircraft = generate_cost_params(aircraft);
 % plot_cost_pie_chart(aircraft);
 
 
