@@ -26,7 +26,7 @@ function aircraft = generate_LG_params(aircraft)
     rear_CGx = max(aircraft.weight.cg.excursion_arr_full_mission(:,1)); % farthest backward CG value, x only
 
     nose_LGx = 4;  %m; location of nose landing gear
-    main_LGx = 11.094; %m; location of main landing gear
+    main_LGx = 10.196; %m; location of main landing gear
 
     B  = main_LGx-nose_LGx; %m; distance between landing gears
 
