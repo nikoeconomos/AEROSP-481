@@ -179,6 +179,8 @@ CD0_nose_strut  = streamlined_strut_per_area     * nose_strut_frontal_area * 1; 
 
 CD0_lg = CD0_main_wheels + CD0_nose_wheels + CD0_main_struts + CD0_nose_strut;
 
+CD0_lg = 0.015;  % Placeholder value
+
 %% Miscellaneous Drag %%
 
 CD0_misc = 0; % Assumed to be zero because no main sources apply to our aircraft
