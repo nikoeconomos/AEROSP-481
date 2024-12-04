@@ -137,7 +137,7 @@ n_combined_neg = max(n_negative, n_gust_neg_at_VB);
 %% Plotting %%
 
 % Plot the V-n diagram
-figure;
+figure('Position', [5, 5, 1500, 800]); % Adjust figure size
 hold on;
 
 % Colors for autumn/winter feel
@@ -228,13 +228,13 @@ text(V_Mach12_EAS_kts + 10, n_sustained_Mach12 - 0.5, 'Sustained Turn (Mach 1.2)
 
 %Labels, grid, and legend
 
-title('V-n Diagram');
-xlabel('Equivalent Airspeed (EAS)');
-ylabel('Load Factor (n)');
+title('V-n Diagram at Max TOGW');
+xlabel('Equivalent Airspeed (EAS) [kts]');
+ylabel('Load Factor [n]');
 grid on;
 legend('Location', 'SouthEast');
-xlim([0 VD_EAS + 200]);
-ylim([n_negative - 5, n_limit + 5]);
+xlim([0 600]);
+ylim([-15, 20]);
 hold off;
 
 end
