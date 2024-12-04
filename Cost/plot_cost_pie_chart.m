@@ -39,6 +39,8 @@ COC = Cost_crew + Cost_fuel + Cost_oil + Engine_maint;
 
 %% FOC %%
 
+% This must be fixed!
+%{
 Cost_unit = mean(aircraft.cost.avg_flyaway_cost); % Average cost for one aircraft
 K_depreciation = 0.1; % Typical - from metabook chapter 3
 n = 25; % Number of years aircraft is used - Estimated
@@ -50,6 +52,9 @@ Cost_financing = 0.07; % From Raymer - should be 7% of DOC
 Cost_depreciation = (Cost_unit * (1 - K_depreciation) * tb) / (n * U_annual);
 
 FOC = Cost_insurance + Cost_financing + Cost_depreciation;
+%}
+
+FOC = 0; %placeholder TODO REMOVE
 
 %% DOC %%
 
@@ -61,48 +66,46 @@ TOC = IOC + DOC;
 
 %% Plotting %%
 
-    function aircraft = plot_cost_pie_chart(aircraft)
-    % Color Palette
-    custom_colormap1 = [
-     0.078, 0.098, 0.118; % Dark shade
-     0.157, 0.208, 0.235; % Light shade
-     0.941, 0.953, 0.957; % Gray
-    ];
-    custom_colormap2 = [
-     0.157, 0.208, 0.235; % Light shade
-     0.941, 0.953, 0.957; % Gray
-    ];
+% Color Palette
+custom_colormap1 = [
+ 0.078, 0.098, 0.118; % Dark shade
+ 0.157, 0.208, 0.235; % Light shade
+ 0.941, 0.953, 0.957; % Gray
+];
+custom_colormap2 = [
+ 0.157, 0.208, 0.235; % Light shade
+ 0.941, 0.953, 0.957; % Gray
+];
 
-    % First Pie Chart: Cost Breakdown
-    figure;
-    data = [aircraft.IOC, aircraft.DOC, aircraft.TOC]; % Use struct notation
-    labels = {'IOC', 'DOC', 'TOC'}; 
-    
-    % Create pie chart
-    p1 = pie(data, labels);
-    
-    % Manually set colors for pie slices
-    for k = 1:2:length(p1)
-        p1(k).FaceColor = custom_colormap1(ceil(k/2), :);
-    end
-    
-    title("Cost Breakdown");
-    
-    % Second Pie Chart: DOC Breakdown
-    figure;
-    DOC_data = [aircraft.FOC, aircraft.COC]; % Use struct notation
-    DOC_labels = {'FOC', 'COC'}; 
-    
-    % Create pie chart
-    p2 = pie(DOC_data, DOC_labels);
-    
-    % Manually set colors for pie slices
-    for k = 1:2:length(p2)
-        p2(k).FaceColor = custom_colormap2(ceil(k/2), :);
-    end
-    
-    title("DOC Breakdown");
-    end
+% First Pie Chart: Cost Breakdown
+figure;
+data = [IOC, DOC, TOC]; % Use struct notation
+labels = {'IOC', 'DOC', 'TOC'}; 
+
+% Create pie chart
+p1 = pie(data, labels);
+
+% Manually set colors for pie slices
+for k = 1:2:length(p1)
+    p1(k).FaceColor = custom_colormap1(ceil(k/2), :);
+end
+
+title("Cost Breakdown");
+
+% Second Pie Chart: DOC Breakdown
+figure;
+DOC_data = [FOC, COC]; % Use struct notation
+DOC_labels = {'FOC', 'COC'}; 
+
+% Create pie chart
+p2 = pie(DOC_data, DOC_labels);
+
+% Manually set colors for pie slices
+for k = 1:2:length(p2)
+    p2(k).FaceColor = custom_colormap2(ceil(k/2), :);
+end
+
+title("DOC Breakdown");
 
 %% Displaying Costs %%
 

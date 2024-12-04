@@ -31,7 +31,7 @@ function aircraft = cg_calc_plot(aircraft)
 
     w.cg_pos = struct();
 
-    w.cg_pos.engine = [12.835, 0, 0.27];
+    w.cg_pos.engine = [13.835, 0, 0.27];
 
     w.cg_pos.vtail  = [aircraft.geometry.vtail.x40MAC, 0, 1.566];
     w.cg_pos.htail  = [aircraft.geometry.htail.x40MAC, 0, 0.065];
@@ -56,14 +56,14 @@ function aircraft = cg_calc_plot(aircraft)
     w.cg_pos.right_wing_fuel = [9.498, -2.316,  0.279]; 
     w.cg_pos.left_wing_fuel  = [9.498, 2.316,  0.279];
 
-    w.cg_pos.ICNIA                = [3.375, 0, 0.145];
-    w.cg_pos.databus              = [2.782, -0.365, 0.268];
-    w.cg_pos.INEWS                = [3.87, 0, 0.24];
-    w.cg_pos.VMS                  = [12.979, -0.748, 0.29];
-    w.cg_pos.IRSTS                = [3.41, 0, 0.63];
-    w.cg_pos.AESA                 = [2.695, 0, 0.12];
-    w.cg_pos.EES                  = [12.325, 0.74, 0.25];
-    w.cg_pos.APU                  = [11.906, -0.689, -0.08];
+    w.cg_pos.ICNIA   = [3.375, 0, 0.145];
+    w.cg_pos.databus = [2.782, -0.365, 0.268];
+    w.cg_pos.INEWS   = [3.87, 0, 0.24];
+    w.cg_pos.VMS     = [12.979, -0.748, 0.29];
+    w.cg_pos.IRSTS   = [3.41, 0, 0.63];
+    w.cg_pos.AESA    = [2.695, 0, 0.12];
+    w.cg_pos.EES     = [12.325, 0.74, 0.25];
+    w.cg_pos.APU     = [11.906, -0.689, -0.08];
 
     w.cg_pos.lg_main = [10.209,0,0]; % Not actually 0 0, but we can't as accurately say where the Z will be placed. 10.209 is v approximate.
     w.cg_pos.lg_nose = [3.999,0,0];

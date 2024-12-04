@@ -75,10 +75,6 @@ function aircraft = SM_calc_plot(aircraft)
     C_L_alpha_w(3) = 2.15;
     C_L_alpha_w(4) = 2.2;
     C_L_alpha_w(5) = 2;
-
-    %% Assign
-
-    aircraft.stability.C_L_alpha.wing = C_L_alpha_w;
     
     %% Plot the curve
     % Define colors from the palette
@@ -112,66 +108,35 @@ function aircraft = SM_calc_plot(aircraft)
     %%%%%%%%%%%%%%%%%%%%%%
     %% CL ALPHA OF TAIL %%
     %%%%%%%%%%%%%%%%%%%%%%
-   
+    
+    C_L_alpha_h   = zeros(1 , length(mach));
+    de_da         = zeros(1 , length(mach));
+
+    C_L_alpha_h(1) = NaN;
+    C_L_alpha_h(2) = NaN;
+    C_L_alpha_h(3) = NaN;
+    C_L_alpha_h(4) = NaN;
+    C_L_alpha_h(5) = NaN;
+    C_L_alpha_h(6) = NaN;
+
+    aircraft.stability.C_L_alpha.wing = C_L_alpha_w;
+    aircraft.stability.C_L_alpha.htail = C_L_alpha_h;
+
     AR_h = aircraft.geometry.htail.AR;
     eta_h = aircraft.aerodynamics.eta.htail; %tail efficiency: taking into account downwash
     
     Lambda_HC_h = aircraft.geometry.htail.sweep_HC;
-    
-    %% Subsonic
 
-    C_L_alpha_h_0        = (2*pi*AR_h) ./ (2 + sqrt(4+( (AR_h^2.*beta_subsonic.^2)./(eta_h.^2) .* (1 + tan(Lambda_HC_h)^2./beta_subsonic.^2) ) ) ); % Metabook 8.18
-    
-    de_da       = 2.00*C_L_alpha_w / (pi*AR_w);   % metabook
+    C_L_alpha_h_0        = (2*pi*AR_h) ./ (2 + sqrt(4+( (AR_h^2.*beta_subsonic.^2)./(eta_h.^2) .* (1 + tan(Lambda_HC_h)^2./beta_subsonic.^2) ) ) ) * exposed_ratio; % Metabook 8.18
+    C_L_alpha_h_0(3:end) = NaN;
+
+
+    de_da(1:5)  = 2.00*C_L_alpha_w(1:5) / (pi*AR_w);   % metabook
+    de_da(6)    = 1.62*C_L_alpha_w(6)   / (pi*AR_w); % 16.21b raymer
+
     C_L_alpha_h = C_L_alpha_h_0.*(1 - de_da).*eta_h; % 8.21
-
-    C_L_alpha_h(3:end) = NaN;
-
-    %% Trans and supersonic 
-
-    % estimates to make a faired curve
-    C_L_alpha_h(3) = 1.81;
-    C_L_alpha_h(4) = 1.85;
-    C_L_alpha_h(5) = 1.7;
-    C_L_alpha_h(6) = 1.6132;
-
-    %% Assign
-
-    aircraft.stability.C_L_alpha.htail = C_L_alpha_h;
-
-    %% Plots
-
-    % Define colors from the palette
-    dark_blue = [0.20, 0.30, 0.40];  % Dark bluish-gray for the line
-    light_blue = [0.70, 0.80, 0.90];  % Soft light blue for the marker face
     
-    % Plot original data points
-    figure();
-    plot(mach, C_L_alpha_h, 'o', 'MarkerFaceColor', light_blue, 'MarkerEdgeColor', dark_blue);
-    hold on;
     
-    % Generate a dense set of x values for the spline interpolation
-    mach_dense = linspace(min(mach), max(mach), 200);
-    
-    % Fit a cubic spline to all data points
-    C_L_alpha_h_smooth = spline(mach, C_L_alpha_h, mach_dense);
-    
-    % Plot the smooth spline curve
-    plot(mach_dense, C_L_alpha_h_smooth, '--', 'LineWidth', 1.5, 'Color', dark_blue);
-    
-    % Set y-axis limits from 0 to 4
-    ylim([0 4]);
-    
-    % Customize the plot
-    xlabel('Mach');
-    ylabel('C_L_\alpha_h');
-    title('C_L_\alpha_h vs. Mach number, faired curve (estimation)');
-    legend('Data Points', 'Spline Fit Curve');
-    hold off;
-    
-    %%%%%%%%%%%%%
-    %% SM CALC %%
-    %%%%%%%%%%%%%
     
     %% Finding Kf based on location of wing quarter chord
 
@@ -216,35 +181,22 @@ function aircraft = SM_calc_plot(aircraft)
     
     %% PLOT %%
     
-% Define a colormap for different shades of blue with more variation
-num_lines = length(sm_arr(1,:));
-color_map = lines(num_lines); % Use the 'lines' colormap, which provides distinct colors
-
-% Neutral Point Plot
-figure;
-plot(mach, np_mach_arr, '-o', 'MarkerFaceColor', 'k', 'Color', [0.30, 0.50, 0.70], 'LineWidth', 1);
-title('Neutral Point Location at Varying Mach Numbers');
-xlabel('Mach');
-ylabel('x_n_p (m, from nose tip)');
-xline(1, '--', 'Color', 'k'); % Dashed vertical line at Mach = 1
-hold off;
-
-% Static Margin Excursion Plot
-figure;
-hold on;
-for i = 1:num_lines
-    % Use a distinct color from the colormap for each line
-    plot(cg_excursion_arr(5:end, 1), sm_arr(5:end, i)', '-o', 'MarkerFaceColor', 'k', 'Color', color_map(i, :), 'LineWidth', 1);
-end
-yline(0, '--', 'Color', 'k'); % Dashed horizontal line at y = 0
-legendLabels = arrayfun(@(x) "M = " + x, mach, 'UniformOutput', false); % Generate legend strings
-legend(legendLabels, 'Location', 'Best');
-title('Static Margin Excursion Plot for Varying Mach Numbers');
-xlabel('CG Location With Respect to Nose');
-ylabel('SM');
-hold off;
-
-
-
+    figure;
+    plot(mach,np_mach_arr,'-o', 'MarkerFaceColor', 'k');
+    title('Neutral Point location at varying Mach numbers');
+    xline(1,'--');
+    xlabel('Mach'); ylabel('x_n_p (m, from nose tip)');
+    
+    figure;
+    hold on;
+    for i = 1:length(sm_arr(1,:))
+        plot(6:1:length(cg_excursion_arr),sm_arr(6:end,i)','-o', 'MarkerFaceColor', 'k');
+    end
+    yline(0,'--');
+    lgndstr = "M = " + string(mach);
+    legend(lgndstr);
+    title('Static Margin Excursion Plot for varying Mach numbers');
+    xlabel('Flight Stage'); 
+    ylabel('SM');
 
 end

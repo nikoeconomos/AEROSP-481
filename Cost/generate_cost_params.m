@@ -32,6 +32,7 @@ CEF_calc = @(byear, tyear) (5.17053 + 0.104981 *(tyear-2006))/(5.17053 + 0.10498
 %% Individual Components %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+aircraft.cost = struct();
 cost = aircraft.cost;
 
 %% Labor %
@@ -76,7 +77,6 @@ crew_costs = airline_factor * (route_factor * (togw_lb)^0.4 * mission_block_time
 
 cost.crew = adjust_cost_inflation_calc(crew_costs, crew_base_year, target_year);
 
-
 %% Airframe maintenance %
 
 airframe_weight = aircraft.weight.empty - aircraft.weight.components.engine;
@@ -86,7 +86,6 @@ Cml_af = 1.03*(3+0.067*airframe_weight/1000)*maintenance_labor_rate;
 Cmm_af = 1.03*(30*CEF_calc(1989,target_year))+0.79*10^-5*cost.airframe;
 
 airframe_maint = (Cml_af+Cmm_af)*block_time;
-
 
 %% INSURANCE %%
 
@@ -115,6 +114,7 @@ cost.cannon = adjust_cost_inflation_calc(cannon_cost_base, cannon_base_year, tar
 
 %% RTDE and flyaway cost from slides page 34
 
+%{
 We = ConvMass(aircraft.weight.empty, 'kg', 'lbm');
 V = ConvVel(velocity_from_flight_cond(aircraft.performance.mach.dash, 10668), 'm/s', 'ft/s');
 Q = 1000; % Production number
@@ -138,10 +138,11 @@ RDT_E_flyaway = HE * RE + HT * RT + HM * RM + HQ * RQ + CD + CF + CM + cost.engi
 
 RTDE_flyaway_adjusted = adjust_cost_inflation_calc(RDT_E_flyaway, 1999, target_year); % slides page 34
 
-
 %% Flyaway cost
 
 [cost.avg_flyaway_cost, cost.learning_curve_costs] = avg_flyaway_cost_calc(cost.aircraft, 1000);
+
+%}
 
 %% Update struct
 
