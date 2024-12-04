@@ -45,7 +45,7 @@ aircraft = generate_component_weights(aircraft);
 %% FIND AIRCRAFT COST
 
 aircraft = generate_cost_params(aircraft);
-plot_cost_pie_chart(aircraft);
+%plot_cost_pie_chart(aircraft);
 
 
 %% PRINT %%

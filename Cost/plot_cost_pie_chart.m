@@ -31,7 +31,7 @@ IOC = Cost_cargo;
 %% COC %%
 
 Cost_crew = aircraft.cost.crew;
-Cost_fuel = 4.7673e+03; % NEED TO PARAMETRIZE - in generate_cost_params
+Cost_fuel = 579 * 6.6521; % NEED TO PARAMETRIZE - in generate_cost_params
 Cost_oil = 137.7898; % NEED TO PARAMETRIZE - in generate_cost_params
 Engine_maint = 722.3120; % NEED TO PARAMETRIZE - in generate_cost_params
 
@@ -39,8 +39,7 @@ COC = Cost_crew + Cost_fuel + Cost_oil + Engine_maint;
 
 %% FOC %%
 
-% This must be fixed!
-%{
+
 Cost_unit = mean(aircraft.cost.avg_flyaway_cost); % Average cost for one aircraft
 K_depreciation = 0.1; % Typical - from metabook chapter 3
 n = 25; % Number of years aircraft is used - Estimated
@@ -52,9 +51,7 @@ Cost_financing = 0.07; % From Raymer - should be 7% of DOC
 Cost_depreciation = (Cost_unit * (1 - K_depreciation) * tb) / (n * U_annual);
 
 FOC = Cost_insurance + Cost_financing + Cost_depreciation;
-%}
 
-FOC = 0; %placeholder TODO REMOVE
 
 %% DOC %%
 
@@ -63,6 +60,7 @@ DOC = COC + FOC;
 %% TOC %%
 
 TOC = IOC + DOC;
+
 
 %% Plotting %%
 
@@ -79,8 +77,8 @@ custom_colormap2 = [
 
 % First Pie Chart: Cost Breakdown
 figure;
-data = [IOC, DOC, TOC]; % Use struct notation
-labels = {'IOC', 'DOC', 'TOC'}; 
+data = [Avionics, Airframe, TOC, Engine Cost]; % Use struct notation
+labels = {'Avionics', 'Airframe', 'TOC', 'Engine Cost'}; 
 
 % Create pie chart
 p1 = pie(data, labels);
