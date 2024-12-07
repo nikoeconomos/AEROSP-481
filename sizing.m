@@ -44,7 +44,11 @@ plot_drag_polar(aircraft);
 
 %% FIND AIRCRAFT COST
 
+<<<<<<< HEAD
 %aircraft = generate_cost_params(aircraft);
+=======
+aircraft = generate_cost_params(aircraft);
+>>>>>>> d3d0d417849545b78fdf9cc05b47040157d5a49d
 %plot_cost_pie_chart(aircraft);
 
 

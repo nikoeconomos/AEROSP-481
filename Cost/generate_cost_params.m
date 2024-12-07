@@ -58,7 +58,7 @@ engine_maint_cost = aircraft.propulsion.num_engines*(Cml_eng+Cmm_eng)*block_time
 % engine cost
 cost.engine = 9165621.37; % Based on contract with Lockhead Martin F-16 Fleet in 2000 (adjusted for inflation)
 
-cost.aircraft = 10^(0.657+(1.4133*log10(aircraft.weight.togw*2.2))); % From Roskam
+cost.aircraft = 10^(2.3341+(1.0586*log10(aircraft.weight.togw*2.2))); % From Roskam
 cost.airframe = cost.aircraft - cost.engine; %From metabook chapter 3
 
 %% CREW %
@@ -112,6 +112,12 @@ cannon_cost_base = 250290;  % USD
 cannon_base_year = 2006;  
 cost.cannon = adjust_cost_inflation_calc(cannon_cost_base, cannon_base_year, target_year); % USD
 
+%% Flyaway Cost 
+
+[cost.avg_flyaway_cost, cost.learning_curve_costs] = avg_flyaway_cost_calc(cost.aircraft, 1000);
+disp(cost.avg_flyaway_cost)
+display(cost.learning_curve_costs)
+
 %% RTDE and flyaway cost from slides page 34
 
 %{
@@ -138,9 +144,6 @@ RDT_E_flyaway = HE * RE + HT * RT + HM * RM + HQ * RQ + CD + CF + CM + cost.engi
 
 RTDE_flyaway_adjusted = adjust_cost_inflation_calc(RDT_E_flyaway, 1999, target_year); % slides page 34
 
-%% Flyaway cost
-
-[cost.avg_flyaway_cost, cost.learning_curve_costs] = avg_flyaway_cost_calc(cost.aircraft, 1000);
 
 %}
 
