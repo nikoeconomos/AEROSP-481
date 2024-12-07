@@ -175,15 +175,10 @@ maintenance_labor_rate = 24.81; % $ as of June 2024
 
 %% FUEL %%
 
-t_mis = sum(aircraft.mission.time);
-U_annflt = 325; % middle of the range, ramer table 6.1
-
-N_mission = U_annflt/t_mis;
-
-%N_serv = Q
+N_mission - 
 
 F_OL = 1.005;
-%W_f = 
+W_f = 
 
 fuel_price = 2.14/0.00378541; % $/m3 as of September 13, 2024
 oil_price = 113.92/0.00378541; % $/m3 as of September 13, 2024
