@@ -79,7 +79,7 @@ fudge_factor_composite = 1.8; % for materials pg 697
 
 %% Avionics
 
-cost_avi_percent_flyaway = 0.4; % raymer pg 698, can be bumped up to 40 according to roskam pg 367 sec 8
+cost_avi_percent_flyaway = 0.25; % raymer pg 698, can be bumped up to 40 according to roskam
 
 %avi_cost_per_kg = adjust_cost_inflation_calc(18000, DAPCA_base_year, target_year); % raymer pg 698
 %cost.avionics   = W_avi * avi_cost_per_kg;
@@ -88,8 +88,8 @@ cost_avi_percent_flyaway = 0.4; % raymer pg 698, can be bumped up to 40 accordin
 
 % engine cost, based on contract with Lockhead Martin F-16 Fleet in 2000 (adjusted for inflation)
 engine_base_year = 2000;
-engine_order_80  = 400000000; % from source online
-engine_cost_base = engine_order_80/80;
+engine_order_60  = 400000000; % from source online
+engine_cost_base = engine_order_60/60;
 
 cost.engine = adjust_cost_inflation_calc(engine_cost_base, engine_base_year, target_year);
 
@@ -106,13 +106,12 @@ HT = (7.22  * W_e^0.777 * V_max^0.696 * Q^0.263) * fudge_factor_composite; % too
 HM = (10.5  * W_e^0.820 * V_max^0.484 * Q^0.641) * fudge_factor_composite; % manufacturing hours
 HQ = (0.133 * HM) * fudge_factor_composite; % quality contorl hours
 
-HM_adj = learning_curve_95(HM, Q); % adjust for learning curve for manufacturing hours only, 95 % because we expect to see less improvement in newer programs
-HQ_adj = learning_curve_95(HQ, Q); 
+HE_adj = learning_curve_95(HE, Q);
 
-cost.engineering   = HE    *RE;
-cost.tooling       = HT    *RT;
-cost.manufacturing = HM_adj*RM;
-cost.quality_ctrl  = HQ_adj*RQ;
+cost.engineering   = HE*RE;
+cost.tooling       = HT*RT;
+cost.manufacturing = HM*RM;
+cost.quality_ctrl  = HQ*RQ;
 
 %% Cost of development
 
