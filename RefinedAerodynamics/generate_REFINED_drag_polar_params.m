@@ -365,43 +365,41 @@ aero.CL_htail = CL_tail;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% WAVE DRAG COEFFICIENT %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+% Values taken from CFD simulations:
+flight_mach = [0.282, 0.54, 0.85, 0.9, 0.928, 0.953, 0.978, 1.002, 1.027, 1.052, 1.076, 1.101, 1.126, 1.151, 1.2, 1.6];
+Cd_cfd = [0.00794828, 0.007731049, 0.008301784, 0.008040219, 0.008208084, 0.008468099, 0.008778918, 0.009233597, 0.01002093, 0.01143649, 0.01251037, 0.01714696, 0.02499639, 0.03132697, 0.04084863, 0.04596498];
 M_DD = 0.95; % From airfoil sectional CFD analysis
-
 M_crit  = M_DD - (0.1 / 80)^(1/3);
-
 aero.CD_wave = 20 * (freestream_mach - M_crit).^4;
 aero.CD_wave(1) = 0; %no wave drag at slow speeds
 aero.CD_wave(2) = 0; %no wave drag at slow speeds
-
+figure()
+scatter(flight_mach,Cd_cfd)
+title('Change in Wing Airfoil Drag Coefficient with Mach Number')
+xlabel('Flight Mach Number')
+ylabel('Drag Coefficient')
+hold on
+xline(0.95,'r--',LineWidth=0.5);
+legend('','Drag Divergence Mach = 0.95')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% TOTAL DRAG COEFFICIENT %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 %% TODO ADD WAVE, TRIM DRAG. These are calculated for a variety of Mach numbers. find out how to integrate that array
 aero.CD.cruise = aero.CD0.cruise + aero.CDi.cruise + aero.CD_trim(3) + aero.CD_wave(3);
-
 aero.CD.dash = aero.CD0.dash + aero.CDi.dash + aero.CD_trim(6) + aero.CD_wave(6);
-
 aero.CD.takeoff_flaps_slats      = aero.CD0.takeoff_flaps_slats      + aero.CDi.takeoff_flaps_slats + aero.CD_trim(1);
 aero.CD.takeoff_flaps_slats_gear = aero.CD0.takeoff_flaps_slats_gear + aero.CDi.takeoff_flaps_slats + aero.CD_trim(1);
-
 aero.CD.landing_flaps_slats      = aero.CD0.landing_flaps_slats      + aero.CDi.landing_flaps_slats + aero.CD_trim(2);
 aero.CD.landing_flaps_slats_gear = aero.CD0.landing_flaps_slats_gear + aero.CDi.landing_flaps_slats + aero.CD_trim(2);
-
 % Plot to compare drag values with configurations
 figure()
-
 y_values = [aero.CD.cruise, aero.CD.takeoff_flaps_slats, aero.CD.takeoff_flaps_slats_gear, ...
     aero.CD.landing_flaps_slats, aero.CD.landing_flaps_slats_gear];
-
 bar(y_values);
-
 xticklabels(["Clean", "Take Off Configuration - No L.G.", ...
              "Take Off Configuration - L.G.", "Landing Configuration - No L.G.", ...
              "Landing Configuration - L.G."]);
-
 % Add value markers above bars
 for k = 1:length(y_values)
     text(k, y_values(k), sprintf('%.2f', y_values(k)), ... % Format value as needed
@@ -409,9 +407,7 @@ for k = 1:length(y_values)
          'VerticalAlignment', 'bottom', ...
          'FontSize', 10, 'Color', 'black');
 end
-
 title('Aircraft Drag Coefficient at Different Configurations')
-
 data = [CD0_wing(3), CD0_fuselage(3), CD0_htail(3), CD0_vtail(3), CD0_lp_percent(3)];
 labels = ['Wing: 0.007','Fusselage: 0.0147','Horizontal Tail: 0.0011','Vertical Tail: 0.6135','Leakage and Protuberance: 0.02'];
 figure()
@@ -419,7 +415,7 @@ piechart(data, labels);
 title("Aircraft Component Contributions to CD0 - Clean Configuration")
 
 %% REASSIGN %%
-
 aircraft.aerodynamics = aero;
 aircraft.geometry.htail = htail;
 
+end
