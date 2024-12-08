@@ -79,28 +79,6 @@ FF_fuselage = 0.9 + (5 / (f_fuse^1.5)) + (f_fuse / 400);
 
 CD0_fuselage = ((Cf_fuselage .* FF_fuselage .* Q_fuselage .* S_wet_fuselage) / S_ref_wing);
 
-%% Inlets %%
-
-%{ 
-%Inlet parameters
-l_inlet     = aircraft.geometry.inlet.length; % [m]
-S_wet_inlet  = aircraft.geometry.inlet.S_wet; % [m^2], Estimated
-A_max_inlet = aircraft.geometry.inlet.A_max;
-
-Q_inlet = 1; % Assumed 1
-
-Re_inlet = Re_fuselage * (l_inlet / l_fuselage); 
-
-Cf_inlet = Cf_turbulent_calc(Re_inlet);
-
-% Form factor
-f_inlet  = l_inlet / sqrt(4 * pi * A_max_inlet); 
-FF_inlet = 0.9 + (5 / (f_inlet^1.5)) + (f_inlet / 400); 
-
-CD0_inlets = ((Cf_inlet * FF_inlet * Q_inlet * S_wet_inlet) / S_ref_wing) * 2; % Two inlets, multiply by two
-%}
-
-
 %% Wings (Both) %%
 
 % Wing parameters
@@ -163,6 +141,7 @@ CD0_vtail = (Cf_vtail .* FF_vtail * Q_vtail * S_wet_vtail) ./ S_ref_wing;
 
 %% Landing Gear
 
+%{
 % Raymer table 12.6
 streamline_wheel_tire_per_area = 0.18;
 streamlined_strut_per_area = 0.05;
@@ -179,6 +158,9 @@ CD0_main_struts = streamlined_strut_per_area     * main_strut_frontal_area * 2;
 CD0_nose_strut  = streamlined_strut_per_area     * nose_strut_frontal_area * 1; % only one of these
 
 CD0_lg = CD0_main_wheels + CD0_nose_wheels + CD0_main_struts + CD0_nose_strut;
+%}
+
+CD0_lg = 0.015;  % Placeholder value from raymer
 
 %% Miscellaneous Drag %%
 
@@ -186,7 +168,7 @@ CD0_misc = 0; % Assumed to be zero because no main sources apply to our aircraft
 
 %% Leakage and Protuberance Drag %%
 
-CD0_lp = 0.05; % Estimated from table in slides slide 20
+CD0_lp_percent = 0.02; % Estimated from table in slides slide 20, 5% of total parasite drag
 
 %% Flap Drag %%
 
@@ -206,7 +188,7 @@ delta_CD0_landing_flaps_slats = F_flap * (cf_c) * (S_flapped / S_ref_wing) * (ra
 
 CD0_component_sum  = CD0_fuselage + CD0_wing  + CD0_htail + CD0_vtail; %+ CD0_inlets;
 
-aero.CD0.clean = CD0_component_sum(3) + CD0_misc + CD0_lp; 
+aero.CD0.clean = (CD0_component_sum(3) + CD0_misc)/(1-CD0_lp_percent); % 5 % of cd0 is leakage and protruberance
 
 aero.CD0.takeoff_flaps_slats      = aero.CD0.clean + delta_CD0_takeoff_flaps_slats;
 aero.CD0.takeoff_flaps_slats_gear = aero.CD0.takeoff_flaps_slats + CD0_lg;

@@ -43,9 +43,9 @@ function aircraft = generate_component_weights(aircraft)
 
     aircraft.geometry.fuselage.S_wet = 94.614; % m2 from CAD
 
-    aircraft.geometry.fuselage.width = 2.1; % max width of fuselage from CAD
-    aircraft.geometry.fuselage.length = 16.459; % length of fuselage from CAD
-    aircraft.geometry.fuselage.height = 1.632; % length of fuselage from CAD
+    aircraft.geometry.fuselage.width = 2.6; % max width of fuselage from CAD
+    aircraft.geometry.fuselage.length = 16.5; % length of fuselage from CAD
+    aircraft.geometry.fuselage.height = 1.67; % length of fuselage from CAD
     aircraft.geometry.fuselage.A_max = 2.5; % m2, TODO UPDATE
 
     aircraft.weight.density.fuselage_area = 23; %kg/m2 metabook p76
@@ -62,12 +62,11 @@ function aircraft = generate_component_weights(aircraft)
                                                  * aircraft.weight.fudge_factor.fuselage; 
 
 
-    % for drag calculation. Not currently being used. TODO UPDATE
+    % for drag calculation. Not currently being used.
     aircraft.geometry.inlet.length = NaN;
     aircraft.geometry.inlet.S_wet  = NaN;
     aircraft.geometry.inlet.A_max  = NaN;
     
-
     %%%%%%%%%%%%%%%%%%%
     %% WING GEOMETRY %%
     %%%%%%%%%%%%%%%%%%%
@@ -78,9 +77,10 @@ function aircraft = generate_component_weights(aircraft)
     wing = aircraft.geometry.wing;
 
     wing.S_ref = aircraft.geometry.wing.S_ref; %m2, updated in geometry
+    wing.S_exposed = 7.976*2; % from CAD
 
     %wing.S_wet = wing.S_ref*2; %m2 TODO APPROXIMATION, UPDATE WITH A BETTER ONE
-    wing.S_wet = wing.S_ref*2;
+    wing.S_wet = 27.35; %from CAD
     wing.b = sqrt(wing.AR*wing.S_ref);
 
     wing.taper_ratio = 0.35;
@@ -98,7 +98,7 @@ function aircraft = generate_component_weights(aircraft)
     wing.sweep_TE = atan( tan(wing.sweep_LE) - (4 / wing.AR) * ((1.00 * (1 - wing.taper_ratio)) / (1 + wing.taper_ratio)) );
 
     % locations/MAC
-    wing.xRLE = 7.175; %m positino of leading edge of the root chord, from CAD
+    wing.xRLE = 6.25;%7.083; %m positino of leading edge of the root chord, from CAD
     wing.xR25 = wing.xRLE + 0.25*wing.c_root; % position of quarter chord at root of wing
 
     wing.MAC   = aircraft.weight.func.MAC_calc  (wing.c_root, wing.c_tip);
@@ -141,6 +141,7 @@ function aircraft = generate_component_weights(aircraft)
                                                                             'lbm', 'kg'); % sweep QC should be of the structural elastic axis
     
     % ROSKAM PART 5, 5.9 USAF
+    % SELECTED FORMULA
     % A = Aspect ratio AR
     % S = wing area in ft^2
     K_w = 1; %for fixed wing aircraft
@@ -234,22 +235,21 @@ function aircraft = generate_component_weights(aircraft)
 
     % Define mass of each component in kg
     w.gfe.ICNIA    = ConvMass(100, 'lbm', 'kg');
-    w.gfe.data_bus = ConvMass(10, 'lbm', 'kg');
+    w.gfe.databus = ConvMass(10, 'lbm', 'kg');
     w.gfe.INEWS    = ConvMass(100, 'lbm', 'kg');
 
-    w.gfe.vehicle_management_system = ConvMass(50, 'lbm', 'kg');
+    w.gfe.VMS = ConvMass(50, 'lbm', 'kg');
 
-    w.gfe.electrical_system  = ConvMass(300, 'lbm', 'kg');
+    w.gfe.EES  = ConvMass(300, 'lbm', 'kg');
     w.gfe.APU                = ConvMass(100, 'lbm', 'kg');
-
-    w.gfe.IRSTS               = ConvMass(50, 'lbm', 'kg');
-    w.gfe.active_array_radar  = ConvMass(450, 'lbm', 'kg');
+    w.gfe.IRSTS              = ConvMass(50, 'lbm', 'kg');
+    w.gfe.AESA               = ConvMass(450, 'lbm', 'kg'); % active array radar
 
        
     % Calculate the total mass of all components
-    w.components.gfe_total = w.gfe.ICNIA + w.gfe.data_bus + w.gfe.INEWS + ...
-                             w.gfe.vehicle_management_system + w.gfe.electrical_system + ...
-                             w.gfe.APU + w.gfe.IRSTS + w.gfe.active_array_radar;
+    w.components.gfe_total = w.gfe.ICNIA + w.gfe.databus + w.gfe.INEWS + ...
+                             w.gfe.VMS + w.gfe.EES + ...
+                             w.gfe.APU + w.gfe.IRSTS + w.gfe.AESA;
 
     aircraft.weight = w;
 
@@ -336,23 +336,27 @@ function aircraft = generate_component_weights(aircraft)
 
     f = w.fuel_vol;
     
-    f.nose            = 0.90; %m3
-    f.cannon          = 3.608;
-    f.left_wing       = 0.976;
-    f.right_wing      = f.left_wing; 
-    f.rear            = 1.735;
+    f.fore       = 0.554; %m3
+    f.center     = 4.278;
+    f.aft        = 1.414;
+    f.right_wing = 0.237; 
+    f.left_wing  = f.right_wing;
 
-    f.total_available = sum([f.nose, f.cannon, f.left_wing, f.right_wing,f.rear]);
+    f.total_available = sum([f.fore, f.center, f.aft, f.right_wing, f.left_wing]);
+
+    remainder = f.total_available - f.total_used;
 
     if f.total_available-f.total_used < 0
-        %error('Not enough fuel available silly!')
+        error('Not enough fuel available silly!')
     end
 
-    f.nose_pct            = f.nose           / f.total_used; % percent
-    f.cannon_pct          = f.cannon         / f.total_used;
-    f.left_wing_pct       = f.left_wing      / f.total_used;
-    f.right_wing_pct      = f.right_wing     / f.total_used;
-    f.rear_pct            = f.rear           / f.total_used;
+    f.fore_pct       = (f.fore-remainder)  / f.total_used; % percent
+    f.center_pct     = f.center     / f.total_used;
+    f.aft_pct        = f.aft        / f.total_used; %because we have a bit over what we need
+    f.left_wing_pct  = f.left_wing  / f.total_used;
+    f.right_wing_pct = f.right_wing / f.total_used;
+
+    %checksum = sum([f.fore_pct, f.center_pct, f.aft_pct, f.right_wing_pct, f.left_wing_pct]);
 
     w.fuel_vol = f;
 
@@ -369,9 +373,10 @@ function aircraft = generate_component_weights(aircraft)
 
     % TODO FIX
     
-    %aircraft = cg_calc_plot(aircraft); % TODO UPDATE MISSION PROFILE IF MISSILES CHANGE
+    aircraft = cg_calc_plot(aircraft); % TODO UPDATE MISSION PROFILE IF MISSILES CHANGE
+    aircraft = generate_LG_params(aircraft);
     
-    %aircraft = SM_calc_plot(aircraft, aircraft.performance.mach.arr); % sets the np and sm arrays for a full mission profile.
+    aircraft = SM_calc_plot(aircraft); % sets the np and sm arrays for a full mission profile.
 
     %aircraft = empennage_aerodynamics_calc(aircraft);
 

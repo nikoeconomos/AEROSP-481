@@ -69,8 +69,8 @@ function [] = plot_T_W_W_S_space(aircraft)
     T_W_climb_arr_3 = ones(1, k) .* T_W_climb_calc_3(aircraft, NaN); 
     T_W_climb_arr_4 = ones(1, k) .* T_W_climb_calc_4(aircraft, NaN); 
     T_W_climb_arr_5 = ones(1, k) .* T_W_climb_calc_5(aircraft, NaN); 
-    T_W_climb_arr_6 = ones(1, k) .* T_W_climb_calc_6(aircraft, NaN); 
-
+    %T_W_climb_arr_6 = ones(1, k) .* T_W_climb_calc_6(aircraft, NaN); ONly 1 engine
+ 
     % Ceiling
     T_W_ceiling_arr = ones(1, k) .* T_W_ceiling_calc(aircraft, NaN);
 
@@ -83,7 +83,7 @@ function [] = plot_T_W_W_S_space(aircraft)
     %% Plotting the calculated values, all together%%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-    figure('Position', [50, 50, 1000, 800]); % Adjust figure size
+    figure('Position', [50, 50, 1500, 800]); % Adjust figure size
     hold on;
     
     % Takeoff and Landing Constraints (Solid Lines - Distinct Colors)
@@ -105,7 +105,7 @@ function [] = plot_T_W_W_S_space(aircraft)
     c3 = plot(W_S_space, T_W_climb_arr_3, 'Color', [0, 0.8, 0.3], 'LineStyle', ':', 'LineWidth', 1.2); % Mint Green
     c4 = plot(W_S_space, T_W_climb_arr_4, 'Color', [0.1, 0.7, 0.7], 'LineStyle', ':', 'LineWidth', 1.2); % Turquoise
     c5 = plot(W_S_space, T_W_climb_arr_5, 'Color', [0.7, 0.1, 0.2], 'LineStyle', ':', 'LineWidth', 1.2); % Reddish Brown
-    c6 = plot(W_S_space, T_W_climb_arr_6, 'Color', [0.3, 0.7, 0.3], 'LineStyle', ':', 'LineWidth', 1.2); % Olive Green
+    %c6 = plot(W_S_space, T_W_climb_arr_6, 'Color', [0.3, 0.7, 0.3], 'LineStyle', ':', 'LineWidth', 1.2); % Olive Green
     
     % Specific Excess Power Constraints (Same Dotted Lines, Different Colors from Climb)
     sp1 = plot(W_S_space, T_W_sp_ex_pwr_arr_1, 'Color', [0.9, 0.4, 0.1], 'LineStyle', '-.', 'LineWidth', 1.2); % Burnt Orange
@@ -119,12 +119,12 @@ function [] = plot_T_W_W_S_space(aircraft)
     ceil = plot(W_S_space, T_W_ceiling_arr, 'Color', [0.9, 0, 0.5], 'LineStyle', '-', 'LineWidth', 1.2); % Bright Rose
         
     % Add legend
-    legend([to,lf,cs,ds,m09,m12,it,c1,c2,c3,c4,c5,c6,ceil,sp1,sp2,sp3,sp4,sp5,sp6], ...
+    legend([to,lf,cs,ds,m09,m12,it,c1,c2,c3,c4,c5,ceil,sp1,sp2,sp3,sp4,sp5,sp6], ...
         {'Takeoff field length','Landing field length',...
         'Cruise', 'Dash', ...
         '0.9 Mach sustained turn', '1.2 Mach sustained turn','Instantaneous turn',...
         'Takeoff climb','Transition climb','Second segment climb',...
-        'Enroute climb','Balked landing climb (AEO)','Balked landing climb (OEI)',...
+        'Enroute climb','Balked landing climb'...
         'Ceiling', ...
         'Sp. Excess Power (1g, SL, Military)','Sp. Excess Power (1g, 4500m, Military)',...
         'Sp. Excess Power (1g, SL, Max)','Sp. Excess Power (1g, 4500m, Max)',...
@@ -135,7 +135,7 @@ function [] = plot_T_W_W_S_space(aircraft)
     ylim([0 t]);
     xlabel('W/S [kg/m^2]');
     ylabel('T/W [N/N]');
-    title('T/W - W/S plot for Libellula''s custom interceptor');
+    title('T/W - W/S plot for the F-81');
     
     hold off;
 
@@ -143,7 +143,7 @@ function [] = plot_T_W_W_S_space(aircraft)
     %% Plotting the calculated values, Military Thrust %%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-    figure('Position', [50, 50, 1000, 800]); % Adjust figure size
+    figure('Position', [50, 50, 1500, 800]); % Adjust figure size
     hold on;
     
     % Takeoff and Landing Constraints (Solid Lines - Distinct Colors)
@@ -163,7 +163,7 @@ function [] = plot_T_W_W_S_space(aircraft)
     c3 = plot(W_S_space, T_W_climb_arr_3, 'Color', [0, 0.8, 0.3], 'LineStyle', ':', 'LineWidth', 1.2); % Mint Green
     c4 = plot(W_S_space, T_W_climb_arr_4, 'Color', [0.1, 0.7, 0.7], 'LineStyle', ':', 'LineWidth', 1.2); % Turquoise
     c5 = plot(W_S_space, T_W_climb_arr_5, 'Color', [0.7, 0.1, 0.2], 'LineStyle', ':', 'LineWidth', 1.2); % Reddish Brown
-    c6 = plot(W_S_space, T_W_climb_arr_6, 'Color', [0.3, 0.7, 0.3], 'LineStyle', ':', 'LineWidth', 1.2); % Olive Green
+    %c6 = plot(W_S_space, T_W_climb_arr_6, 'Color', [0.3, 0.7, 0.3], 'LineStyle', ':', 'LineWidth', 1.2); % Olive Green
     
     % Ceiling Constraint (Solid Line - Unique Color)
     ceil = plot(W_S_space, T_W_ceiling_arr, 'Color', [0.9, 0, 0.5], 'LineStyle', '-', 'LineWidth', 1.2); % Bright Rose
@@ -203,12 +203,12 @@ fill(x_fill, y_fill, 'c', 'EdgeColor', 'none', 'FaceAlpha', 0.5);
 %}
 
     % Add legend
-    legend([to,lf,cs,m09,it,c1,c2,c3,c4,c5,c6,ceil,sp1,sp2,s_pt], ...
+    legend([to,lf,cs,m09,it,c1,c2,c3,c4,c5,ceil,sp1,sp2,s_pt], ...
         {'Takeoff field length','Landing field length',...
         'Cruise', ...
         '0.9 Mach sustained turn','Instantaneous turn',...
         'Takeoff climb','Transition climb','Second segment climb',...
-        'Enroute climb','Balked landing climb (AEO)','Balked landing climb (OEI)',...
+        'Enroute climb','Balked landing climb'...
         'Ceiling', ...
         'Sp. Excess power (1g, SL, Military)','Sp. Excess power (1g, 4500m, Military)'...
         'Selected Design Point, Military'});
@@ -218,14 +218,14 @@ fill(x_fill, y_fill, 'c', 'EdgeColor', 'none', 'FaceAlpha', 0.5);
     ylim([0 t]);
     xlabel('W/S [kg/m^2]');
     ylabel('T/W [N/N]');
-    title('T/W - W/S Plot for Libellula''s Custom Interceptor, Military Thrust');
+    title('T/W - W/S Plot for the F-81, Military Thrust');
         
     hold off;
 
     %% MAX THRUST PLOT %%
     %%%%%%%%%%%%%%%%%%%%%
 
-    figure('Position', [50, 50, 1000, 800]); % Adjust figure size
+    figure('Position', [50, 50, 1500, 800]); % Adjust figure size
     hold on;
     
     % Takeoff and Landing Constraints (Solid Lines - Distinct Colors)
@@ -267,7 +267,7 @@ fill(x_fill, y_fill, 'c', 'EdgeColor', 'none', 'FaceAlpha', 0.5);
     ylim([0 t]);
     xlabel('W/S [kg/m^2]');
     ylabel('T/W [N/N]');
-    title('T/W - W/S Plot for Libellula''s Custom Interceptor, Maximum Thrust');
+    title('T/W - W/S Plot for the F-81, Maximum Thrust');
     
     hold off;
     

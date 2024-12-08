@@ -23,7 +23,7 @@ function T_W = T_W_takeoff_field_length_calc(aircraft, W_S)
 CL_max_TO = aircraft.aerodynamics.CL.takeoff_flaps_slats; %This was from Cinar to use - estimated from similar aircraft with plain flaps and will be updated once we choose flaps to use
 CD0_TO = aircraft.aerodynamics.CD0.takeoff_flaps_slats_gear;
 
-rho_SL_30C = aircraft.environment.rho_SL_30C; %[kg/m^3]
+[~, ~, rho_4000MSL, ~] = standard_atmosphere_calc(1219.2); %[kg/m^3]
 
 BFL = 8000; %[ft] - takeoff distance per RFP, 8000 ft
 
@@ -35,16 +35,19 @@ BFL = 8000; %[ft] - takeoff distance per RFP, 8000 ft
 
 %% Roskam 3.9
 
+W_S_imp = W_S*0.204816; % kg/m2 to lb/ft2
+
+lambda = aircraft.propulsion.bypass_ratio; %
+
 k1 = 0.0447;
-k2 = 0.76;
-mu_G = 0.03; % ground friction coeff for asphalt
+k2 = 0.75*(5+lambda)/(4+lambda);
+mu_G = 0.2; % ground friction coeff for ice, looked up online
 
-rho_SL_30C_imp = rho_SL_30C*0.062428; %lb/ft^3
+rho_4000MSL_imp = rho_4000MSL*0.062428; %lb/ft^3
 
-numerator = k1 * W_S + BFL * rho_SL_30C * 0.72 * CD0_TO;
-denominator = BFL * rho_SL_30C_imp * CL_max_TO;
+numerator = k1 * W_S_imp / (BFL * rho_4000MSL_imp * CL_max_TO) + mu_G + 0.72 * CD0_TO;
 
 % Compute the (X/W)_TO term
-T_W = (1 / k2) * (numerator / denominator + mu_G);  % roskam 3.9, done with imperial units
+T_W = numerator/k2;  % roskam 3.9, done with imperial units
 
 end

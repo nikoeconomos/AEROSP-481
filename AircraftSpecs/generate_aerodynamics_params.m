@@ -50,7 +50,7 @@ aircraft = generate_drag_polar_params(aircraft, 0.025); %intial guess of CD0
 %% Efficiencies (not oswald)
 
 aircraft.aerodynamics.eta.wing  = 0.97; % wing efficiency (NOT OSWALD): usually 0.97 from metabook
-aircraft.aerodynamics.eta.htail = 0.8;  % tail efficiency: taking into account downwash from metabook
+aircraft.aerodynamics.eta.htail = 0.9;  % tail efficiency: taking into account downwash from metabook from metabook around eq 8.21
 
 %% AR wetted (STORES IN GEOMETRY)
 

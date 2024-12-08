@@ -63,6 +63,7 @@ A_max_fuselage = aircraft.geometry.fuselage.A_max; % Estimated cross-sectional a
 Q_fuselage     = 1; % Interference factor, given on slide 16 of lecture 14
 
 Re_fuselage = speed_of_sound .* wing_airfoil_mach .* l_fuselage ./ kinematic_viscosity
+
 %Re_fuselage_values = [72630000, 81690000, 75060000, 81320000, 87570000, 93830000, 100090000, 112600000, 125110000, 131360000, 137620000, 141370000, 150130000];
 
 % Skin friction coefficients - from slides
@@ -78,28 +79,6 @@ f_fuse = l_fuselage / sqrt(4 * pi * A_max_fuselage);
 FF_fuselage = 0.9 + (5 / (f_fuse^1.5)) + (f_fuse / 400); 
 
 CD0_fuselage = ((Cf_fuselage .* FF_fuselage .* Q_fuselage .* S_wet_fuselage) / S_ref_wing);
-
-%% Inlets %%
-
-%{ 
-%Inlet parameters
-l_inlet     = aircraft.geometry.inlet.length; % [m]
-S_wet_inlet  = aircraft.geometry.inlet.S_wet; % [m^2], Estimated
-A_max_inlet = aircraft.geometry.inlet.A_max;
-
-Q_inlet = 1; % Assumed 1
-
-Re_inlet = Re_fuselage * (l_inlet / l_fuselage); 
-
-Cf_inlet = Cf_turbulent_calc(Re_inlet);
-
-% Form factor
-f_inlet  = l_inlet / sqrt(4 * pi * A_max_inlet); 
-FF_inlet = 0.9 + (5 / (f_inlet^1.5)) + (f_inlet / 400); 
-
-CD0_inlets = ((Cf_inlet * FF_inlet * Q_inlet * S_wet_inlet) / S_ref_wing) * 2; % Two inlets, multiply by two
-%}
-
 
 %% Wings (Both) %%
 
@@ -163,6 +142,7 @@ CD0_vtail = (Cf_vtail .* FF_vtail * Q_vtail * S_wet_vtail) ./ S_ref_wing;
 
 %% Landing Gear
 
+%{
 % Raymer table 12.6
 streamline_wheel_tire_per_area = 0.18;
 streamlined_strut_per_area = 0.05;
@@ -179,6 +159,9 @@ CD0_main_struts = streamlined_strut_per_area     * main_strut_frontal_area * 2;
 CD0_nose_strut  = streamlined_strut_per_area     * nose_strut_frontal_area * 1; % only one of these
 
 CD0_lg = CD0_main_wheels + CD0_nose_wheels + CD0_main_struts + CD0_nose_strut;
+%}
+
+CD0_lg = 0.015;  % Placeholder value from raymer
 
 %% Miscellaneous Drag %%
 
@@ -370,11 +353,92 @@ aero.CL_htail = CL_tail;
 % aero.CD_trim = CD_trim;
 % aero.CL_htail = CL_tail;
 
+%% TODO FINISH
+
+%{
+% For horizontal tail
+AR_htail = aircraft.geometry.htail.AR;
+
+x   = 6.4337; % [m] WHAT IS THIS? PARAMETRIZE TODO
+x_w = 1.8652; % [m] WHAT IS THIS? PARAMETRIZE TODO
+
+MAC_HT = aircraft.geometry.htail.MAC; % [m]
+S_HT   = aircraft.geometry.htail.S_ref; % [m^2]
+V_HT   = aircraft.geometry.htail.volume_coefficient; 
+
+CL_wing_clean   = aero.CL.clean; % NEED TO UPDATE ONCE VALUE IS DONE
+CL_wing_takeoff = aero.CL.takeoff_flaps_slats; % NEED TO UPDATE ONCE VALUE IS DONE
+CL_wing_landing = aero.CL.landing_flaps_slats; % NEED TO UPDATE ONCE VALUE IS DONE
+
+%% CMac WING
+
+%% TODO MAKE DIFFERENT FOR EACH CONFIG and PARAMETRIZE
+
+Cl = 2 * pi * 10 * (pi/180); % [rad] GET ACTUAL DISTRIBUTION, FOR DIFFERENT CONFIGS??
+c  = @(y) 4.187 - (0.628*y); % PARAMETRIZE W/ TAPER RATIO
+x_ac = NaN; % before it was 2.2218; %TODO WHAT IS THIS?
+
+b_wing = aircraft.geometry.wing.b; % [m]
+
+CM_ac  = 0.524; % NEEDS TO BE UPDATED
+
+function1 = @(y)(Cl * c(y) * x_ac);
+function2 = @(y)(CM_ac * c(y).^2);
+
+int1 = integral(function1, -b_wing/2, b_wing/2);
+int2 = integral(function2, -b_wing/2, b_wing/2);
+
+CM_ac_w = (1 / MAC_tail * S_ref_wing) * (-int1 + int2);
+
+%% CMac DELTA FLAPS
+
+%? this is accounted for above if we make it different?
+
+%% CMac FUSELAGE TODO FIX AND PARAMETRIze
+
+pitching_moment_factor = 0.6133;
+width_fus = 2.1; % [m]
+
+MAC_wing = aircraft.geometry.wing.MAC;
+alpha_fus = 10; % [degrees] Estimated
+
+CM_fus = ((pitching_moment_factor * width_fus^2 * l_fuselage) / (MAC_wing * S_ref_wing)) * alpha_fus;
+
+%% TOTAL
+
+CM_pitch_minus_tail_clean   = CM_ac_w + CM_fus; % + delta_CM_ac_flap THIS WILL CHANGE TODO FIX
+CM_pitch_minus_tail_takeoff = CM_ac_w + CM_fus; % + delta_CM_ac_flap THIS WILL CHANGE
+CM_pitch_minus_tail_landing = CM_ac_w + CM_fus; % + delta_CM_ac_flap THIS WILL CHANGE
+
+CLt_clean   = (CL_wing_clean   * (x_w/MAC_HT) + CM_pitch_minus_tail_clean)   * (x / (x-x_w)) * (1 / V_HT);
+CLt_takeoff = (CL_wing_takeoff * (x_w/MAC_HT) + CM_pitch_minus_tail_takeoff) * (x / (x-x_w)) * (1 / V_HT);
+CLt_landing = (CL_wing_landing * (x_w/MAC_HT) + CM_pitch_minus_tail_landing) * (x / (x-x_w)) * (1 / V_HT);
+
+aero.CD_trim.clean         = (CLt_clean^2   / ( pi * aero.e.htail * AR_htail) ) * (S_HT / S_ref_wing); 
+aero.CD_trim.takeoff_flaps = (CLt_takeoff^2 / ( pi * aero.e.htail * AR_htail) ) * (S_HT / S_ref_wing);
+aero.CD_trim.landing_flaps = (CLt_landing^2 / ( pi * aero.e.htail * AR_htail) ) * (S_HT / S_ref_wing);
+%}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% WAVE DRAG CALCULATIONS %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% TODO FINISH
+%{
+k             = 0.95; % for transonic airfoils
+sweep_QC_wing = aircraft.geometry.wing.sweep_QC_wing;
+t_c           = aircraft.geometry.wing.t_c;
+CL_cruise     = aircraft.aerodynamics.CL.cruise;
+
+aircraft.aerodynamics.MDD = k / cos(sweep_QC_wing) - t_c / cos(sweep_QC_wing)^2 - CL_cruise / (10 * cos(sweep_QC_wing)^3);
+%}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% TOTAL DRAG COEFFICIENT %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% TODO ADD WAVE, TRIM DRAG. These are calculated for a variety of Mach numbers. find out how to integrate that array
+
 aero.CD.clean = aero.CD0.clean + aero.CDi.cruise + aero.CD_trim(4); %+ aero.CD_wave.cruise;
 
 aero.CD.takeoff_flaps_slats      = aero.CD0.takeoff_flaps_slats      + aero.CDi.takeoff_flaps_slats + aero.CD_trim(1);

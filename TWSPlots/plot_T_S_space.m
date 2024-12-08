@@ -86,7 +86,7 @@ function [] = plot_T_S_space(aircraft)
     T_climb_3 = T_from_S_constraint_calc(aircraft, S, @T_W_climb_calc_3, k);
     T_climb_4 = T_from_S_constraint_calc(aircraft, S, @T_W_climb_calc_4, k);
     T_climb_5 = T_from_S_constraint_calc(aircraft, S, @T_W_climb_calc_5, k);
-    T_climb_6 = T_from_S_constraint_calc(aircraft, S, @T_W_climb_calc_6, k);
+    %T_climb_6 = T_from_S_constraint_calc(aircraft, S, @T_W_climb_calc_6, k);
 
     % Specific excess power
     T_sp_ex_pwr_1 = T_from_S_constraint_calc(aircraft, S, @T_W_sp_ex_pwr_calc_1, k); % TODO UPDATE/test with individualized climb calcs
@@ -100,7 +100,7 @@ function [] = plot_T_S_space(aircraft)
     %% PLOT ALL TOGETHER %%
     %%%%%%%%%%%%%%%%%%%%%%%
 
-    figure('Position', [50, 50, 1000, 800]); % Adjust figure size
+    figure('Position', [50, 50, 1500, 800]); % Adjust figure size
     hold on;
     
     % Takeoff and Landing Constraints (Solid Lines - Distinct Colors)
@@ -122,7 +122,7 @@ function [] = plot_T_S_space(aircraft)
     c3 = plot(S, T_climb_3, 'Color', [0, 0.8, 0.3], 'LineStyle', ':', 'LineWidth', 1.2); % Mint Green
     c4 = plot(S, T_climb_4, 'Color', [0.1, 0.7, 0.7], 'LineStyle', ':', 'LineWidth', 1.2); % Turquoise
     c5 = plot(S, T_climb_5, 'Color', [0.7, 0.1, 0.2], 'LineStyle', ':', 'LineWidth', 1.2); % Reddish Brown
-    c6 = plot(S, T_climb_6, 'Color', [0.3, 0.7, 0.3], 'LineStyle', ':', 'LineWidth', 1.2); % Olive Green
+    %c6 = plot(S, T_climb_6, 'Color', [0.3, 0.7, 0.3], 'LineStyle', ':', 'LineWidth', 1.2); % Olive Green
     
     % Specific Excess Power Constraints (Dash-Dot Lines, Distinct Colors)
     sp1 = plot(S, T_sp_ex_pwr_1, 'Color', [0.9, 0.4, 0.1], 'LineStyle', '-.', 'LineWidth', 1.2); % Burnt Orange
@@ -136,12 +136,12 @@ function [] = plot_T_S_space(aircraft)
     ceil = plot(S, T_ceiling, 'Color', [0.9, 0, 0.5], 'LineStyle', '-', 'LineWidth', 1.2); % Bright Rose
     
     % Add legend
-    legend([to, lf, cs, ds, m12, m09, it, c1, c2, c3, c4, c5, c6, ceil, sp1, sp2, sp3, sp4, sp5, sp6], ...
+    legend([to, lf, cs, ds, m12, m09, it, c1, c2, c3, c4, c5, ceil, sp1, sp2, sp3, sp4, sp5, sp6], ...
         {'Takeoff field length','Landing field length', ...
         'Cruise', 'Dash', ...
         'Mach 1.2 Sustained Turn', 'Mach 0.9 Sustained Turn', 'Instantaneous Turn', ...
         'Takeoff climb', 'Transition climb', 'Second segment climb', ...
-        'Enroute climb', 'Balked landing climb (AEO)', 'Balked landing climb (OEI)', ...
+        'Enroute climb', 'Balked landing climb', ...
         'Ceiling', ...
         'Sp. Excess Power (1g, SL, Military)', 'Sp. Excess Power (1g, 4500m, Military)', ...
         'Sp. Excess Power (1g, SL, Max)', 'Sp. Excess Power (1g, 4500m, Max)', ...
@@ -152,7 +152,7 @@ function [] = plot_T_S_space(aircraft)
     ylim([T_min T_max]);
     xlabel('S [m^2]');
     ylabel('T [N]');
-    title('T-S Plot for Libellula''s Custom Interceptor');
+    title('T-S Plot for the F-81');
     
     hold off; 
 
@@ -165,7 +165,7 @@ function [] = plot_T_S_space(aircraft)
         %% PLOT WEIGHT CONTOURS AND CONSTRAINING LINES %%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-    figure('Position', [50, 50, 1000, 800]); % Adjust figure size
+    figure('Position', [50, 50, 1500, 800]); % Adjust figure size
     hold on;
     
     contourf(S, T, TOGW, 100, 'LineStyle', 'none');        % plot contours
@@ -183,18 +183,18 @@ function [] = plot_T_S_space(aircraft)
 
     s_pt_max = plot(S_selected, T_selected, 'ko', 'MarkerSize', 5, 'MarkerFaceColor', 'r'); % black circle
     % Create a label with the s and t values
-    label = sprintf('(%.1f, %.0f)', S_selected, T_selected);  % Format the label with two decimal places
+    label = sprintf('(%.2f, %.0f)', S_selected, T_selected);  % Format the label with two decimal places
     text(S_selected + 0.3, T_selected+6000, label, 'BackgroundColor', 'white', 'EdgeColor', 'black', 'FontSize', 9, 'Color', 'k');
 
     s_pt_mil = plot(S_selected, aircraft.propulsion.T_military, 'ro', 'MarkerSize', 5, 'MarkerFaceColor', 'r'); % black circle
     % Create a label with the s and t values
-    label = sprintf('(%.1f, %.0f)', S_selected, aircraft.propulsion.T_military);  % Format the label with two decimal places
+    label = sprintf('(%.2f, %.0f)', S_selected, aircraft.propulsion.T_military);  % Format the label with two decimal places
     text(S_selected + 0.3, aircraft.propulsion.T_military+6000, label, 'BackgroundColor', 'white', 'EdgeColor', 'black', 'FontSize', 9, 'Color', 'k');
 
     % Add legend
     leg = legend([lf, sp3, sp1, tmax, tmil, s_pt_max, s_pt_mil], {'Landing field length', 'Sp. Excess Power (1g, SL, Max)',...
-                                          'Sp. Excess Power (1g, SL, Military)', 'F110-GE-100 Max Thrust', ...
-                                          'F110-GE-100 Military Thrust', 'Selected Design Point, Max Thrust' ...
+                                          'Sp. Excess Power (1g, SL, Military)', 'F110-GE-132 Max Thrust', ...
+                                          'F110-GE-132 Military Thrust', 'Selected Design Point, Max Thrust' ...
                                           'Selected Design Point, Military Thrust'});
     
     set(leg, 'Color', [0.9 0.9 0.9]);  % Set legend background to light gray
@@ -212,7 +212,7 @@ function [] = plot_T_S_space(aircraft)
     %% PLOT COST CONTOURS AND CONSTRAINING LINES %%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-    figure('Position', [50, 50, 1000, 800]); % Adjust figure size
+    figure('Position', [50, 50, 1500, 800]); % Adjust figure size
     hold on;
     
     contourf(S, T, avg_cost, 100, 'LineStyle','none');        % plot contours
@@ -230,18 +230,18 @@ function [] = plot_T_S_space(aircraft)
 
     s_pt_max = plot(S_selected, T_selected, 'ko', 'MarkerSize', 5, 'MarkerFaceColor', 'r'); % black circle
     % Create a label with the s and t values
-    label = sprintf('(%.1f, %.0f)', S_selected, T_selected);  % Format the label with two decimal places
+    label = sprintf('(%.2f, %.0f)', S_selected, T_selected);  % Format the label with two decimal places
     text(S_selected + 0.3, T_selected+6000, label, 'BackgroundColor', 'white', 'EdgeColor', 'black', 'FontSize', 9, 'Color', 'k');
 
     s_pt_mil = plot(S_selected, aircraft.propulsion.T_military, 'ro', 'MarkerSize', 5, 'MarkerFaceColor', 'r'); % black circle
     % Create a label with the s and t values
-    label = sprintf('(%.1f, %.0f)', S_selected, aircraft.propulsion.T_military);  % Format the label with two decimal places
+    label = sprintf('(%.2f, %.0f)', S_selected, aircraft.propulsion.T_military);  % Format the label with two decimal places
     text(S_selected + 0.3, aircraft.propulsion.T_military+6000, label, 'BackgroundColor', 'white', 'EdgeColor', 'black', 'FontSize', 9, 'Color', 'k');
 
     % Add legend
     leg = legend([lf, sp3, sp1, tmax, tmil, s_pt_max, s_pt_mil], {'Landing field length', 'Sp. Excess Power (1g, SL, Max)',...
-                                          'Sp. Excess Power (1g, SL, Military)', 'F110-GE-100 Max Thrust', ...
-                                          'F110-GE-100 Military Thrust', 'Selected Design Point, Max Thrust' ...
+                                          'Sp. Excess Power (1g, SL, Military)', 'F110-GE-132 Max Thrust', ...
+                                          'F110-GE-132 Military Thrust', 'Selected Design Point, Max Thrust' ...
                                           'Selected Design Point, Military Thrust'});
     
     set(leg, 'Color', [0.9 0.9 0.9]);  % Set legend background to light gray

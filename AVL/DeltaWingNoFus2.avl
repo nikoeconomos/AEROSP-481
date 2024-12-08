@@ -1,0 +1,99 @@
+DeltaWingNoFus2
+
+#Mach
+ 0.85
+
+#IYsym   IZsym   Zsym
+ 0       0       0.0
+
+#Sref    Cref    Bref
+30   2    10
+
+#Xref    Yref    Zref
+0.0     0.0     0.0
+
+
+
+
+
+
+
+
+#-------------------------------------------------------
+#------------------------WINGS--------------------------
+#-------------------------------------------------------
+SURFACE 
+Wing 
+#Nchordwise  Cspace  Nspanwise  Sspace
+12           1.0     20         1.0
+
+
+YDUPLICATE 
+0.0
+
+ANGLE
+0.0
+
+SCALE
+1.0   1.0   1.0
+
+TRANSLATE
+0  0.0 0.0 
+
+
+SECTION
+# Root Chord Section
+#Xle    Yle    Zle     Chord   Angle  Nspanwise  Sspace
+0.0   1.0    0.0     5.0      0.0
+
+NACA
+0012
+
+CLAF
+1
+
+SECTION
+# Tip Chord
+#Xle    Yle    Zle     Chord   Ainc  Nspanwise  Sspace
+5.0 3.0   0.0  0   0.0    0.0
+
+NACA
+0012
+
+CLAF
+1
+
+
+SURFACE 
+Vertical Stabalizer
+#Nchordwise  Cspace  Nspanwise  Sspace
+12           1.0     20         1.0
+
+
+ANGLE
+0.0
+
+SCALE
+1.0   1.0   1.0
+
+TRANSLATE
+3  0 0
+
+
+SECTION
+# Root Chord Section
+#Xle    Yle    Zle     Chord   Angle  Nspanwise  Sspace
+0.0   0.0    1     2      0.0
+
+NACA 
+0012
+
+SECTION
+# Tip Chord Section
+#Xle    Yle    Zle     Chord   Angle  Nspanwise  Sspace
+2 0 2    0      0.0
+
+NACA
+0012
+
+

@@ -1,5 +1,5 @@
 % Aerosp 481 Group 3 - Libellula 
-function [avg_flyaway_cost, learning_curve_costs] = avg_flyaway_cost_calc(aircraft_cost, Q)
+function [H_adjusted] = learning_curve_95(H1, Q)
 % Description: This function generates the average flyway cost using the
 % roskam method and the learning curve
 % 
@@ -21,13 +21,9 @@ function [avg_flyaway_cost, learning_curve_costs] = avg_flyaway_cost_calc(aircra
 
 target_year = 2024;
 
-Q_i = 1:1:Q;
-
 x = 0.926; %(95% learning curve))
 
-aircraft_cost_2024 = adjust_cost_inflation_calc(aircraft_cost, 1989, target_year); 
-
-learning_curve_costs = aircraft_cost_2024 * (1./Q_i).^(1-x);
+H_adjusted = H1 * (1/Q)^(1-x);
 
 avg_flyaway_cost = mean(learning_curve_costs);
 
