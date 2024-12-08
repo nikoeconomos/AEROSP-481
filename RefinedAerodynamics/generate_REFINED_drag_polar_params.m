@@ -366,6 +366,10 @@ aero.CL_htail = CL_tail;
 %% WAVE DRAG COEFFICIENT %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% Values taken from CFD simulations:
+flight_mach = [0.282, 0.54, 0.85, 0.9, 0.928, 0.953, 0.978, 1.002, 1.027, 1.052, 1.076, 1.101, 1.126, 1.151, 1.2, 1.6];
+Cd_cfd = [0.00794828, 0.007731049, 0.008301784, 0.008040219, 0.008208084, 0.008468099, 0.008778918, 0.009233597, 0.01002093, 0.01143649, 0.01251037, 0.01714696, 0.02499639, 0.03132697, 0.04084863, 0.04596498];
+
 M_DD = 0.95; % From airfoil sectional CFD analysis
 
 M_crit  = M_DD - (0.1 / 80)^(1/3);
@@ -373,6 +377,17 @@ M_crit  = M_DD - (0.1 / 80)^(1/3);
 aero.CD_wave = 20 * (freestream_mach - M_crit).^4;
 aero.CD_wave(1) = 0; %no wave drag at slow speeds
 aero.CD_wave(2) = 0; %no wave drag at slow speeds
+
+figure()
+scatter(flight_mach,Cd_cfd)
+title('Change in Wing Airfoil Drag Coefficient with Mach Number')
+xlabel('Flight Mach Number')
+ylabel('Drag Coefficient')
+
+hold on
+xline(0.95,'r--',LineWidth=0.5);
+
+legend('','Drag Divergence Mach = 0.95')
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
