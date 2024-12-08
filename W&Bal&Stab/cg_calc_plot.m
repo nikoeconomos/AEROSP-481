@@ -31,16 +31,16 @@ function aircraft = cg_calc_plot(aircraft)
 
     w.cg_pos = struct();
 
-    w.cg_pos.engine = [13.835, 0, 0.27];
+    w.cg_pos.engine = [13.353, 0, 0.27];
 
     w.cg_pos.vtail  = [aircraft.geometry.vtail.x40MAC, 0, 1.566];
     w.cg_pos.htail  = [aircraft.geometry.htail.x40MAC, 0, 0.065];
     w.cg_pos.wing   = [aircraft.geometry.wing.x40MAC,  0, 0.863];
 
-    w.cg_pos.fuselage = [8.892, 0, 0.801]; % m, CENTROID OF THE FUSELAGE FROM CAD
+    w.cg_pos.fuselage = [8.97, 0, 0.801]; % m, CENTROID OF THE FUSELAGE FROM CAD
 
-    w.cg_pos.cannon             = [5.969, 0.661, 0.59];
-    w.cg_pos.cannon_feed_system = [6.125, 0.411, 0.59]; 
+    w.cg_pos.cannon             = [5.46, 0.661, 0.59];
+    w.cg_pos.cannon_feed_system = [6.083, 0.411, 0.59]; 
 
     w.cg_pos.missile_1 = [7.172, -0.741,  -0.03];
     w.cg_pos.missile_2 = [7.172, 0.741,  -0.03];
@@ -50,16 +50,16 @@ function aircraft = cg_calc_plot(aircraft)
 
     w.cg_pos.xtra = [aircraft.geometry.fuselage.length*0.45, 0, 0]; % 45% of fuselage length (raymer table)
     
-    w.cg_pos.fore_fuel       = [4.775, -0.091,  0.269];
-    w.cg_pos.center_fuel     = [7.936,  -0.035,  0.523];
-    w.cg_pos.aft_fuel        = [10.844, 0.001, 0.609];
+    w.cg_pos.fore_fuel       = [4.9, -0.091,  0.269];
+    w.cg_pos.center_fuel     = [8.295,  -0.022,  0.515];
+    w.cg_pos.aft_fuel        = [11.125, 0.002, 0.667];
     w.cg_pos.right_wing_fuel = [9.498, -2.316,  0.279]; 
     w.cg_pos.left_wing_fuel  = [9.498, 2.316,  0.279];
 
-    w.cg_pos.ICNIA   = [3.375, 0, 0.145];
+    w.cg_pos.ICNIA   = [3.375, 0.246, 0.145];
     w.cg_pos.databus = [2.782, -0.365, 0.268];
-    w.cg_pos.INEWS   = [3.87, 0, 0.24];
-    w.cg_pos.VMS     = [12.979, -0.748, 0.29];
+    w.cg_pos.INEWS   = [3.37, -0.249, 0.14];
+    w.cg_pos.VMS     = [3.829, 0.002, 0.29];
     w.cg_pos.IRSTS   = [3.41, 0, 0.63];
     w.cg_pos.AESA    = [2.695, 0, 0.12];
     w.cg_pos.EES     = [12.325, 0.74, 0.25];
