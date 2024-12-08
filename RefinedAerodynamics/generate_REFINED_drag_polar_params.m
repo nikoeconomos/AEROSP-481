@@ -189,22 +189,23 @@ delta_CD0_landing_flaps_slats = F_flap * (cf_c) * (S_flapped / S_ref_wing) * (ra
 
 CD0_component_sum  = CD0_fuselage + CD0_wing  + CD0_htail + CD0_vtail; %+ CD0_inlets;
 
-aero.CD0.cruise = NaN; % this was from the previous estimate, complete
-
-aero.CD0.clean = (CD0_component_sum(3) + CD0_misc)/(1-CD0_lp_percent); % 5 % of cd0 is leakage and protruberance
+aero.CD0.cruise = (CD0_component_sum(3) + CD0_misc)/(1-CD0_lp_percent); % 5 % of cd0 is leakage and protruberance
 aero.CD0.dash  = (CD0_component_sum(6) + CD0_misc)/(1-CD0_lp_percent); 
 
-aero.CD0.takeoff_flaps_slats      = aero.CD0.clean + delta_CD0_takeoff_flaps_slats;
+aero.CD0.takeoff_landing_clean = (CD0_component_sum(1) + CD0_misc)/(1-CD0_lp_percent); % 5 % of cd0 is leakage and protruberance
+
+aero.CD0.takeoff_flaps_slats      = aero.CD0.takeoff_landing_clean + delta_CD0_takeoff_flaps_slats;
 aero.CD0.takeoff_flaps_slats_gear = aero.CD0.takeoff_flaps_slats + CD0_lg;
 
-aero.CD0.landing_flaps_slats      = aero.CD0.clean + delta_CD0_landing_flaps_slats;
+aero.CD0.landing_flaps_slats      = aero.CD0.takeoff_landing_clean + delta_CD0_landing_flaps_slats;
 aero.CD0.landing_flaps_slats_gear = aero.CD0.landing_flaps_slats + CD0_lg;
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 %% CALCULATE e VALUES %%
 %%%%%%%%%%%%%%%%%%%%%%%%
 
-aero.e.clean               = oswaldfactor(aircraft.geometry.wing.AR, aircraft.geometry.wing.sweep_LE,'shevell', aero.CD0.clean, 0, 0.98);
+aero.e.cruise              = oswaldfactor(aircraft.geometry.wing.AR, aircraft.geometry.wing.sweep_LE,'shevell', aero.CD0.cruise, 0, 0.98);
+aero.e.dash                = oswaldfactor(aircraft.geometry.wing.AR, aircraft.geometry.wing.sweep_LE,'shevell', aero.CD0.dash, 0, 0.98);
 aero.e.takeoff_flaps_slats = oswaldfactor(aircraft.geometry.wing.AR, aircraft.geometry.wing.sweep_LE,'shevell', aero.CD0.takeoff_flaps_slats, 0, 0.98);
 aero.e.landing_flaps_slats = oswaldfactor(aircraft.geometry.wing.AR, aircraft.geometry.wing.sweep_LE,'shevell', aero.CD0.landing_flaps_slats, 0, 0.98);
 
@@ -216,8 +217,8 @@ aero.e.htail = 1.78 * (1 - (0.045 * aircraft.geometry.htail.AR^0.68) ) - 0.64; %
 
 AR_wing = aircraft.geometry.wing.AR;
 
-aero.CDi.cruise              = aero.CL.cruise^2 / (pi * AR_wing * aero.e.clean);
-aero.CDi.dash                = aero.CL.dash^2   / (pi * AR_wing * aero.e.clean);
+aero.CDi.cruise              = aero.CL.cruise^2 / (pi * AR_wing * aero.e.cruise);
+aero.CDi.dash                = aero.CL.dash^2   / (pi * AR_wing * aero.e.cruise);
 
 aero.CDi.takeoff_flaps_slats = aero.CL.takeoff_flaps_slats^2 / (pi * AR_wing * aero.e.takeoff_flaps_slats);
 aero.CDi.landing_flaps_slats = aero.CL.landing_flaps_slats^2 / (pi * AR_wing * aero.e.landing_flaps_slats);
@@ -379,9 +380,9 @@ aero.CD_wave(2) = 0; %no wave drag at slow speeds
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% TODO ADD WAVE, TRIM DRAG. These are calculated for a variety of Mach numbers. find out how to integrate that array
-aero.CD.clean = aero.CD0.clean + aero.CDi.cruise + aero.CD_trim(3) + aero.CD_wave.cruise(3);
+aero.CD.cruise = aero.CD0.cruise + aero.CDi.cruise + aero.CD_trim(3) + aero.CD_wave(3);
 
-aero.CD.dash = aero.CD0.clean + aero.CDi.cruise + aero.CD_trim(3) + aero.CD_wave.cruise(3);
+aero.CD.dash = aero.CD0.dash + aero.CDi.dash + aero.CD_trim(6) + aero.CD_wave(6);
 
 aero.CD.takeoff_flaps_slats      = aero.CD0.takeoff_flaps_slats      + aero.CDi.takeoff_flaps_slats + aero.CD_trim(1);
 aero.CD.takeoff_flaps_slats_gear = aero.CD0.takeoff_flaps_slats_gear + aero.CDi.takeoff_flaps_slats + aero.CD_trim(1);
