@@ -390,6 +390,34 @@ aero.CD.takeoff_flaps_slats_gear = aero.CD0.takeoff_flaps_slats_gear + aero.CDi.
 aero.CD.landing_flaps_slats      = aero.CD0.landing_flaps_slats      + aero.CDi.landing_flaps_slats + aero.CD_trim(2);
 aero.CD.landing_flaps_slats_gear = aero.CD0.landing_flaps_slats_gear + aero.CDi.landing_flaps_slats + aero.CD_trim(2);
 
+% Plot to compare drag values with configurations
+figure()
+
+y_values = [aero.CD.cruise, aero.CD.takeoff_flaps_slats, aero.CD.takeoff_flaps_slats_gear, ...
+    aero.CD.landing_flaps_slats, aero.CD.landing_flaps_slats_gear];
+
+bar(y_values);
+
+xticklabels(["Clean", "Take Off Configuration - No L.G.", ...
+             "Take Off Configuration - L.G.", "Landing Configuration - No L.G.", ...
+             "Landing Configuration - L.G."]);
+
+% Add value markers above bars
+for k = 1:length(y_values)
+    text(k, y_values(k), sprintf('%.2f', y_values(k)), ... % Format value as needed
+         'HorizontalAlignment', 'center', ...
+         'VerticalAlignment', 'bottom', ...
+         'FontSize', 10, 'Color', 'black');
+end
+
+title('Aircraft Drag Coefficient at Different Configurations')
+
+data = [CD0_wing(3), CD0_fuselage(3), CD0_htail(3), CD0_vtail(3), CD0_lp_percent(3)];
+labels = ['Wing: 0.007','Fusselage: 0.0147','Horizontal Tail: 0.0011','Vertical Tail: 0.6135','Leakage and Protuberance: 0.02'];
+figure()
+piechart(data, labels);
+title("Aircraft Component Contributions to CD0 - Clean Configuration")
+
 %% REASSIGN %%
 
 aircraft.aerodynamics = aero;
