@@ -30,10 +30,6 @@ cost = aircraft.cost;
 
 target_year = 2024;
 
-block_time = block_time_calc(aircraft); % for DCA
-
-CEF_calc = @(byear, tyear) (5.17053 + 0.104981 *(tyear-2006))/(5.17053 + 0.104981*(byear - 2006)); %From metabook chapter 3
-
 x = 0.926; %(95% learning curve))
 learning_curve_95 = @(H1, Q) H1 * (1/Q)^(1-x);
 
@@ -58,8 +54,6 @@ V_max     = TAS_to_EAS(V_max_tas, rho_c); % m/s of EAS
 Q = 1000; % Production number
 FTA = 6; % Flight test aircraft
 
-N_eng = Q; % Number of engines required
-
 fudge_factor_composite = 1.8; % for materials pg 697
 
 
@@ -71,8 +65,9 @@ cost_avi_percent_flyaway = 0.4; % raymer pg 698, can be bumped up to 40 accordin
 engine_base_year = 2000;
 engine_order_80  = 400000000; % from source online
 engine_cost_base = engine_order_80/80;
+N_eng = Q; % Number of engines required, single engine plane
 
-cost.engine = adjust_cost_inflation_calc(engine_cost_base, engine_base_year, target_year);
+cost.RTDE_flyaway.engines = adjust_cost_inflation_calc(N_eng*engine_cost_base, engine_base_year, target_year);
 
 %% RTDE DAPCA RATES & COST
 
@@ -90,10 +85,10 @@ HQ = (0.133 * HM) * fudge_factor_composite; % quality contorl hours
 HM_adj = learning_curve_95(HM, Q); % adjust for learning curve for manufacturing hours only, 95 % because we expect to see less improvement in newer programs
 HQ_adj = learning_curve_95(HQ, Q); 
 
-cost.engineering   = HE    *RE;
-cost.tooling       = HT    *RT;
-cost.manufacturing = HM_adj*RM;
-cost.quality_ctrl  = HQ_adj*RQ;
+cost.RTDE_flyaway.engineering   = HE    *RE;
+cost.RTDE_flyaway.tooling       = HT    *RT;
+cost.RTDE_flyaway.manufacturing = HM_adj*RM;
+cost.RTDE_flyaway.quality_ctrl  = HQ_adj*RQ;
 
 %% Cost of development
 
@@ -101,9 +96,9 @@ CD_2012 = 67.400 * W_e^0.630 * V_max^1.3;               % development support co
 CF_2012 = 1974   * W_e^0.325 * V_max^0.822 * FTA^1.21;  % flight test cost
 CM_2012 = 31.2   * W_e^0.921 * V_max^0.621 * Q^0.799;      % manufacturing materials cost
 
-cost.development_support    = adjust_cost_inflation_calc(CD_2012, DAPCA_base_year, target_year);
-cost.flight_test            = adjust_cost_inflation_calc(CF_2012, DAPCA_base_year, target_year);
-cost.manufacturing_material = adjust_cost_inflation_calc(CM_2012, DAPCA_base_year, target_year);
+cost.RTDE_flyaway.development_support    = adjust_cost_inflation_calc(CD_2012, DAPCA_base_year, target_year);
+cost.RTDE_flyaway.flight_test            = adjust_cost_inflation_calc(CF_2012, DAPCA_base_year, target_year);
+cost.RTDE_flyaway.manufacturing_material = adjust_cost_inflation_calc(CM_2012, DAPCA_base_year, target_year);
 
 % Loop to converge on avionics cost
 tol = 1e-3;
@@ -113,17 +108,17 @@ cost_curr = 25000000000; % initial estimate of 25 billion
 
 while converged == false
         
-    cost.avionics = cost_curr*cost_avi_percent_flyaway;
+    cost.RTDE_flyaway.avionics = cost_curr*cost_avi_percent_flyaway;
 
-    cost_new = cost.engineering + ...
-               cost.tooling + ...       
-               cost.manufacturing + ...
-               cost.quality_ctrl + ...
-               cost.development_support + ...
-               cost.flight_test + ...
-               cost.manufacturing_material + ...
-               cost.engine*N_eng + ...
-               cost.avionics;
+    cost_new = cost.RTDE_flyaway.engineering + ...
+               cost.RTDE_flyaway.tooling + ...       
+               cost.RTDE_flyaway.manufacturing + ...
+               cost.RTDE_flyaway.quality_ctrl + ...
+               cost.RTDE_flyaway.development_support + ...
+               cost.RTDE_flyaway.flight_test + ...
+               cost.RTDE_flyaway.manufacturing_material + ...
+               cost.RTDE_flyaway.engines + ...
+               cost.RTDE_flyaway.avionics;
 
     if abs(cost_new - cost_curr) <= tol
         converged = true;
@@ -132,7 +127,7 @@ while converged == false
     cost_curr = cost_new;
 end
 
-cost.total = cost_curr;
+cost.RTDE_flyaway.total = cost_curr;
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -167,99 +162,238 @@ C_aed_r = MHR_aed_r * R_e_r;
 %% OPERATING COSTS %%
 %%%%%%%%%%%%%%%%%%%%%
 
+cost.operation = struct();
 
-%% Labor %
+%% FUEL ROSKAM 6.1 %% 
 
-maintenance_labor_rate = 24.81; % $ as of June 2024
+% Assuming worst case that every mission is DCA
 
-
-%% FUEL %%
-
-t_mis = sum(aircraft.mission.time);
-U_annflt = 325; % middle of the range, ramer table 6.1
-
+t_mis = sum(aircraft.mission.time)/3600; % in hours
+U_annflt  = 350; % middle of the range, ramer table 6.1 fligth hours per aircplane per year
 N_mission = U_annflt/t_mis;
 
-%N_serv = Q
+N_acq  = Q;
+N_res  = 0.1*N_acq;
 
-F_OL = 1.005;
-%W_f = 
+N_yr = 40; % number of years in service, upper amount in peacetime because assuming new aircraft last longer
 
-fuel_price = 2.14/0.00378541; % $/m3 as of September 13, 2024
-oil_price = 113.92/0.00378541; % $/m3 as of September 13, 2024
-fuel_cost = 1.02*aircraft.weight.ff*aircraft.weight.togw*fuel_price/aircraft.weight.density.fuel;
-oil_cost  = 1.02*aircraft.weight.components.oil*oil_price/aircraft.weight.density.oil;
+L_R = 2.0; % ANNUAL LOSS RATE OF AIRCRAFT PER 10^5 FLYING HOURS, avg taken from table 6.2 roskam part 8
+
+% Loop to converge on pair of service and lost aircraft
+tol = 1e-3;
+converged = false;
+
+N_serv = 1000; % initial estimate of 25 billion
+N_loss = 0;
+while converged == false
+ 
+    N_loss_new = L_R/(10^5) * N_serv * U_annflt * N_yr;
+    N_serv_new = N_acq - N_res - 0.5*N_loss_new;
+
+    if abs(N_loss_new - N_loss) <= tol
+        if abs(N_serv_new - N_serv) <= tol
+            converged = true;
+        end
+    end
+
+    N_loss = N_loss_new;
+    N_serv = N_serv_new;
+end
+
+F_OL = 1.005; %oil and lubricant factor
+
+W_f = aircraft.weight.components.fuel; % kg
+
+JP4_price_per_gallon = adjust_cost_inflation_calc(3.06, 2020, target_year); % from FY2020
+FP = JP4_price_per_gallon/0.00378541;%$/m3
+
+JP4_density_lb_per_ft3 = 50.420; % at 72 degrees F, lb/ft3
+FD = JP4_density_lb_per_ft3*16.0185; %kg/m3
+
+cost.operation.fuel_oil_lubricant = (F_OL * W_f * FP/FD * N_mission * N_serv * N_yr);
+
+%% Direct personnel 6.2 %%
+
+% flight crew
+
+R_cr   = 1.1; % crew ratio roskam table 6.1
+N_crew = 2; %2 operators on the ground, similar to reaper (sensors and pilot)
+
+Pay_crew_1990 = 29268 + 12*400 + 12000; % may be out of date due to congressional action
+Pay_crew      = adjust_cost_inflation_calc(Pay_crew_1990, 1990, target_year);
+
+OHR_crew = 3.0; %given by roskam pg 154
+
+cost.operation.direct_personnel.flight_crew = N_serv * N_crew * R_cr * Pay_crew * OHR_crew * N_yr;
+
+% maintenance crew
+
+MHR_flthr = 35; % upper range in table 6.5
+R_mml = adjust_cost_inflation_calc(45, 1989, target_year); % eq 6.12
+
+cost.operation.direct_personnel.maintenance_crew  = N_serv * N_yr * U_annflt * MHR_flthr * R_mml;
+
+%% Indirect personnel 6.3 %%
+
+f_persind = mean([0.14, 0.2]); % table 6.6 avg of the fighters
+
+%cost.operation.indirect_personnel = f_persind * C_OPS; see total OPs cost below
+
+%% Consumable materials 6.4 %%
+
+R_conmat = adjust_cost_inflation_calc(6.5, 1989, target_year);
+
+cost.operation.consumable_materials = N_serv * N_yr * U_annflt * MHR_flthr * R_conmat;
+
+%% Cost of Spares C_spares 6.5 %%
+
+f_spares = mean([0.13 0.16 0.27, 0.12 0.16]); % table 6.6 avg of all of the planes
+
+% cost.operation.spares = f_spares * C_OPS;
+
+%% Cost of depot 6.6 %%
+
+f_depot = mean([0.2 0.15 0.22 0.13 0.16]); % table 6.6 avg of all of the planes
+
+% %cost.operation.depot = f_depot* C_OPS;
+
+%% Miscellaneous items Cmisc 6.7 %%
+
+cost.operation.misc = 4*cost.operation.consumable_materials; % roskam eq 6.19
+
+%% Total operating cost %%
+
+% Loop to converge on individual/total costs of operation
+tol = 1e-3;
+converged = false;
+
+C_OPS = 22000000000; %initial estimate
+while converged == false
+ 
+    cost.operation.indirect_personnel = f_persind * C_OPS;
+    cost.operation.spares             = f_spares * C_OPS;
+    cost.operation.depot              = f_depot * C_OPS;
+
+    C_OPS_new = cost.operation.fuel_oil_lubricant                + ... % pre calculated
+                cost.operation.direct_personnel.flight_crew      + ... % pre calculated
+                cost.operation.direct_personnel.maintenance_crew + ... % pre calculated
+                cost.operation.indirect_personnel                + ...
+                cost.operation.consumable_materials              + ... % pre calculated
+                cost.operation.spares                            + ...
+                cost.operation.depot                             + ...
+                cost.operation.misc;                                   % pre calculated
+
+    if abs(C_OPS_new - C_OPS) <= tol
+        if abs(N_serv_new - N_serv) <= tol
+            converged = true;
+        end
+    end
+
+    C_OPS = C_OPS_new;
+end
+
+cost.operation.total = C_OPS;
+cost.operation.per_hour = C_OPS/ (N_serv * N_yr * U_annflt);
+
+%%%%%%%%%%%%%%
+%% PLOTTING %%
+%%%%%%%%%%%%%%
+
+%% RTDE Flyaway %%
+
+% Exclude "total" and create a pie chart
+labels = {'Engine', 'Quality Control', 'Engineering', 'Tooling', 'Manufacturing', ...
+          'Manufacturing Material', 'Flight Test', 'Avionics', 'Development Support'};
+
+values = [cost.RTDE_flyaway.engines, cost.RTDE_flyaway.quality_ctrl, cost.RTDE_flyaway.engineering, ...
+          cost.RTDE_flyaway.tooling, cost.RTDE_flyaway.manufacturing, ...
+          cost.RTDE_flyaway.manufacturing_material, cost.RTDE_flyaway.flight_test, ...
+          cost.RTDE_flyaway.avionics,cost.RTDE_flyaway.development_support];
+
+% Calculate the total
+cost.RTDE_flyaway.total = sum(values);
+
+% Less muted color palette (slightly more vibrant)
+colors = [145, 163, 176; 174, 200, 202; 143, 179, 157; 191, 171, 141; ...
+          131, 119, 139; 167, 149, 139; 171, 186, 158; 149, 151, 169; ...
+          139, 139, 127] / 255;  % RGB normalized to 0-1
+
+% Create the pie chart with percentages
+figure;
+h = pie(values);
+
+% Add labels with percentages, showing 2 decimal points
+percentLabels = arrayfun(@(x) ...
+    [labels{x}, ' (', sprintf('%.2f', (values(x) / cost.RTDE_flyaway.total) * 100), '%)'], ...
+    1:length(values), 'UniformOutput', false);
+
+textHandles = findobj(h, 'Type', 'Text');
+for i = 1:length(textHandles)
+    textHandles(i).String = percentLabels{i};
+end
+
+% Apply less muted colors to each segment
+patchHandles = findobj(h, 'Type', 'Patch'); % Find pie chart patches
+for i = 1:length(patchHandles)
+    patchHandles(i).FaceColor = colors(i, :); % Assign vibrant color
+end
+
+% Add a title with the rounded total formatted with commas
+rounded_total = round(cost.RTDE_flyaway.total / 1e6) * 1e6;
+formatted_total = sprintf('%0.0f', rounded_total);  % Format the number as a string with no decimal places
+formatted_total_with_commas = regexprep(formatted_total, '(?<=\d)(?=(\d{3})+(?!\d))', ',');
+
+title(['Program RTDE & Flyaway Costs - Total: ', formatted_total_with_commas]);
 
 
+%% Operations %%
 
-%% Engine maintenance %%
+% Exclude "total" and create a pie chart
+labels = {'Fuel, Oil, Lubricant', 'Flight Crew', 'Maintenance Crew', ...
+          'Consumable Materials', 'Misc', 'Indirect Personnel', ...
+          'Spares', 'Depot'};
 
-engine_base_year = 1993;
+values = [cost.operation.fuel_oil_lubricant, cost.operation.direct_personnel.flight_crew, ...
+          cost.operation.direct_personnel.maintenance_crew, cost.operation.consumable_materials, ...
+          cost.operation.misc, cost.operation.indirect_personnel, cost.operation.spares, ...
+          cost.operation.depot];
 
-T_max_lbf = ConvForce(aircraft.propulsion.T_max, 'N', 'lbf');
+% Calculate the total
+cost.operation.total = sum(values);
 
-Cml_eng = (0.645+(0.05*T_max_lbf/10000))*(0.566+0.434/block_time)*maintenance_labor_rate;
-Cmm_eng = (25+(18*T_max_lbf/10000))*(0.62+0.38/block_time)*CEF_calc(engine_base_year, target_year);
+% Updated muted blue-gray-purple color palette with navy-like darker shades
+colors = [142, 160, 186; 171, 184, 197; 154, 153, 174; 186, 175, 192; ...
+          123, 133, 161; 102, 116, 138; 89, 101, 129; 78, 92, 113] / 255;
 
-engine_maint_cost = aircraft.propulsion.num_engines*(Cml_eng+Cmm_eng)*block_time;
+% Create the pie chart with percentages
+figure;
+h = pie(values);
 
+% Add labels with percentages, formatted to 2 decimal points
+percentLabels = arrayfun(@(x) ...
+    [labels{x}, ' (', sprintf('%.2f', (values(x) / cost.operation.total) * 100), '%)'], ...
+    1:length(values), 'UniformOutput', false);
+textHandles = findobj(h, 'Type', 'Text');
+for i = 1:length(textHandles)
+    textHandles(i).String = percentLabels{i};
+end
 
-%% CREW %
-crew_base_year = 1993;
+% Apply new colors to each segment
+patchHandles = findobj(h, 'Type', 'Patch'); % Find pie chart patches
+for i = 1:length(patchHandles)
+    patchHandles(i).FaceColor = colors(i, :); % Assign new color
+end
 
-% Route factor
-route_factor = 4; % Route factor -- estimated, 800 nautical miles is around 1000 miles, domestic flight length, but only 1 pilot on the ground
+% Add a title with the total, formatted with commas
+rounded_total = round(cost.operation.total / 1e6) * 1e6;
+formatted_total = sprintf('%0.0f', rounded_total);  % Format without decimal places
+formatted_total_with_commas = regexprep(formatted_total, '(?<=\d)(?=(\d{3})+(?!\d))', ',');
 
-mission_block_time = block_time_calc(aircraft);
-airline_factor = 1; % Estimated
+title(['Program Operation Costs - Total: ', formatted_total_with_commas]);
 
-togw_lb = ConvMass(aircraft.weight.togw, 'kg', 'lbm');
-
-% Initialize result
-crew_costs = airline_factor * (route_factor * (togw_lb)^0.4 * mission_block_time);
-
-cost.crew = adjust_cost_inflation_calc(crew_costs, crew_base_year, target_year);
-
-%% Airframe maintenance %
-
-airframe_weight = aircraft.weight.empty - aircraft.weight.components.engine;
-
-Cml_af = 1.03*(3+0.067*airframe_weight/1000)*maintenance_labor_rate;
-
-Cmm_af = 1.03*(30*CEF_calc(1989,target_year))+0.79*10^-5*cost.airframe;
-
-airframe_maint = (Cml_af+Cmm_af)*block_time;
-
-%% INSURANCE %%
-
-Uannual = 1.5*10^3 * (3.4546*block_time + 2.994 - (12.289*block_time^2 - 5.6626*block_time + 8.964)^0.5 );
-
-IRa = 0.02; % Hull insurance rate
-
-cost.insurance = (IRa*cost.airframe/Uannual)*block_time;
 
 %% Update struct
 
 aircraft.cost = cost;
 
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

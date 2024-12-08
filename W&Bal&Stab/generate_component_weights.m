@@ -80,7 +80,7 @@ function aircraft = generate_component_weights(aircraft)
     wing.S_exposed = 7.976*2; % from CAD
 
     %wing.S_wet = wing.S_ref*2; %m2 TODO APPROXIMATION, UPDATE WITH A BETTER ONE
-    wing.S_wet = wing.S_ref*2;
+    wing.S_wet = 27.35; %from CAD
     wing.b = sqrt(wing.AR*wing.S_ref);
 
     wing.taper_ratio = 0.35;

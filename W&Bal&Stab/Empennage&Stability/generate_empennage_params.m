@@ -31,7 +31,7 @@ function [aircraft] = generate_empennage_params(aircraft)
     htail.volume_coefficient = 0.4;  % Raymer decision TODO CONFIRM
     
     htail.S_ref = htail.volume_coefficient * aircraft.geometry.wing.MAC * aircraft.geometry.wing.S_ref  / htail.lever_arm; % TODO CONFIRM WHETHER THIS IS 1 section or both
-    htail.S_wet = 2*htail.S_ref; %m2 APPROXIMATION, UPDATE WITH A BETTER ONE
+    htail.S_wet = 7.334; % from CAD
 
     htail.b = sqrt(htail.AR * htail.S_ref);
 
@@ -73,7 +73,7 @@ function [aircraft] = generate_empennage_params(aircraft)
     vtail.volume_coefficient = 0.07; % Raymer decision TODO CONFIRM
 
     vtail.S_ref = vtail.volume_coefficient * aircraft.geometry.wing.b * aircraft.geometry.wing.S_ref / vtail.lever_arm; % TODO CONFIRM AND STATE LOCATION OF EQUATION
-    vtail.S_wet = 2*vtail.S_ref; %m2 APPROXIMATION, UPDATE WITH A BETTER ONE
+    vtail.S_wet = 3.943; % from CAD
 
     vtail.b = sqrt(vtail.AR * vtail.S_ref);
 
