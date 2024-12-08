@@ -247,15 +247,15 @@ Wf = 2.4; % Max fusselage width
 CM_fus_coeff = Kf * l_fuselage * Wf^2 / (wing.MAC * ...
     wing.S_ref);
 
-CM_fus_SLF = CM_fus_coeff * 0;
-CM_fus_TO = CM_fus_coeff * 12;
-CM_fus_L = CM_fus_coeff * 16;
+CM_fus_SLF = CM_fus_coeff *  0;
+CM_fus_TO  = CM_fus_coeff * 12;
+CM_fus_L   = CM_fus_coeff * 16;
 
 xt = htail.xMAC + 0.25 * htail.MAC;
 xw = wing.xMAC + 0.25 * wing.MAC;
 
 xt_comp = htail.xMAC + 0.5 * htail.MAC;
-xw_comp = wing.xMAC + 0.5 * wing.MAC;
+xw_comp = wing.xMAC  + 0.5 *  wing.MAC;
 
 wing_chords = linspace(wing.c_root, wing.c_tip, 12);
 
@@ -370,85 +370,15 @@ aero.CL_htail = CL_tail;
 % aero.CD_trim = CD_trim;
 % aero.CL_htail = CL_tail;
 
-%% TODO FINISH
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% WAVE DRAG COEFFICIENT %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%{
-% For horizontal tail
-AR_htail = aircraft.geometry.htail.AR;
+M_DD = 0.95; % From airfoil sectional CFD analysis
 
-x   = 6.4337; % [m] WHAT IS THIS? PARAMETRIZE TODO
-x_w = 1.8652; % [m] WHAT IS THIS? PARAMETRIZE TODO
+M_crit  = M_DD - (0.1 / 80)^(1/3);
 
-MAC_HT = aircraft.geometry.htail.MAC; % [m]
-S_HT   = aircraft.geometry.htail.S_ref; % [m^2]
-V_HT   = aircraft.geometry.htail.volume_coefficient; 
-
-CL_wing_clean   = aero.CL.clean; % NEED TO UPDATE ONCE VALUE IS DONE
-CL_wing_takeoff = aero.CL.takeoff_flaps_slats; % NEED TO UPDATE ONCE VALUE IS DONE
-CL_wing_landing = aero.CL.landing_flaps_slats; % NEED TO UPDATE ONCE VALUE IS DONE
-
-%% CMac WING
-
-%% TODO MAKE DIFFERENT FOR EACH CONFIG and PARAMETRIZE
-
-Cl = 2 * pi * 10 * (pi/180); % [rad] GET ACTUAL DISTRIBUTION, FOR DIFFERENT CONFIGS??
-c  = @(y) 4.187 - (0.628*y); % PARAMETRIZE W/ TAPER RATIO
-x_ac = NaN; % before it was 2.2218; %TODO WHAT IS THIS?
-
-b_wing = aircraft.geometry.wing.b; % [m]
-
-CM_ac  = 0.524; % NEEDS TO BE UPDATED
-
-function1 = @(y)(Cl * c(y) * x_ac);
-function2 = @(y)(CM_ac * c(y).^2);
-
-int1 = integral(function1, -b_wing/2, b_wing/2);
-int2 = integral(function2, -b_wing/2, b_wing/2);
-
-CM_ac_w = (1 / MAC_tail * S_ref_wing) * (-int1 + int2);
-
-%% CMac DELTA FLAPS
-
-%? this is accounted for above if we make it different?
-
-%% CMac FUSELAGE TODO FIX AND PARAMETRIze
-
-pitching_moment_factor = 0.6133;
-width_fus = 2.1; % [m]
-
-MAC_wing = aircraft.geometry.wing.MAC;
-alpha_fus = 10; % [degrees] Estimated
-
-CM_fus = ((pitching_moment_factor * width_fus^2 * l_fuselage) / (MAC_wing * S_ref_wing)) * alpha_fus;
-
-%% TOTAL
-
-CM_pitch_minus_tail_clean   = CM_ac_w + CM_fus; % + delta_CM_ac_flap THIS WILL CHANGE TODO FIX
-CM_pitch_minus_tail_takeoff = CM_ac_w + CM_fus; % + delta_CM_ac_flap THIS WILL CHANGE
-CM_pitch_minus_tail_landing = CM_ac_w + CM_fus; % + delta_CM_ac_flap THIS WILL CHANGE
-
-CLt_clean   = (CL_wing_clean   * (x_w/MAC_HT) + CM_pitch_minus_tail_clean)   * (x / (x-x_w)) * (1 / V_HT);
-CLt_takeoff = (CL_wing_takeoff * (x_w/MAC_HT) + CM_pitch_minus_tail_takeoff) * (x / (x-x_w)) * (1 / V_HT);
-CLt_landing = (CL_wing_landing * (x_w/MAC_HT) + CM_pitch_minus_tail_landing) * (x / (x-x_w)) * (1 / V_HT);
-
-aero.CD_trim.clean         = (CLt_clean^2   / ( pi * aero.e.htail * AR_htail) ) * (S_HT / S_ref_wing); 
-aero.CD_trim.takeoff_flaps = (CLt_takeoff^2 / ( pi * aero.e.htail * AR_htail) ) * (S_HT / S_ref_wing);
-aero.CD_trim.landing_flaps = (CLt_landing^2 / ( pi * aero.e.htail * AR_htail) ) * (S_HT / S_ref_wing);
-%}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% WAVE DRAG CALCULATIONS %%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%% TODO FINISH
-%{
-k             = 0.95; % for transonic airfoils
-sweep_QC_wing = aircraft.geometry.wing.sweep_QC_wing;
-t_c           = aircraft.geometry.wing.t_c;
-CL_cruise     = aircraft.aerodynamics.CL.cruise;
-
-aircraft.aerodynamics.MDD = k / cos(sweep_QC_wing) - t_c / cos(sweep_QC_wing)^2 - CL_cruise / (10 * cos(sweep_QC_wing)^3);
-%}
+aero.CD_wave.cruise = 20 * (aircraft.performance.cruise.Mach - M_crit)^4;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% TOTAL DRAG COEFFICIENT %%
@@ -463,6 +393,15 @@ aero.CD.takeoff_flaps_slats_gear = aero.CD0.takeoff_flaps_slats_gear + aero.CDi.
 aero.CD.landing_flaps_slats      = aero.CD0.landing_flaps_slats      + aero.CDi.landing_flaps_slats + aero.CD_trim(2);
 aero.CD.landing_flaps_slats_gear = aero.CD0.landing_flaps_slats_gear + aero.CDi.landing_flaps_slats + aero.CD_trim(2);
 
+figure()
+bar([aero.CD.clean, aero.CD.takeoff_flaps_slats, aero.CD.takeoff_flaps_slats_gear, ...
+    aero.CD.landing_flaps_slats, aero.CD.landing_flaps_slats_gear], ... 
+    ["Clean","Take Off Configuration - No L.G.", "Take Off Configuration - L.G.","Landing Configuration - No L.G.", "Landing Configuration - L.G."]);
+title('Aircraft Drag Coefficien at Different Configurations')
+
+figure()
+piechart([aero.CD.clean, aero.CDi.cruise, aero.CD_trim(4), aero.CD_wave.cruise], []);
+title("Aircraft Clean Configuration Parasitic Drag Component Contributions")
 %% REASSIGN %%
 
 aircraft.aerodynamics = aero;
