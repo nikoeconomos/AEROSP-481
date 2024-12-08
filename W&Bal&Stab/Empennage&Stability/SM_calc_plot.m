@@ -237,6 +237,8 @@ for i = 1:num_lines
     plot(cg_excursion_arr(5:end, 1), sm_arr(5:end, i)', '-o', 'MarkerFaceColor', 'k', 'Color', color_map(i, :), 'LineWidth', 1);
 end
 yline(0, '--', 'Color', 'k'); % Dashed horizontal line at y = 0
+yline(-0.1,'--r');
+yline(0.1,'--r');
 legendLabels = arrayfun(@(x) "M = " + x, mach, 'UniformOutput', false); % Generate legend strings
 legend(legendLabels, 'Location', 'Best');
 title('Static Margin Excursion Plot for Varying Mach Numbers');

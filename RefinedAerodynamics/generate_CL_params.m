@@ -87,4 +87,6 @@ del_CL_wing_L_flap = 0.9 * del_Cl_L_flap * wing.S_flapped/wing.S_ref * cos(wing.
 
 aircraft.aerodynamics.CL.landing_flaps_slats = base_CL_w + del_CL_wing_L_slat + del_CL_wing_L_flap;
 
+aircraft.aerodynamics.CL.dash = 0.9*0.2140571;
+
 end

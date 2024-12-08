@@ -1,3 +1,5 @@
+%% SECTION TITLE
+% DESCRIPTIVE TEXT
 % Aerosp 481 Group 3 - Libellula 
 % main file
 clear;
@@ -27,7 +29,6 @@ aircraft = generate_climb_segments(aircraft);
 
 % plot_T_W_W_S_space(aircraft)
 
-
 %plot_T_S_space(aircraft)
 % plot_T_S_space_F35(aircraft)
 % [togw, ff] = togw_as_func_of_T_S_calc(aircraft, aircraft.propulsion.T_max, aircraft.geometry.wing.S_ref)
@@ -36,8 +37,8 @@ aircraft = generate_climb_segments(aircraft);
 
 aircraft = generate_component_weights(aircraft);
 
-%aircraft = generate_REFINED_drag_polar_params(aircraft);
-%plot_drag_polar(aircraft);
+aircraft = generate_REFINED_drag_polar_params(aircraft);
+plot_drag_polar(aircraft);
 
 plot_V_n_diagram(aircraft);
 

@@ -43,10 +43,12 @@ c_bar = aircraft.geometry.wing.S_ref / aircraft.geometry.wing.b; % Mean geometri
 c_bar_engl = c_bar * 3.281; % m to ft 
 
 CL_max    = aircraft.aerodynamics.CL.cruise;
-C_L_alpha = 3.2; % parameter on different branch TODO DEFINE FOR 
 
-n_limit    = aircraft.performance.load_factor.limit_upper_limit; % Positive limit load factor
-n_negative = aircraft.performance.load_factor.limit_lower_limit; % Negative limit load factor
+C_L_alpha = aircraft.stability.C_L_alpha.wing(3); % parameter on different branch TODO DEFINE FOR 
+
+
+n_limit    = aircraft.performance.load_factor.upper_limit; % Positive limit load factor
+n_negative = aircraft.performance.load_factor.lower_limit; % Negative limit load factor
 
 %% Gust velocity
 

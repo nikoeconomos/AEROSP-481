@@ -80,7 +80,7 @@ function aircraft = generate_component_weights(aircraft)
     wing.S_exposed = 7.976*2; % from CAD
 
     %wing.S_wet = wing.S_ref*2; %m2 TODO APPROXIMATION, UPDATE WITH A BETTER ONE
-    wing.S_wet = wing.S_ref*2;
+    wing.S_wet = 27.35; %from CAD
     wing.b = sqrt(wing.AR*wing.S_ref);
 
     wing.taper_ratio = 0.35;
@@ -336,9 +336,9 @@ function aircraft = generate_component_weights(aircraft)
 
     f = w.fuel_vol;
     
-    f.fore       = 0.90; %m3
-    f.center     = 3.608;
-    f.aft        = 1.735;
+    f.fore       = 0.554; %m3
+    f.center     = 4.278;
+    f.aft        = 1.414;
     f.right_wing = 0.237; 
     f.left_wing  = f.right_wing;
 
@@ -347,7 +347,7 @@ function aircraft = generate_component_weights(aircraft)
     remainder = f.total_available - f.total_used;
 
     if f.total_available-f.total_used < 0
-        %error('Not enough fuel available silly!')
+        error('Not enough fuel available silly!')
     end
 
     f.fore_pct       = (f.fore-remainder)  / f.total_used; % percent
