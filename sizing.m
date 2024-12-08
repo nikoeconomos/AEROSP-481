@@ -1,3 +1,5 @@
+%% SECTION TITLE
+% DESCRIPTIVE TEXT
 % Aerosp 481 Group 3 - Libellula 
 % main file
 clear;
@@ -26,7 +28,6 @@ aircraft = generate_climb_segments(aircraft);
 %% GENERATE PRELIMINARY SIZINCAG PLOTS %%
 
 % plot_T_W_W_S_space(aircraft)
-
 
 %plot_T_S_space(aircraft)
 % plot_T_S_space_F35(aircraft)
