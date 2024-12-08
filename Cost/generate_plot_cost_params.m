@@ -1,5 +1,5 @@
 % Aerosp 481 Group 3 - Libellula 
-function [aircraft] = generate_cost_params(aircraft)
+function [aircraft] = generate_plot_cost_params(aircraft)
 % Description: This function generates a struct that holds parameters used in
 % calculating the cost of the aerodynamics system of the aircraft.
 % 

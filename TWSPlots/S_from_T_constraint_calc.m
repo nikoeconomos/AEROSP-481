@@ -33,7 +33,8 @@ function [S] = S_from_T_constraint_calc(aircraft, Tin, f, k)
         iter = 0;
         while ~converged
 
-            W_0 = togw_as_func_of_T_S_calc(aircraft, T_0, S(i)); % Compute TOGW
+            [W_0, ff] = togw_as_func_of_T_S_calc(aircraft, T_0, S(i)); % Compute TOGW
+            aircraft.weight.ff = ff;
 
             if isnan(W_0)
                 S(i) = NaN;

@@ -43,8 +43,8 @@ function [] = plot_T_S_space(aircraft)
     % Evaluate TOGW at each point in the grid
     for i = 1:length(S_grid)
         for j = 1:length(T_grid)
-            TOGW(i, j) = togw_as_func_of_T_S_calc(aircraft, T_grid(i, j), S_grid(i, j));  % Call your function
-            [avg_cost(i, j), ~] = avg_flyaway_cost_calc(TOGW(i,j), 1000);
+            [TOGW(i, j), ~] = togw_as_func_of_T_S_calc(aircraft, T_grid(i, j), S_grid(i, j));  % Call your function
+            %avg_cost(i, j) = DAPCA_cost_for_contours(aircraft, W_e, T_grid(i, j))/1000; Does not work
         end
         fprintf('%d/%d\n', i, k)
     end
@@ -162,7 +162,7 @@ function [] = plot_T_S_space(aircraft)
     T_selected = aircraft.propulsion.T_max;
     S_selected = aircraft.geometry.wing.S_ref;
 
-        %% PLOT WEIGHT CONTOURS AND CONSTRAINING LINES %%
+    %% PLOT WEIGHT CONTOURS AND CONSTRAINING LINES %%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
     figure('Position', [50, 50, 1500, 800]); % Adjust figure size
@@ -212,6 +212,7 @@ function [] = plot_T_S_space(aircraft)
     %% PLOT COST CONTOURS AND CONSTRAINING LINES %%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+    %{
     figure('Position', [50, 50, 1500, 800]); % Adjust figure size
     hold on;
     
@@ -255,6 +256,7 @@ function [] = plot_T_S_space(aircraft)
     title('T-S Plot: Constraining Requirements Over Cost Contours');
     
     hold off; 
+    %}
 
 end
 

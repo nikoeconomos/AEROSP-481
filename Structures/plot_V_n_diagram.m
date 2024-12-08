@@ -55,9 +55,8 @@ U_e_VC = 50;
 U_e_VD = 25;
 
 % mu for gust 
-W_S = W_S_max_imp_mass;
 g_engl = g * 1.5;
-mu = (2 * W_S) / (rho_2k_engl * c_bar_engl * C_L_alpha * g_engl) * g;
+mu = (2 * W_S_max_imp_mass) / (rho_2k_engl * c_bar_engl * C_L_alpha * g_engl) * g;
 disp(mu)
 
 % Gust alleviation factor (K_g)
@@ -81,7 +80,7 @@ VD_EAS = 1.07 * VMO_EAS; % Dive speed EAS, page 108 metabook
 VD_EAS_kts = VD_EAS*1.94384;
 
 % Stall speed (VS)
-VS_EAS = sqrt((2 * W_S) / (rho_SL * CL_max)); % Stall speed in EAS at cruise
+VS_EAS = sqrt((2 * W_S_max_imp_mass) / (rho_SL * CL_max)); % Stall speed in EAS at cruise
 VS_EAS_kts = VS_EAS*1.94384;
 VS_EAS_ft_s = VS_EAS * 3.281;
 
@@ -90,7 +89,7 @@ VA_EAS = sqrt(n_limit) * VS_EAS; % Maneuvering speed in EAS
 VA_EAS_kts = VA_EAS*1.94384;
 
 % Gust penetration speed (VB)
-VB_EAS = sqrt((2 * W_S * (n_limit - 1)) / (rho_SL * CL_max)); % VB EAS in m/s
+VB_EAS = sqrt((2 * W_S_max_imp_mass * (n_limit - 1)) / (rho_SL * CL_max)); % VB EAS in m/s
 VB_EAS_kts = VB_EAS*1.94384;
 
 % Velocity Range
@@ -103,8 +102,8 @@ V_kts = V .* 1.944; % EAS range in kts
 
 % Positive and negative maneuver load factors
 
-n_maneuver_positive = min(n_limit,     (rho_SL_engl * (V_ft_s).^2 * CL_max) / (2 * W_S) * g);
-n_maneuver_negative = max(n_negative, -(rho_SL_engl * (V_ft_s).^2 * CL_max) / (2 * W_S) * g); % CL min?
+n_maneuver_positive = min(n_limit,     (rho_SL_engl * (V_ft_s).^2 * CL_max) / (2 * W_S_max_imp_mass) * g);
+n_maneuver_negative = max(n_negative, -(rho_SL_engl * (V_ft_s).^2 * CL_max) / (2 * W_S_max_imp_mass) * g); % CL min?
 
 % Gust load factors
 n_gust_pos_VC = 1 + (K_g * C_L_alpha * U_e_VC .* V_kts) / (498 * W_S_max_imp_mass) * g;
