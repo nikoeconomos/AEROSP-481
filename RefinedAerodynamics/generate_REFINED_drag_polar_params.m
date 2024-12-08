@@ -37,6 +37,7 @@ htail = aircraft.geometry.htail;
 S_ref_wing = wing.S_ref; % [m^2]
 
 freestream_mach = aircraft.performance.mach.arr; %0.282 0.54 0.85 0.9 1.2 1.6
+aero.mach = freestream_mach;
 
 wing_airfoil_mach = freestream_mach.*cos(aircraft.geometry.wing.sweep_LE);
 
@@ -62,7 +63,7 @@ A_max_fuselage = aircraft.geometry.fuselage.A_max; % Estimated cross-sectional a
 
 Q_fuselage     = 1; % Interference factor, given on slide 16 of lecture 14
 
-Re_fuselage = speed_of_sound .* wing_airfoil_mach .* l_fuselage ./ kinematic_viscosity
+Re_fuselage = speed_of_sound .* wing_airfoil_mach .* l_fuselage ./ kinematic_viscosity;
 %Re_fuselage_values = [72630000, 81690000, 75060000, 81320000, 87570000, 93830000, 100090000, 112600000, 125110000, 131360000, 137620000, 141370000, 150130000];
 
 % Skin friction coefficients - from slides
@@ -188,7 +189,10 @@ delta_CD0_landing_flaps_slats = F_flap * (cf_c) * (S_flapped / S_ref_wing) * (ra
 
 CD0_component_sum  = CD0_fuselage + CD0_wing  + CD0_htail + CD0_vtail; %+ CD0_inlets;
 
+aero.CD0.cruise = NaN; % this was from the previous estimate, complete
+
 aero.CD0.clean = (CD0_component_sum(3) + CD0_misc)/(1-CD0_lp_percent); % 5 % of cd0 is leakage and protruberance
+aero.CD0.dash  = (CD0_component_sum(6) + CD0_misc)/(1-CD0_lp_percent); 
 
 aero.CD0.takeoff_flaps_slats      = aero.CD0.clean + delta_CD0_takeoff_flaps_slats;
 aero.CD0.takeoff_flaps_slats_gear = aero.CD0.takeoff_flaps_slats + CD0_lg;
@@ -212,7 +216,9 @@ aero.e.htail = 1.78 * (1 - (0.045 * aircraft.geometry.htail.AR^0.68) ) - 0.64; %
 
 AR_wing = aircraft.geometry.wing.AR;
 
-aero.CDi.cruise             = aero.CL.cruise^2              / (pi * AR_wing * aero.e.clean);
+aero.CDi.cruise              = aero.CL.cruise^2 / (pi * AR_wing * aero.e.clean);
+aero.CDi.dash                = aero.CL.dash^2   / (pi * AR_wing * aero.e.clean);
+
 aero.CDi.takeoff_flaps_slats = aero.CL.takeoff_flaps_slats^2 / (pi * AR_wing * aero.e.takeoff_flaps_slats);
 aero.CDi.landing_flaps_slats = aero.CL.landing_flaps_slats^2 / (pi * AR_wing * aero.e.landing_flaps_slats);
 
@@ -223,6 +229,7 @@ aero.CDi.landing_flaps_slats = aero.CL.landing_flaps_slats^2 / (pi * AR_wing * a
 % CMac_w spanwise points to integrate over 12 points, sectional Cl 12 
 % simulations
 
+%{
 Kf = 0.033; % Fusselage pitching moment factor obtained from table from NACA TR 711 with %l_fus = 0.55
 Wf = 2.4; % Max fusselage width
 
@@ -340,17 +347,19 @@ end
 
 aero.CD_trim = CD_trim;
 aero.CL_htail = CL_tail;
+%}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% TRIM DRAG CALCULATIONS IF CL_T IS STILL TOO BIG %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% CL_tail = [0.9 1 0.6 0.7 0.72 0.78 0.2]; % MADE UP
-% 
-% CD_trim = CL_tail.^2 * (htail.S_ref / (pi * aero.e.htail * htail.AR * wing.S_ref));
-% 
-% aero.CD_trim = CD_trim;
-% aero.CL_htail = CL_tail;
+CL_tail = [0.9 0.6 0.7 0.72 0.78 0.2]; % MADE UP
+CL_tail_landing = 1;
+ 
+CD_trim = CL_tail.^2 * (htail.S_ref / (pi * aero.e.htail * htail.AR * wing.S_ref));
+ 
+aero.CD_trim = CD_trim;
+aero.CL_htail = CL_tail;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% WAVE DRAG COEFFICIENT %%
@@ -360,14 +369,19 @@ M_DD = 0.95; % From airfoil sectional CFD analysis
 
 M_crit  = M_DD - (0.1 / 80)^(1/3);
 
-aero.CD_wave.cruise = 20 * (aircraft.performance.cruise.Mach - M_crit)^4;
+aero.CD_wave = 20 * (freestream_mach - M_crit).^4;
+aero.CD_wave(1) = 0; %no wave drag at slow speeds
+aero.CD_wave(2) = 0; %no wave drag at slow speeds
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% TOTAL DRAG COEFFICIENT %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% TODO ADD WAVE, TRIM DRAG. These are calculated for a variety of Mach numbers. find out how to integrate that array
-aero.CD.clean = aero.CD0.clean + aero.CDi.cruise + aero.CD_trim(4); %+ aero.CD_wave.cruise;
+aero.CD.clean = aero.CD0.clean + aero.CDi.cruise + aero.CD_trim(3) + aero.CD_wave.cruise(3);
+
+aero.CD.dash = aero.CD0.clean + aero.CDi.cruise + aero.CD_trim(3) + aero.CD_wave.cruise(3);
 
 aero.CD.takeoff_flaps_slats      = aero.CD0.takeoff_flaps_slats      + aero.CDi.takeoff_flaps_slats + aero.CD_trim(1);
 aero.CD.takeoff_flaps_slats_gear = aero.CD0.takeoff_flaps_slats_gear + aero.CDi.takeoff_flaps_slats + aero.CD_trim(1);
@@ -375,15 +389,6 @@ aero.CD.takeoff_flaps_slats_gear = aero.CD0.takeoff_flaps_slats_gear + aero.CDi.
 aero.CD.landing_flaps_slats      = aero.CD0.landing_flaps_slats      + aero.CDi.landing_flaps_slats + aero.CD_trim(2);
 aero.CD.landing_flaps_slats_gear = aero.CD0.landing_flaps_slats_gear + aero.CDi.landing_flaps_slats + aero.CD_trim(2);
 
-figure()
-bar([aero.CD.clean, aero.CD.takeoff_flaps_slats, aero.CD.takeoff_flaps_slats_gear, ...
-    aero.CD.landing_flaps_slats, aero.CD.landing_flaps_slats_gear], ... 
-    ["Clean","Take Off Configuration - No L.G.", "Take Off Configuration - L.G.","Landing Configuration - No L.G.", "Landing Configuration - L.G."]);
-title('Aircraft Drag Coefficien at Different Configurations')
-
-figure()
-piechart([aero.CD.clean, aero.CDi.cruise, aero.CD_trim(4), aero.CD_wave.cruise], []);
-title("Aircraft Clean Configuration Parasitic Drag Component Contributions")
 %% REASSIGN %%
 
 aircraft.aerodynamics = aero;
