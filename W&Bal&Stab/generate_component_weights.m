@@ -298,7 +298,7 @@ function aircraft = generate_component_weights(aircraft)
 
         if abs(W_0_new - W_0) <= tol
             converged = true;
-        end
+        end 
 
         W_0 = W_0_new;
     end
@@ -370,22 +370,13 @@ function aircraft = generate_component_weights(aircraft)
     %%%%%%%%%%%%%%%%%%%%
     %% CG AND SM CALCULATION %%
     %%%%%%%%%%%%%%%%%%%%
-
-    % TODO FIX
     
     aircraft = cg_calc_plot(aircraft); % TODO UPDATE MISSION PROFILE IF MISSILES CHANGE
     aircraft = generate_LG_params(aircraft);
     
     aircraft = SM_calc_plot(aircraft); % sets the np and sm arrays for a full mission profile.
 
-    %aircraft = empennage_aerodynamics_calc(aircraft);
-
-    %%%%%%%%%%%%%%%%%
-    %% COST UPDATE %%
-    %%%%%%%%%%%%%%%%%
-
-    %aircraft.cost.avg_flyaway_cost = avg_flyaway_cost_calc(aircraft.weight.togw, 1000);
-    
+    %aircraft = empennage_aerodynamics_calc(aircraft);    
 
 end
     

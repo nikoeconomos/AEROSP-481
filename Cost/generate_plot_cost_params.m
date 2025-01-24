@@ -65,9 +65,11 @@ cost_avi_percent_flyaway = 0.4; % raymer pg 698, can be bumped up to 40 accordin
 engine_base_year = 2000;
 engine_order_80  = 400000000; % from source online
 engine_cost_base = engine_order_80/80;
+engine_cost = adjust_cost_inflation_calc(engine_cost_base, engine_base_year, target_year);
+
 N_eng = Q; % Number of engines required, single engine plane
 
-cost.RTDE_flyaway.engines = adjust_cost_inflation_calc(N_eng*engine_cost_base, engine_base_year, target_year);
+cost.RTDE_flyaway.engines = engine_cost*N_eng;
 
 %% RTDE DAPCA RATES & COST
 
@@ -94,7 +96,7 @@ cost.RTDE_flyaway.quality_ctrl  = HQ_adj*RQ;
 
 CD_2012 = 67.400 * W_e^0.630 * V_max^1.3;               % development support cost
 CF_2012 = 1974   * W_e^0.325 * V_max^0.822 * FTA^1.21;  % flight test cost
-CM_2012 = 31.2   * W_e^0.921 * V_max^0.621 * Q^0.799;      % manufacturing materials cost
+CM_2012 = 31.2   * W_e^0.921 * V_max^0.621 * Q^0.799;   % manufacturing materials cost
 
 cost.RTDE_flyaway.development_support    = adjust_cost_inflation_calc(CD_2012, DAPCA_base_year, target_year);
 cost.RTDE_flyaway.flight_test            = adjust_cost_inflation_calc(CF_2012, DAPCA_base_year, target_year);
@@ -128,7 +130,7 @@ while converged == false
 end
 
 cost.RTDE_flyaway.total = cost_curr;
-
+cost.RTDE_flyaway.average = cost_curr/Q;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Roskam Caq Section 8 %%
@@ -233,6 +235,8 @@ R_mml = adjust_cost_inflation_calc(45, 1989, target_year); % eq 6.12
 
 cost.operation.direct_personnel.maintenance_crew  = N_serv * N_yr * U_annflt * MHR_flthr * R_mml;
 
+cost.operation.direct_personnel.total = cost.operation.direct_personnel.maintenance_crew +  cost.operation.direct_personnel.flight_crew;
+
 %% Indirect personnel 6.3 %%
 
 f_persind = mean([0.14, 0.2]); % table 6.6 avg of the fighters
@@ -293,7 +297,8 @@ while converged == false
 end
 
 cost.operation.total = C_OPS;
-cost.operation.per_hour = C_OPS/ (N_serv * N_yr * U_annflt);
+total_service_hours = N_serv * N_yr * U_annflt;
+cost.operation.per_hour = C_OPS/total_service_hours;
 
 %%%%%%%%%%%%%%
 %% PLOTTING %%
@@ -343,7 +348,7 @@ rounded_total = round(cost.RTDE_flyaway.total / 1e6) * 1e6;
 formatted_total = sprintf('%0.0f', rounded_total);  % Format the number as a string with no decimal places
 formatted_total_with_commas = regexprep(formatted_total, '(?<=\d)(?=(\d{3})+(?!\d))', ',');
 
-title(['Program RTDE & Flyaway Costs - Total: ', formatted_total_with_commas]);
+title(['Program RTDE & Flyaway Costs Breakdown']);
 
 
 %% Operations %%
@@ -389,7 +394,7 @@ rounded_total = round(cost.operation.total / 1e6) * 1e6;
 formatted_total = sprintf('%0.0f', rounded_total);  % Format without decimal places
 formatted_total_with_commas = regexprep(formatted_total, '(?<=\d)(?=(\d{3})+(?!\d))', ',');
 
-title(['Program Operation Costs - Total: ', formatted_total_with_commas]);
+title(['Program Operation Costs Breakdown']);
 
 
 %% Update struct

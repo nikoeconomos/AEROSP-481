@@ -27,9 +27,9 @@ aircraft = generate_climb_segments(aircraft);
 
 %% GENERATE PRELIMINARY SIZINCAG PLOTS %%
 
-% plot_T_W_W_S_space(aircraft)
+plot_T_W_W_S_space(aircraft)
 
-%plot_T_S_space(aircraft)
+plot_T_S_space(aircraft)
 % plot_T_S_space_F35(aircraft)
 % [togw, ff, W_e] = togw_as_func_of_T_S_calc(aircraft, aircraft.propulsion.T_max, aircraft.geometry.wing.S_ref)
 
